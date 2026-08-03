@@ -1,12 +1,12 @@
-// Приём 1 - массив id из массива объектов (map)
+// Drill 1 - array of ids from an array of objects (map)
 //
-// Критерий зелёного: пишу все три с нуля, без подсказок, за 90 секунд каждое,
-// тесты зелёные с первого запуска.
+// Green criterion: write all three from scratch, no hints, under 90 seconds each,
+// tests green on the first run.
 //
-// Правила: пишешь по памяти, вслух проговаривая что делаешь.
-// Полез подсматривать - это 🔁, приём вернётся через день. Это нормально.
+// Rules: write from memory, saying out loud what you are doing.
+// Peeked - that is 🔁, the drill comes back in a day. That is fine.
 //
-// Запуск:  node week-1-js/01-map-ids.js
+// Run:  node week-1-js/01-map-ids.js
 
 const users = [
   { id: 7, name: "Ada", active: true },
@@ -14,36 +14,36 @@ const users = [
   { id: 3, name: "Grace", active: true },
 ];
 
-// ─── 1 ─────────────────────────────────────────────────────────
-// getIds(users) должен вернуть [7, 12, 3]
+// --- 1 --------------------------------------------------------
+// getIds(users) must return [7, 12, 3]
 
 function getIds(list) {
-  // сюда
+  return list.map(item => item.id)
 }
 
-// ─── 2 ─────────────────────────────────────────────────────────
-// getNames(users) должен вернуть ["Ada", "Linus", "Grace"]
-// Тот же приём, другое поле. Пиши не глядя наверх.
+// --- 2 --------------------------------------------------------
+// getNames(users) must return ["Ada", "Linus", "Grace"]
+// Same drill, different field. Write it without looking up.
 
 function getNames(list) {
-  // сюда
+  return list.map(item => item.name)
 }
 
-// ─── 3 ─────────────────────────────────────────────────────────
-// toLabels(users) должен вернуть ["7: Ada", "12: Linus", "3: Grace"]
-// map плюс шаблонная строка.
+// --- 3 --------------------------------------------------------
+// toLabels(users) must return ["7: Ada", "12: Linus", "3: Grace"]
+// map plus a template literal.
 
 function toLabels(list) {
-  // сюда
+  return list.map(item => `${item.id}: ${item.name}`)
 }
 
-// ─── 4, устно, ничего не пишем ─────────────────────────────────
-// Проговори вслух, до запуска тестов:
-//   а) чем map отличается от forEach
-//   б) что вернёт users.map(u => { u.id }) и почему именно это
+// --- 4, spoken, nothing to write ------------------------------
+// Say out loud, before running the tests:
+//   a) how map differs from forEach
+//   b) what users.map(u => { u.id }) returns, and why exactly that
 
-// ───────────────────────────────────────────────────────────────
-// Ниже не трогаем. Это проверка.
+// --------------------------------------------------------------
+// Do not touch below. This is the check.
 
 const assert = require("node:assert");
 
@@ -61,8 +61,8 @@ for (const [name, run, expected] of checks) {
   } catch (e) {
     failed++;
     console.log(`  FAIL ${name}`);
-    console.log(`       ждали:   ${JSON.stringify(expected)}`);
-    console.log(`       вернулось: ${JSON.stringify(e.actual)}`);
+    console.log(`       expected: ${JSON.stringify(expected)}`);
+    console.log(`       received: ${JSON.stringify(e.actual)}`);
   }
 }
-console.log(failed === 0 ? "\nВсё зелёное. Ставь ✅\n" : `\nПровалено: ${failed}. Чини и запускай снова.\n`);
+console.log(failed === 0 ? "\nAll green. Mark it ✅\n" : `\nFailed: ${failed}. Fix and run again.\n`);

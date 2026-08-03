@@ -1,21 +1,29 @@
-# Ежедневные повторения руками
+# Daily Recall Drills
 
-Артефакт к программе [🎯 Программа ежедневных повторений (4 недели)] из вольта.
-40 приёмов, 4 недели, конечный список. Всё новое, что вскрывается по ходу, идёт в `PARKING.md` и ждёт следующего цикла. В текущий цикл ничего не добавляется. Никогда.
+Artifact for the 4-week recall programme kept in the Obsidian vault
+(`🎯 Программа ежедневных повторений (4 недели)`).
 
-**Норма дня:** один приём, 5 минут. Хорошая сессия: 2 приёма, 25 минут. Таймер звонит - стоп, даже если пошло хорошо.
+40 drills, 4 weeks, a **closed list**. Anything new that surfaces along the way goes to
+`PARKING.md` and waits for the next cycle. Nothing is ever added to the current cycle.
 
-**Формат:** 3-5 мин смотрю рабочий пример → закрываю всё → пишу по памяти вслух → запускаю. Работает ✅. Полез подсматривать 🔁, вернётся через день.
+**Daily quota:** one drill, 5 minutes. A good session: two drills, 25 minutes.
+When the timer rings, stop - even if it is going well.
 
-**Три состояния:** новый → 🔁 писал с подсказкой → ✅ написал вхолодную. Закрытым считается только третий.
+**Format:** look at a working example for 3-5 min → close everything →
+write it from memory, **saying out loud what you are doing** → run it.
+Passes ✅. Peeked 🔁, comes back in a day.
 
-## Счётчик
+**Three states:** new → 🔁 written with a hint → ✅ written cold.
+Only the third counts as closed.
 
-Старт: 03.08.2026
-Закрыто вхолодную: **0 из 40**
-Дней подряд: **1**
+## Counter
 
-## Дневник
+Start: 2026-08-03
+Closed cold: **1 of 40**
+Day streak: **1**
 
-| Дата | Приём | Итог |
+## Log
+
+| Date | Drill | Result |
 | --- | --- | --- |
+| 2026-08-03 | 01 map ids | ✅ all three under 90 s, no hints. Did not narrate out loud yet - that half is the target tomorrow |
