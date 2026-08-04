@@ -19,11 +19,12 @@ Only the third counts as closed.
 ## Counter
 
 Start: 2026-08-03
-Closed cold: **1 of 40**
-Day streak: **1**
+Closed cold: **2 of 40**
+Day streak: **2**
 
 ## Log
 
 | Date | Drill | Result |
 | --- | --- | --- |
 | 2026-08-03 | 01 map ids | ✅ all three under 90 s, no hints. Did not narrate out loud yet - that half is the target tomorrow |
+| 2026-08-04 | 02 filter vs find | ✅ all four cold, narrated out loud. some/every came out fuzzy in the spoken part, rewritten by hand as part 6 - green. Slip: typed `=` for `===` twice, caught it myself |

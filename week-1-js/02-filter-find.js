@@ -18,14 +18,14 @@ const users = [
 // activeUsers(users) must return the two whole objects whose active is true
 
 function activeUsers(list) {
-  // here
+  return list.filter(item => item.active);
 }
 
 // --- 2 --------------------------------------------------------
 // findByName(users, "Grace") must return the Grace object itself, not an array
 
 function findByName(list, name) {
-  // here
+  return list.find(item => item.name === name);
 }
 
 // --- 3 --------------------------------------------------------
@@ -33,7 +33,7 @@ function findByName(list, name) {
 // filter first, then map. Say out loud why that order and not the other one.
 
 function activeIds(list) {
-  // here
+  return list.filter(item => item.active).map(item => item.id);
 }
 
 // --- 4 --------------------------------------------------------
@@ -42,14 +42,35 @@ function activeIds(list) {
 // Do not hardcode it. Actually call filter and find with a predicate that never matches.
 
 function noMatch(list) {
-  // here
+  return [ list.filter(item => item.name === 'foobar'), list.find(item => item.id === 1)]
 }
 
 // --- 5, spoken, nothing to write ------------------------------
 // Say out loud, before running the tests:
-//   a) which of the two stops early, and why that matters on a large array
-//   b) what findIndex returns when nothing matches, and why it is not undefined
-//   c) some vs every in one sentence each
+//   a) which of the two stops early, and why that matters on a large array = find potentially chiper, filter going to the whole array always
+//   b) what findIndex returns when nothing matches, and why it is not undefined = -1
+//   c) some vs every in one sentence each - some check the first one catch and every check all the array as well
+
+
+// --- 6, added after the spoken part came out fuzzy ------------
+// some / every. Both return a boolean. Write them from memory, out loud.
+
+// hasInactive(users) -> true   (is there at least one inactive user)
+function hasInactive(list) {
+  return list.some(item => !item.active);
+}
+
+// allHaveId(users) -> true     (does every user have an id)
+function allHaveId(list) {
+  return list.every(item => item.id)
+}
+
+// emptyEdge() -> [false, true]
+// Call some and every on an EMPTY array. some with any predicate, every with any predicate.
+// Do not hardcode. The result is the whole lesson.
+function emptyEdge() {
+  return [ [].some(item => item.name === '123'), [].every(item => item.name === '123') ]
+}
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
@@ -68,6 +89,9 @@ const checks = [
   ["findByName", () => findByName(users, "Grace"), users[2]],
   ["activeIds", () => activeIds(users), [7, 3]],
   ["noMatch", () => noMatch(users), [[], undefined]],
+  ["hasInactive", () => hasInactive(users), true],
+  ["allHaveId", () => allHaveId(users), true],
+  ["emptyEdge", () => emptyEdge(), [false, true]],
 ];
 
 let failed = 0;
