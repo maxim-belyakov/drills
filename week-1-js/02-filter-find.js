@@ -56,6 +56,13 @@ function noMatch(list) {
 
 const assert = require("node:assert");
 
+// honest printer: JSON.stringify turns undefined into null and hides holes
+const show = (v) =>
+  v === undefined ? "undefined"
+  : Array.isArray(v) ? "[" + v.map(show).join(", ") + "]"
+  : typeof v === "object" && v !== null ? JSON.stringify(v)
+  : String(v);
+
 const checks = [
   ["activeUsers", () => activeUsers(users), [users[0], users[2]]],
   ["findByName", () => findByName(users, "Grace"), users[2]],
@@ -71,8 +78,8 @@ for (const [name, run, expected] of checks) {
   } catch (e) {
     failed++;
     console.log(`  FAIL ${name}`);
-    console.log(`       expected: ${JSON.stringify(expected)}`);
-    console.log(`       received: ${JSON.stringify(e.actual)}`);
+    console.log(`       expected: ${show(expected)}`);
+    console.log(`       received: ${show(e.actual)}`);
   }
 }
 console.log(failed === 0 ? "\nAll green. Now: was it narrated out loud? If not, it is 🔁\n" : `\nFailed: ${failed}. Fix and run again.\n`);
