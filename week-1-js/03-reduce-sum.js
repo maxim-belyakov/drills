@@ -28,9 +28,9 @@ function orderTotal(list) {
 }
 
 // --- 3 --------------------------------------------------------
-// mostExpensive(cart) -> the C-2... no. Work it out yourself and return the OBJECT
-// with the highest price. Use reduce, not sort - the point is that an accumulator
-// does not have to be a number.
+// mostExpensive(cart) -> the whole OBJECT with the highest price.
+// Use reduce, not sort - the point is that the accumulator does not have to be
+// a number. It can be an object, and it starts as one of the items.
 
 function mostExpensive(list) {
   // here
