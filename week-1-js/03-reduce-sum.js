@@ -17,14 +17,14 @@ const cart = [
 // totalPrice(cart) -> 510        (just the prices, ignore qty)
 
 function totalPrice(list) {
-  // here
+  return list.reduce((sum, line) => sum + line.price, 0);
 }
 
 // --- 2 --------------------------------------------------------
 // orderTotal(cart) -> 930        (price * qty for each line, then summed)
 
 function orderTotal(list) {
-  // here
+  return list.reduce((sum, line) => sum + line.price * line.qty, 0);
 }
 
 // --- 3 --------------------------------------------------------
@@ -33,7 +33,7 @@ function orderTotal(list) {
 // a number. It can be an object, and it starts as one of the items.
 
 function mostExpensive(list) {
-  // here
+  return list.reduce((best, line) => line.price > best.price ? line : best, list[0]);
 }
 
 // --- 4 --------------------------------------------------------
@@ -44,15 +44,21 @@ function mostExpensive(list) {
 // Expected: [0, true]
 
 function emptyBehaviour() {
-  // here
+  let empryReduceWithoutInitial;
+  try {
+    [].reduce((sum, line) => line + sum)
+  } catch {
+    empryReduceWithoutInitial = true
+  }
+  return [[].reduce((sum, line) => sum + line, 0), empryReduceWithoutInitial]
 }
 
 // --- 5, spoken, nothing to write ------------------------------
 // Say out loud, before running the tests:
-//   a) the two parameters of the reduce callback, in order, and what each one is
-//   b) what happens if you forget to return the accumulator
+//   a) the two parameters of the reduce callback, in order, and what each one is -- first is sum and second is current item
+//   b) what happens if you forget to return the accumulator -- the accum became undefined in the next iieration
 //   c) why an initial value is not optional in real code, even when the array
-//      looks like it can never be empty
+//      looks like it can never be empty -- because IF the array is empty and you not put init reduce with throw a error
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
@@ -61,9 +67,9 @@ const assert = require("node:assert");
 
 const show = (v) =>
   v === undefined ? "undefined"
-  : Array.isArray(v) ? "[" + v.map(show).join(", ") + "]"
-  : typeof v === "object" && v !== null ? JSON.stringify(v)
-  : String(v);
+    : Array.isArray(v) ? "[" + v.map(show).join(", ") + "]"
+      : typeof v === "object" && v !== null ? JSON.stringify(v)
+        : String(v);
 
 const checks = [
   ["totalPrice", () => totalPrice(cart), 510],
