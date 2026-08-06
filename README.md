@@ -20,7 +20,7 @@ Only the third counts as closed.
 
 Start: 2026-08-03
 Closed cold: **3 of 40**
-Day streak: **3**
+Day streak: **4**
 
 ## Log
 
@@ -29,3 +29,4 @@ Day streak: **3**
 | 2026-08-03 | 01 map ids | ✅ all three under 90 s, no hints. Did not narrate out loud yet - that half is the target tomorrow |
 | 2026-08-04 | 02 filter vs find | ✅ all four cold, narrated out loud. some/every came out fuzzy in the spoken part, rewritten by hand as part 6 - green. Slip: typed `=` for `===` twice, caught it myself |
 | 2026-08-05 | 03 reduce sum and aggregate | ✅ all four cold, narrated out loud. Notes: tie-breaking in a max-reduce, accumulator kept on the left, flag initialised explicitly |
+| 2026-08-06 | 04 group by | 🔁 peeked at the example. Green afterwards, narrated out loud throughout. Systematic miss: forgot the `{}` initial value in all four - one habit, not four mistakes. Returns tomorrow |
