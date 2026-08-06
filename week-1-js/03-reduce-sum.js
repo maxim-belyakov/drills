@@ -80,14 +80,26 @@ const checks = [
 
 let failed = 0;
 for (const [name, run, expected] of checks) {
+  let actual, threw = null;
   try {
-    assert.deepStrictEqual(run(), expected);
+    actual = run();
+  } catch (err) {
+    threw = err;
+  }
+  if (threw) {
+    failed++;
+    console.log(`  ERR  ${name} - it threw, so nothing was compared`);
+    console.log(`       ${threw.name}: ${threw.message}`);
+    continue;
+  }
+  try {
+    assert.deepStrictEqual(actual, expected);
     console.log(`  OK  ${name}`);
-  } catch (e) {
+  } catch {
     failed++;
     console.log(`  FAIL ${name}`);
     console.log(`       expected: ${show(expected)}`);
-    console.log(`       received: ${show(e.actual)}`);
+    console.log(`       received: ${show(actual)}`);
   }
 }
 console.log(failed === 0 ? "\nAll green. Was it narrated out loud? If not, it is 🔁\n" : `\nFailed: ${failed}. Fix and run again.\n`);

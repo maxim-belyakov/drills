@@ -20,7 +20,10 @@ const orders = [
 // Whole objects in the buckets, not skus.
 
 function groupByStatus(list) {
-  // here
+  return list.reduce((acc, line) => {
+    (acc[line.status] ||= []).push(line);
+    return acc;
+  }, {})
 }
 
 // --- 2 --------------------------------------------------------
@@ -28,7 +31,10 @@ function groupByStatus(list) {
 // Same shape of loop, numbers instead of arrays.
 
 function countByStatus(list) {
-  // here
+  return list.reduce((acc, line) => {
+    acc[line.status] = (acc[line.status] ?? 0)+ 1;
+    return acc;
+  }, {})
 }
 
 // --- 3 --------------------------------------------------------
@@ -37,7 +43,10 @@ function countByStatus(list) {
 // the same idea as a HashMap. Say that part out loud, it is a known gap.
 
 function indexBySku(list) {
-  // here
+  return list.reduce((acc, line) => {
+    acc[line.sku] = line;
+    return acc;
+  }, {})
 }
 
 // --- 4 --------------------------------------------------------
@@ -46,16 +55,19 @@ function indexBySku(list) {
 // Two things happen at once here and both are the lesson. Do not hardcode.
 
 function keyTypes() {
-  // here
+  return Object.keys(orders.reduce((acc, line) => {
+    acc[line.priority] = line;
+    return acc;
+  }, {}))
 }
 
 // --- 5, spoken, nothing to write ------------------------------
 // Say out loud, before running the tests:
 //   a) why an arrow function with { braces } needs an explicit return, and what
-//      the accumulator becomes on step two if you forget it
+//      the accumulator becomes on step two if you forget it -- because arrow function has another context borders, it will not return atomatically your context so you need return accumulator if you want tp save it for next steps
 //   b) Object.groupBy exists now - what it does, and why you would still write
-//      reduce by hand in an interview
-//   c) when a lookup object beats calling find in a loop, and what the cost is
+//      reduce by hand in an interview -- groupBy is strict, if you want to do something more while you grouping it's better to write groupBy itself
+//   c) when a lookup object beats calling find in a loop, and what the cost is - to make one time reduce is O(n) but then cost to find by froup will be 0(1)
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
@@ -64,9 +76,9 @@ const assert = require("node:assert");
 
 const show = (v) =>
   v === undefined ? "undefined"
-  : Array.isArray(v) ? "[" + v.map(show).join(", ") + "]"
-  : typeof v === "object" && v !== null ? JSON.stringify(v)
-  : String(v);
+    : Array.isArray(v) ? "[" + v.map(show).join(", ") + "]"
+      : typeof v === "object" && v !== null ? JSON.stringify(v)
+        : String(v);
 
 const checks = [
   ["groupByStatus", () => groupByStatus(orders), { paid: [orders[0], orders[2]], pending: [orders[1]] }],
@@ -77,14 +89,26 @@ const checks = [
 
 let failed = 0;
 for (const [name, run, expected] of checks) {
+  let actual, threw = null;
   try {
-    assert.deepStrictEqual(run(), expected);
+    actual = run();
+  } catch (err) {
+    threw = err;
+  }
+  if (threw) {
+    failed++;
+    console.log(`  ERR  ${name} - it threw, so nothing was compared`);
+    console.log(`       ${threw.name}: ${threw.message}`);
+    continue;
+  }
+  try {
+    assert.deepStrictEqual(actual, expected);
     console.log(`  OK  ${name}`);
-  } catch (e) {
+  } catch {
     failed++;
     console.log(`  FAIL ${name}`);
     console.log(`       expected: ${show(expected)}`);
-    console.log(`       received: ${show(e.actual)}`);
+    console.log(`       received: ${show(actual)}`);
   }
 }
 console.log(failed === 0 ? "\nAll green. Was it narrated out loud? If not, it is 🔁\n" : `\nFailed: ${failed}. Fix and run again.\n`);

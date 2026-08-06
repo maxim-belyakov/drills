@@ -62,7 +62,7 @@ for (const [name, run, expected] of checks) {
     failed++;
     console.log(`  FAIL ${name}`);
     console.log(`       expected: ${JSON.stringify(expected)}`);
-    console.log(`       received: ${JSON.stringify(e.actual)}`);
+    console.log(`       received: ${e instanceof assert.AssertionError ? JSON.stringify(e.actual) : e.name + ": " + e.message}`);
   }
 }
 console.log(failed === 0 ? "\nAll green. Mark it ✅\n" : `\nFailed: ${failed}. Fix and run again.\n`);
