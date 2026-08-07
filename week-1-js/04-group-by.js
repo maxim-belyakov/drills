@@ -25,7 +25,10 @@ const orders = [
 // Whole objects in the buckets, not skus.
 
 function groupByStatus(list) {
-  // here
+  return list.reduce((acc, line) => {
+    (acc[line.status] ??= []).push(line);
+    return acc;
+  }, {})
 }
 
 // --- 2 --------------------------------------------------------
@@ -33,7 +36,11 @@ function groupByStatus(list) {
 // Same shape of loop, numbers instead of arrays.
 
 function countByStatus(list) {
-  // here
+  return list.reduce((acc, line) => {
+    acc[line.status] ??= 0;
+    acc[line.status] += 1 
+    return acc;
+  }, {})
 }
 
 // --- 3 --------------------------------------------------------
@@ -42,7 +49,10 @@ function countByStatus(list) {
 // the same idea as a HashMap. Say that part out loud, it is a known gap.
 
 function indexBySku(list) {
-  // here
+  return list.reduce((acc, line) => {
+    acc[line.sku] = line;
+    return acc;
+  }, {})
 }
 
 // --- 4 --------------------------------------------------------
@@ -51,15 +61,20 @@ function indexBySku(list) {
 // Two things happen at once here and both are the lesson. Do not hardcode.
 
 function keyTypes() {
-  // here
+  const numListPriority = orders.reduce((acc, line) => {
+    (acc[line.priority] ??= []).push(line);
+    return acc;
+  }, {})
+
+  return Object.keys(numListPriority);
 }
 
 // --- 5, spoken, nothing to write ------------------------------
 // Say out loud, before running the tests:
 //   a) why an arrow function with { braces } needs an explicit return, and what
-//      the accumulator becomes on step two if you forget it -- because arrow function has another context borders, it will not return atomatically your context so you need return accumulator if you want tp save it for next steps
+//      the accumulator becomes on step two if you forget it -- because arrow function has another context borders, it will not return automatically your context so you need return accumulator if you want to save it for next steps
 //   b) Object.groupBy exists now - what it does, and why you would still write
-//      reduce by hand in an interview -- groupBy is strict, if you want to do something more while you grouping it's better to write groupBy itself
+//      reduce by hand in an interview -- groupBy is strict, if you want do something more while you grouping it's better to write groupBy itself with side effects
 //   c) when a lookup object beats calling find in a loop, and what the cost is - to make one time reduce is O(n) but then cost to find by froup will be 0(1)
 
 // --------------------------------------------------------------
