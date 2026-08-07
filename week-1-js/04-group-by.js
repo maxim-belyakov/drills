@@ -69,9 +69,10 @@ const assert = require("node:assert");
 
 const show = (v) =>
   v === undefined ? "undefined"
-    : Array.isArray(v) ? "[" + v.map(show).join(", ") + "]"
-      : typeof v === "object" && v !== null ? JSON.stringify(v)
-        : String(v);
+  : typeof v === "string" ? JSON.stringify(v)
+  : Array.isArray(v) ? "[" + v.map((x) => show(x)).join(", ") + "]"
+  : typeof v === "object" && v !== null ? JSON.stringify(v)
+  : String(v);
 
 const checks = [
   ["groupByStatus", () => groupByStatus(orders), { paid: [orders[0], orders[2]], pending: [orders[1]] }],

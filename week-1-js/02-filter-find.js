@@ -81,7 +81,7 @@ const assert = require("node:assert");
 const show = (v) =>
   v === undefined ? "undefined"
   : typeof v === "string" ? JSON.stringify(v)
-  : Array.isArray(v) ? "[" + v.map(show).join(", ") + "]"
+  : Array.isArray(v) ? "[" + v.map((x) => show(x)).join(", ") + "]"
   : typeof v === "object" && v !== null ? JSON.stringify(v)
   : String(v);
 
