@@ -75,48 +75,14 @@ function emptyEdge() {
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
 
-const assert = require("node:assert");
+const { runChecks } = require("../lib/checks");
 
-// honest printer: JSON.stringify turns undefined into null and hides holes
-const show = (v) =>
-  v === undefined ? "undefined"
-  : typeof v === "string" ? JSON.stringify(v)
-  : Array.isArray(v) ? "[" + v.map((x) => show(x)).join(", ") + "]"
-  : typeof v === "object" && v !== null ? JSON.stringify(v)
-  : String(v);
-
-const checks = [
-  ["activeUsers", () => activeUsers(users), [users[0], users[2]]],
-  ["findByName", () => findByName(users, "Grace"), users[2]],
-  ["activeIds", () => activeIds(users), [7, 3]],
-  ["noMatch", () => noMatch(users), [[], undefined]],
-  ["hasInactive", () => hasInactive(users), true],
-  ["allHaveId", () => allHaveId(users), true],
-  ["emptyEdge", () => emptyEdge(), [false, true]],
-];
-
-let failed = 0;
-for (const [name, run, expected] of checks) {
-  let actual, threw = null;
-  try {
-    actual = run();
-  } catch (err) {
-    threw = err;
-  }
-  if (threw) {
-    failed++;
-    console.log(`  ERR  ${name} - it threw, so nothing was compared`);
-    console.log(`       ${threw.name}: ${threw.message}`);
-    continue;
-  }
-  try {
-    assert.deepStrictEqual(actual, expected);
-    console.log(`  OK  ${name}`);
-  } catch {
-    failed++;
-    console.log(`  FAIL ${name}`);
-    console.log(`       expected: ${show(expected)}`);
-    console.log(`       received: ${show(actual)}`);
-  }
-}
-console.log(failed === 0 ? "\nAll green. Now: was it narrated out loud? If not, it is 🔁\n" : `\nFailed: ${failed}. Fix and run again.\n`);
+runChecks([
+  { name: "activeUsers", fn: activeUsers, run: () => activeUsers(users), expected: [users[0], users[2]] },
+  { name: "findByName", fn: findByName, run: () => findByName(users, "Grace"), expected: users[2] },
+  { name: "activeIds", fn: activeIds, run: () => activeIds(users), expected: [7, 3] },
+  { name: "noMatch", fn: noMatch, run: () => noMatch(users), expected: [[], undefined] },
+  { name: "hasInactive", fn: hasInactive, run: () => hasInactive(users), expected: true },
+  { name: "allHaveId", fn: allHaveId, run: () => allHaveId(users), expected: true },
+  { name: "emptyEdge", fn: emptyEdge, run: () => emptyEdge(), expected: [false, true] },
+]);

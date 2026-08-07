@@ -80,44 +80,11 @@ function keyTypes() {
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
 
-const assert = require("node:assert");
+const { runChecks } = require("../lib/checks");
 
-const show = (v) =>
-  v === undefined ? "undefined"
-  : typeof v === "string" ? JSON.stringify(v)
-  : Array.isArray(v) ? "[" + v.map((x) => show(x)).join(", ") + "]"
-  : typeof v === "object" && v !== null ? JSON.stringify(v)
-  : String(v);
-
-const checks = [
-  ["groupByStatus", () => groupByStatus(orders), { paid: [orders[0], orders[2]], pending: [orders[1]] }],
-  ["countByStatus", () => countByStatus(orders), { paid: 2, pending: 1 }],
-  ["indexBySku", () => indexBySku(orders), { "A-1": orders[0], "B-7": orders[1], "C-2": orders[2] }],
-  ["keyTypes", () => keyTypes(), ["1", "2"]],
-];
-
-let failed = 0;
-for (const [name, run, expected] of checks) {
-  let actual, threw = null;
-  try {
-    actual = run();
-  } catch (err) {
-    threw = err;
-  }
-  if (threw) {
-    failed++;
-    console.log(`  ERR  ${name} - it threw, so nothing was compared`);
-    console.log(`       ${threw.name}: ${threw.message}`);
-    continue;
-  }
-  try {
-    assert.deepStrictEqual(actual, expected);
-    console.log(`  OK  ${name}`);
-  } catch {
-    failed++;
-    console.log(`  FAIL ${name}`);
-    console.log(`       expected: ${show(expected)}`);
-    console.log(`       received: ${show(actual)}`);
-  }
-}
-console.log(failed === 0 ? "\nAll green. Was it narrated out loud? If not, it is 🔁\n" : `\nFailed: ${failed}. Fix and run again.\n`);
+runChecks([
+  { name: "groupByStatus", fn: groupByStatus, run: () => groupByStatus(orders), expected: { paid: [orders[0], orders[2]], pending: [orders[1]] } },
+  { name: "countByStatus", fn: countByStatus, run: () => countByStatus(orders), expected: { paid: 2, pending: 1 } },
+  { name: "indexBySku", fn: indexBySku, run: () => indexBySku(orders), expected: { "A-1": orders[0], "B-7": orders[1], "C-2": orders[2] } },
+  { name: "keyTypes", fn: keyTypes, run: () => keyTypes(), expected: ["1", "2"] },
+]);

@@ -4,7 +4,12 @@
 //   1. all four from memory, no hints, under 90 seconds each, tests green
 //   2. narrated out loud WHILE typing
 //
-// Run:  node week-1-js/05-destructuring.js
+// SECOND PASS pending - first pass was 🔁, the example got opened on defaultsEdge.
+//
+// Run:  node week-1-js/05-destructuring.js         all checks
+//       node week-1-js/05-destructuring.js head    only checks matching "head"
+// Run after EVERY function. A function you have not written yet reports as
+// "not written yet", it does not fail.
 
 const user = {
   name: "Ada",
@@ -50,52 +55,19 @@ function defaultsEdge() {
 
 // --- 5, spoken, nothing to write ------------------------------
 // Say out loud, before running the tests:
-//   a) the rename syntax, { email: mail }, and which side is the new variable
+//   a) the rename syntax, { email: mail }, and which side is the new variable -- left is old, right is new one
 //   b) what happens when you destructure a nested object that is not there,
-//      and the two ways to keep it from blowing up
+//      and the two ways to keep it from blowing up -- make init value and second one I don't know
 //   c) destructuring in the parameter list vs in the body - what actually changes
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
 
-const assert = require("node:assert");
+const { runChecks } = require("../lib/checks");
 
-const show = (v) =>
-  v === undefined ? "undefined"
-  : typeof v === "string" ? JSON.stringify(v)
-  : Array.isArray(v) ? "[" + v.map((x) => show(x)).join(", ") + "]"
-  : typeof v === "object" && v !== null ? JSON.stringify(v)
-  : String(v);
-
-const checks = [
-  ["greet", () => greet(user), "Ada from Warsaw"],
-  ["firstTag", () => firstTag(user), "admin"],
-  ["splitHead", () => splitHead([1, 2, 3]), { head: 1, tail: [2, 3] }],
-  ["defaultsEdge", () => defaultsEdge(), ["fallback", null]],
-];
-
-let failed = 0;
-for (const [name, run, expected] of checks) {
-  let actual, threw = null;
-  try {
-    actual = run();
-  } catch (err) {
-    threw = err;
-  }
-  if (threw) {
-    failed++;
-    console.log(`  ERR  ${name} - it threw, so nothing was compared`);
-    console.log(`       ${threw.name}: ${threw.message}`);
-    continue;
-  }
-  try {
-    assert.deepStrictEqual(actual, expected);
-    console.log(`  OK  ${name}`);
-  } catch {
-    failed++;
-    console.log(`  FAIL ${name}`);
-    console.log(`       expected: ${show(expected)}`);
-    console.log(`       received: ${show(actual)}`);
-  }
-}
-console.log(failed === 0 ? "\nAll green. Was it narrated out loud? If not, it is 🔁\n" : `\nFailed: ${failed}. Fix and run again.\n`);
+runChecks([
+  { name: "greet", fn: greet, run: () => greet(user), expected: "Ada from Warsaw" },
+  { name: "firstTag", fn: firstTag, run: () => firstTag(user), expected: "admin" },
+  { name: "splitHead", fn: splitHead, run: () => splitHead([1, 2, 3]), expected: { head: 1, tail: [2, 3] } },
+  { name: "defaultsEdge", fn: defaultsEdge, run: () => defaultsEdge(), expected: ["fallback", null] },
+]);

@@ -63,44 +63,11 @@ function emptyBehaviour() {
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
 
-const assert = require("node:assert");
+const { runChecks } = require("../lib/checks");
 
-const show = (v) =>
-  v === undefined ? "undefined"
-  : typeof v === "string" ? JSON.stringify(v)
-  : Array.isArray(v) ? "[" + v.map((x) => show(x)).join(", ") + "]"
-  : typeof v === "object" && v !== null ? JSON.stringify(v)
-  : String(v);
-
-const checks = [
-  ["totalPrice", () => totalPrice(cart), 510],
-  ["orderTotal", () => orderTotal(cart), 930],
-  ["mostExpensive", () => mostExpensive(cart), cart[0]],
-  ["emptyBehaviour", () => emptyBehaviour(), [0, true]],
-];
-
-let failed = 0;
-for (const [name, run, expected] of checks) {
-  let actual, threw = null;
-  try {
-    actual = run();
-  } catch (err) {
-    threw = err;
-  }
-  if (threw) {
-    failed++;
-    console.log(`  ERR  ${name} - it threw, so nothing was compared`);
-    console.log(`       ${threw.name}: ${threw.message}`);
-    continue;
-  }
-  try {
-    assert.deepStrictEqual(actual, expected);
-    console.log(`  OK  ${name}`);
-  } catch {
-    failed++;
-    console.log(`  FAIL ${name}`);
-    console.log(`       expected: ${show(expected)}`);
-    console.log(`       received: ${show(actual)}`);
-  }
-}
-console.log(failed === 0 ? "\nAll green. Was it narrated out loud? If not, it is 🔁\n" : `\nFailed: ${failed}. Fix and run again.\n`);
+runChecks([
+  { name: "totalPrice", fn: totalPrice, run: () => totalPrice(cart), expected: 510 },
+  { name: "orderTotal", fn: orderTotal, run: () => orderTotal(cart), expected: 930 },
+  { name: "mostExpensive", fn: mostExpensive, run: () => mostExpensive(cart), expected: cart[0] },
+  { name: "emptyBehaviour", fn: emptyBehaviour, run: () => emptyBehaviour(), expected: [0, true] },
+]);

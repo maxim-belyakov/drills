@@ -45,24 +45,10 @@ function toLabels(list) {
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
 
-const assert = require("node:assert");
+const { runChecks } = require("../lib/checks");
 
-const checks = [
-  ["getIds", () => getIds(users), [7, 12, 3]],
-  ["getNames", () => getNames(users), ["Ada", "Linus", "Grace"]],
-  ["toLabels", () => toLabels(users), ["7: Ada", "12: Linus", "3: Grace"]],
-];
-
-let failed = 0;
-for (const [name, run, expected] of checks) {
-  try {
-    assert.deepStrictEqual(run(), expected);
-    console.log(`  OK  ${name}`);
-  } catch (e) {
-    failed++;
-    console.log(`  FAIL ${name}`);
-    console.log(`       expected: ${JSON.stringify(expected)}`);
-    console.log(`       received: ${e instanceof assert.AssertionError ? JSON.stringify(e.actual) : e.name + ": " + e.message}`);
-  }
-}
-console.log(failed === 0 ? "\nAll green. Mark it ✅\n" : `\nFailed: ${failed}. Fix and run again.\n`);
+runChecks([
+  { name: "getIds", fn: getIds, run: () => getIds(users), expected: [7, 12, 3] },
+  { name: "getNames", fn: getNames, run: () => getNames(users), expected: ["Ada", "Linus", "Grace"] },
+  { name: "toLabels", fn: toLabels, run: () => toLabels(users), expected: ["7: Ada", "12: Linus", "3: Grace"] },
+]);
