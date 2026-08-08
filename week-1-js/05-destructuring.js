@@ -21,8 +21,8 @@ const user = {
 // greet(user) -> "Ada from Warsaw"
 // Destructure in the PARAMETER LIST, not in the body. Nested, two levels.
 
-function greet({}) {
-  // here
+function greet({ name, address: { city } }) {
+  return `${name} from ${city}`
 }
 
 // --- 2 --------------------------------------------------------
@@ -31,7 +31,8 @@ function greet({}) {
 // default in case tags comes back empty. No indexing with [0].
 
 function firstTag(u) {
-  // here
+  const [ first = 'none', ...rest ] = u.tags;
+  return first;
 }
 
 // --- 3 --------------------------------------------------------
@@ -39,7 +40,8 @@ function firstTag(u) {
 // Array destructuring with rest. Return an object with both.
 
 function splitHead(list) {
-  // here
+  const [ head, ...tail ] = list;
+  return { head, tail };
 }
 
 // --- 4 --------------------------------------------------------
@@ -50,14 +52,16 @@ function splitHead(list) {
 // One of them is not what most people expect, and that is the whole drill.
 
 function defaultsEdge() {
-  // here
+  const { a: aWithU = 'fallback' } = { a: undefined }
+  const { a: aWithN = 'fallback' } = { a: null }
+  return [ aWithU, aWithN ];
 }
 
 // --- 5, spoken, nothing to write ------------------------------
 // Say out loud, before running the tests:
 //   a) the rename syntax, { email: mail }, and which side is the new variable -- left is old, right is new one
 //   b) what happens when you destructure a nested object that is not there,
-//      and the two ways to keep it from blowing up -- make init value and second one I don't know
+//      and the two ways to keep it from blowing up -- make init value and second one will not give you a way to catch the error
 //   c) destructuring in the parameter list vs in the body - what actually changes
 
 // --------------------------------------------------------------
@@ -66,7 +70,9 @@ function defaultsEdge() {
 const { runChecks } = require("../lib/checks");
 
 runChecks([
-  { name: "greet", fn: greet, run: () => greet(user), expected: "Ada from Warsaw" },
+  // deliberately a DIFFERENT object from the module-level `user`, so a function
+  // that ignores its parameter cannot pass
+  { name: "greet", fn: greet, run: () => greet({ name: "Linus", address: { city: "Helsinki" } }), expected: "Linus from Helsinki" },
   { name: "firstTag", fn: firstTag, run: () => firstTag(user), expected: "admin" },
   { name: "splitHead", fn: splitHead, run: () => splitHead([1, 2, 3]), expected: { head: 1, tail: [2, 3] } },
   { name: "defaultsEdge", fn: defaultsEdge, run: () => defaultsEdge(), expected: ["fallback", null] },
