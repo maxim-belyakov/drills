@@ -6,6 +6,11 @@
 // Rules: write from memory, saying out loud what you are doing.
 // Peeked - that is 🔁, the drill comes back in a day. That is fine.
 //
+// SPACED REPEAT #1 - 2026-08-09, six days after it was first closed.
+// Closed drills come back: a day later, then a week later. Nothing to look at,
+// no example. Should take about five minutes. If it takes longer, it needed to
+// come back.
+//
 // Run:  node week-1-js/01-map-ids.js
 
 const users = [
@@ -18,7 +23,7 @@ const users = [
 // getIds(users) must return [7, 12, 3]
 
 function getIds(list) {
-  return list.map(item => item.id)
+  // here
 }
 
 // --- 2 --------------------------------------------------------
@@ -26,7 +31,7 @@ function getIds(list) {
 // Same drill, different field. Write it without looking up.
 
 function getNames(list) {
-  return list.map(item => item.name)
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -34,7 +39,7 @@ function getNames(list) {
 // map plus a template literal.
 
 function toLabels(list) {
-  return list.map(item => `${item.id}: ${item.name}`)
+  // here
 }
 
 // --- 4, spoken, nothing to write ------------------------------
