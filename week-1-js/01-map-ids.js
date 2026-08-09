@@ -23,7 +23,7 @@ const users = [
 // getIds(users) must return [7, 12, 3]
 
 function getIds(list) {
-  // here
+  return list.map(item => item.id);
 }
 
 // --- 2 --------------------------------------------------------
@@ -31,7 +31,7 @@ function getIds(list) {
 // Same drill, different field. Write it without looking up.
 
 function getNames(list) {
-  // here
+  return list.map(item => item.name);
 }
 
 // --- 3 --------------------------------------------------------
@@ -39,7 +39,7 @@ function getNames(list) {
 // map plus a template literal.
 
 function toLabels(list) {
-  // here
+  return list.map(item => `${item.id}: ${item.name}`);
 }
 
 // --- 4, spoken, nothing to write ------------------------------
