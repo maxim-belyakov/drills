@@ -20,7 +20,7 @@ const order = {
 // in Redux and useState.
 
 function withStatus(o, status) {
-  // here
+  return { ...o, status };
 }
 
 // --- 2 --------------------------------------------------------
@@ -28,15 +28,15 @@ function withStatus(o, status) {
 // One new array, neither input touched.
 
 function mergeLists(a, b) {
-  // here
+  return [ ...a, ...b ];
 }
 
 // --- 3 --------------------------------------------------------
 // sum(1, 2, 3) -> 6, sum() -> 0
 // Collect the arguments with rest in the parameter list. No `arguments`.
 
-function sum() {
-  // here
+function sum( ...sum ) {
+  return sum.reduce((sum, line) => sum + line, 0);
 }
 
 // --- 4 --------------------------------------------------------
@@ -47,15 +47,17 @@ function sum() {
 // Do not hardcode. Expected: ["Krakow", "Krakow"] - and that is the lesson.
 
 function shallowProof() {
-  // here
+  const copyOrder = {...order};
+  copyOrder.customer.city = "Krakow";
+  return [ order.customer.city, copyOrder.customer.city ]
 }
 
 // --- 5, spoken, nothing to write ------------------------------
 // Say out loud, before running the tests:
 //   a) in { ...a, ...b } which side wins on a shared key, and what changes
-//      between { ...o, id: 1 } and { id: 1, ...o }
-//   b) rest in the parameter list vs the old `arguments` object - two differences
-//   c) you need a real deep copy. What do you reach for, and what does it cost
+//      between { ...o, id: 1 } and { id: 1, ...o } - ...b wins, and "...o" wins as last word
+//   b) rest in the parameter list vs the old `arguments` object - two differences -- good question, rest is createting a new varible, and arguments is direct call of the props, it's two usful instremnts working differently, i don't know exactly how 
+//   c) you need a real deep copy. What do you reach for, and what does it cost -- you need to use Object.assign(), the cost is O(n) for time and space
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.

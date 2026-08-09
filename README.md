@@ -23,8 +23,8 @@ Only the third counts as closed.
 ## Counter
 
 Start: 2026-08-03
-Closed cold: **5 of 40**
-Day streak: **6**
+Closed cold: **6 of 40**
+Day streak: **7**
 
 ## Log
 
@@ -36,3 +36,4 @@ Day streak: **6**
 | 2026-08-06 | 04 group by | 🔁 peeked at the example. Green afterwards, narrated out loud throughout. Systematic miss: forgot the `{}` initial value in all four - one habit, not four mistakes. Returns tomorrow |
 | 2026-08-07 | 04 group by, second pass | ✅ cold, no example, narrated out loud. The initial value was there in all four this time. Chose `??=` over `||=` unprompted - correct for both the array and the counter |
 | 2026-08-08 | 05 destructuring, second pass | ✅ cold, no example, narrated out loud. `greet` was green for the wrong reason at first - it read the module-level object instead of its parameter; check hardened, then fixed |
+| 2026-08-09 | repeat 01 + 06 spread and rest | ✅ repeat 01 green on the first re-run after six days, under five minutes. 06 all five checks cold, narrated. Spoken parts (b) rest vs `arguments` and (c) deep copy needed support |
