@@ -22,14 +22,14 @@ const users = [
 // activeUsers(users) must return the two whole objects whose active is true
 
 function activeUsers(list) {
-  // here
+  return list.filter(item => item.active);
 }
 
 // --- 2 --------------------------------------------------------
 // findByName(users, "Grace") must return the Grace object itself, not an array
 
 function findByName(list, name) {
-  // here
+  return list.find(item => item.name === name);
 }
 
 // --- 3 --------------------------------------------------------
@@ -37,7 +37,7 @@ function findByName(list, name) {
 // filter first, then map. Say out loud why that order and not the other one.
 
 function activeIds(list) {
-  // here
+  return list.filter(item => item.active).map(item => item.id);
 }
 
 // --- 4 --------------------------------------------------------
@@ -46,7 +46,7 @@ function activeIds(list) {
 // Do not hardcode it. Actually call filter and find with a predicate that never matches.
 
 function noMatch(list) {
-  // here
+  return [ list.filter(item => item.name === 'Maksim'),list.find(item => item.name === 'Maksim') ]
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -61,19 +61,19 @@ function noMatch(list) {
 
 // hasInactive(users) -> true   (is there at least one inactive user)
 function hasInactive(list) {
-  // here
+  return list.some(item => item.active);
 }
 
 // allHaveId(users) -> true     (does every user have an id)
 function allHaveId(list) {
-  // here
+  return list.every(item => item.id);
 }
 
 // emptyEdge() -> [false, true]
 // Call some and every on an EMPTY array. some with any predicate, every with any predicate.
 // Do not hardcode. The result is the whole lesson.
 function emptyEdge() {
-  // here
+  return [ [].some(i => i.id),[].every(i => i.id) ]
 }
 
 // --------------------------------------------------------------
