@@ -13,6 +13,8 @@ When the timer rings, stop - even if it is going well.
 write it from memory, **saying out loud what you are doing** → run it.
 Passes ✅. Peeked 🔁, comes back in a day.
 
+**First pass gets a worked example, repeats do not.** Every drill opened for the first time starts with 3-5 minutes looking at a working analogue - that is the format, not a concession. A drill coming back as 🔁 or as a spaced repeat gets nothing: it has been seen.
+
 **Week 2 rhythm (from 2026-08-09):** every session is **one new drill plus a cold re-run of the oldest closed drill**, about five minutes extra. The programme's spaced repeat - a day later, then a week later - was not happening; this makes it part of the session instead of a separate intention.
 
 **Every closed drill ends with a commit AND a push**, in the same sitting - no unpushed work left overnight.
