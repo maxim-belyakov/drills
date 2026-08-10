@@ -6,6 +6,10 @@
 // Green but silent counts as 🔁, not ✅. Talking under load is the half that breaks
 // in real rounds, so it is trained here.
 //
+// SPACED REPEAT #1 - 2026-08-10, six days after it was first closed.
+// No example, nothing to look at. Part 6 (some/every) is included - that is the
+// half that was fuzzy the first time.
+//
 // Run:  node week-1-js/02-filter-find.js
 
 const users = [
@@ -18,14 +22,14 @@ const users = [
 // activeUsers(users) must return the two whole objects whose active is true
 
 function activeUsers(list) {
-  return list.filter(item => item.active);
+  // here
 }
 
 // --- 2 --------------------------------------------------------
 // findByName(users, "Grace") must return the Grace object itself, not an array
 
 function findByName(list, name) {
-  return list.find(item => item.name === name);
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -33,7 +37,7 @@ function findByName(list, name) {
 // filter first, then map. Say out loud why that order and not the other one.
 
 function activeIds(list) {
-  return list.filter(item => item.active).map(item => item.id);
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -42,7 +46,7 @@ function activeIds(list) {
 // Do not hardcode it. Actually call filter and find with a predicate that never matches.
 
 function noMatch(list) {
-  return [ list.filter(item => item.name === 'foobar'), list.find(item => item.id === 1)]
+  // here
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -57,19 +61,19 @@ function noMatch(list) {
 
 // hasInactive(users) -> true   (is there at least one inactive user)
 function hasInactive(list) {
-  return list.some(item => !item.active);
+  // here
 }
 
 // allHaveId(users) -> true     (does every user have an id)
 function allHaveId(list) {
-  return list.every(item => item.id)
+  // here
 }
 
 // emptyEdge() -> [false, true]
 // Call some and every on an EMPTY array. some with any predicate, every with any predicate.
 // Do not hardcode. The result is the whole lesson.
 function emptyEdge() {
-  return [ [].some(item => item.name === '123'), [].every(item => item.name === '123') ]
+  // here
 }
 
 // --------------------------------------------------------------
