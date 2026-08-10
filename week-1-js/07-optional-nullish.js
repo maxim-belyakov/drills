@@ -10,15 +10,18 @@
 
 const full = { name: "Ada", address: { city: "Warsaw" }, greet: () => "hi" };
 const bare = { name: "Linus" };
+// a real city that is an empty string - a legitimate value, not a missing one
+const blank = { name: "Grace", address: { city: "" } };
 
 // --- 1 --------------------------------------------------------
 // cityOf(full) -> "Warsaw"
 // cityOf(bare) -> "unknown"      (no address at all)
-// cityOf(null) -> "unknown"      (nothing at all, must not throw)
-// One expression, no if.
+// cityOf(null)  -> "unknown"     (nothing at all, must not throw)
+// cityOf(blank) -> ""            (the city IS an empty string - keep it)
+// One expression, no if. Pick the operator that can tell "empty" from "absent".
 
 function cityOf(u) {
-  // here
+  return u?.address?.city ?? 'unknown';
 }
 
 // --- 2 --------------------------------------------------------
@@ -27,7 +30,7 @@ function cityOf(u) {
 // Call the method optionally. No typeof check, no if.
 
 function callGreet(u) {
-  // here
+  return u.greet?.();
 }
 
 // --- 3 --------------------------------------------------------
@@ -37,7 +40,10 @@ function callGreet(u) {
 // Write the operators for real, do not hardcode. Expected: [0, "fallback", "", "fallback"]
 
 function nullishVsOr() {
-  // here
+  return [
+    0 ?? 'fallback', 0 || 'fallback',
+    '' ?? 'fallback', '' || 'fallback'
+  ]
 }
 
 // --- 4 --------------------------------------------------------
@@ -48,7 +54,16 @@ function nullishVsOr() {
 // One ?. guards ONE step, and that is the whole drill.
 
 function chainTrap() {
-  // here
+  let present = {};
+  let missing = null;
+  try {
+    a = {}?.a.b;
+  } catch {
+    a = true;
+  }
+  return [
+    missing?.a.b, a
+  ]
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -66,6 +81,7 @@ runChecks([
   { name: "cityOf full", fn: cityOf, run: () => cityOf(full), expected: "Warsaw" },
   { name: "cityOf bare", fn: cityOf, run: () => cityOf(bare), expected: "unknown" },
   { name: "cityOf null", fn: cityOf, run: () => cityOf(null), expected: "unknown" },
+  { name: "cityOf blank", fn: cityOf, run: () => cityOf(blank), expected: "" },
   { name: "callGreet full", fn: callGreet, run: () => callGreet(full), expected: "hi" },
   { name: "callGreet bare", fn: callGreet, run: () => callGreet(bare), expected: undefined },
   { name: "nullishVsOr", fn: nullishVsOr, run: () => nullishVsOr(), expected: [0, "fallback", "", "fallback"] },

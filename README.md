@@ -25,8 +25,8 @@ Only the third counts as closed.
 ## Counter
 
 Start: 2026-08-03
-Closed cold: **6 of 40**
-Day streak: **7**
+Closed cold: **7 of 40**
+Day streak: **8**
 
 ## Log
 
@@ -39,3 +39,4 @@ Day streak: **7**
 | 2026-08-07 | 04 group by, second pass | ✅ cold, no example, narrated out loud. The initial value was there in all four this time. Chose `??=` over `||=` unprompted - correct for both the array and the counter |
 | 2026-08-08 | 05 destructuring, second pass | ✅ cold, no example, narrated out loud. `greet` was green for the wrong reason at first - it read the module-level object instead of its parameter; check hardened, then fixed |
 | 2026-08-09 | repeat 01 + 06 spread and rest | ✅ repeat 01 green on the first re-run after six days, under five minutes. 06 all five checks cold, narrated. Spoken parts (b) rest vs `arguments` and (c) deep copy needed support |
+| 2026-08-10 | repeat 02 + 07 optional chaining and nullish | ✅ repeat 02 green on the first re-run including some/every. 07 green, but two functions were green for the wrong reason until the check was hardened: `||` where `??` was the point, and a chainTrap that only worked because the throw always happened. First pass had no worked example - my miss, now a written rule |
