@@ -5,6 +5,9 @@
 //   2. narrated out loud WHILE typing
 // Green but silent is 🔁, not ✅.
 //
+// SPACED REPEAT #1 - 2026-08-11, six days after it was first closed.
+// No example. Watch what the hand does when it reaches the closing bracket.
+//
 // Run:  node week-1-js/03-reduce-sum.js
 
 const cart = [
@@ -17,14 +20,14 @@ const cart = [
 // totalPrice(cart) -> 510        (just the prices, ignore qty)
 
 function totalPrice(list) {
-  return list.reduce((sum, line) => sum + line.price, 0);
+  // here
 }
 
 // --- 2 --------------------------------------------------------
 // orderTotal(cart) -> 930        (price * qty for each line, then summed)
 
 function orderTotal(list) {
-  return list.reduce((sum, line) => sum + line.price * line.qty, 0);
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -33,7 +36,7 @@ function orderTotal(list) {
 // a number. It can be an object, and it starts as one of the items.
 
 function mostExpensive(list) {
-  return list.reduce((best, line) => line.price > best.price ? line : best, list[0]);
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -44,13 +47,7 @@ function mostExpensive(list) {
 // Expected: [0, true]
 
 function emptyBehaviour() {
-  let empryReduceWithoutInitial;
-  try {
-    [].reduce((sum, line) => line + sum)
-  } catch {
-    empryReduceWithoutInitial = true
-  }
-  return [[].reduce((sum, line) => sum + line, 0), empryReduceWithoutInitial]
+  // here
 }
 
 // --- 5, spoken, nothing to write ------------------------------
