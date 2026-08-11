@@ -47,8 +47,9 @@ function mostExpensive(list) {
 // Expected: [0, true]
 
 function emptyBehaviour() {
+  let emptyArrayWithoutInitialValue = false;
   try {
-    let emptyArrayWithoutInitialValue = [].reduce((acc, line) => acc + line)
+    [].reduce((acc, line) => acc + line);
   } catch {
     emptyArrayWithoutInitialValue = true;
   }
