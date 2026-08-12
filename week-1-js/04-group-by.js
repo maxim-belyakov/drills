@@ -1,6 +1,6 @@
 // Drill 4 - reduce into an object: grouping, counting, indexing
 //
-// SECOND PASS, 2026-08-07. First pass was 🔁 - the example got opened.
+// SPACED REPEAT - 2026-08-12. Previously: 2026-08-07 second pass. First pass was 🔁 - the example got opened.
 // This time: no example, nothing above, from memory only.
 // Yesterday's misses, in case they repeat - do not look them up, just notice:
 // the initial value went missing in all four.
@@ -25,10 +25,7 @@ const orders = [
 // Whole objects in the buckets, not skus.
 
 function groupByStatus(list) {
-  return list.reduce((acc, line) => {
-    (acc[line.status] ??= []).push(line);
-    return acc;
-  }, {})
+  // here
 }
 
 // --- 2 --------------------------------------------------------
@@ -36,11 +33,7 @@ function groupByStatus(list) {
 // Same shape of loop, numbers instead of arrays.
 
 function countByStatus(list) {
-  return list.reduce((acc, line) => {
-    acc[line.status] ??= 0;
-    acc[line.status] += 1 
-    return acc;
-  }, {})
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -49,10 +42,7 @@ function countByStatus(list) {
 // the same idea as a HashMap. Say that part out loud, it is a known gap.
 
 function indexBySku(list) {
-  return list.reduce((acc, line) => {
-    acc[line.sku] = line;
-    return acc;
-  }, {})
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -61,12 +51,7 @@ function indexBySku(list) {
 // Two things happen at once here and both are the lesson. Do not hardcode.
 
 function keyTypes() {
-  const numListPriority = orders.reduce((acc, line) => {
-    (acc[line.priority] ??= []).push(line);
-    return acc;
-  }, {})
-
-  return Object.keys(numListPriority);
+  // here
 }
 
 // --- 5, spoken, nothing to write ------------------------------

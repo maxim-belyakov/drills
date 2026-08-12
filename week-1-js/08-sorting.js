@@ -4,6 +4,9 @@
 //   1. all four from memory, no hints, under 90 seconds each, tests green
 //   2. narrated out loud WHILE typing
 //
+// SECOND PASS - 2026-08-12. First pass was 🔁: the spelling of localeCompare
+// got looked up, and byName mutated the shared array. No example this time.
+//
 // Run:  node week-1-js/08-sorting.js         all checks
 //       node week-1-js/08-sorting.js trap    only checks matching "trap"
 // Run after EVERY function.
@@ -20,7 +23,7 @@ const items = [
 // Both are checked separately. The second one is the point of the drill.
 
 function sortedPrices(list) {
-  return list.toSorted((a, b) => a.price - b.price).map(item => item.price);
+  // here
 }
 
 // --- 2 --------------------------------------------------------
@@ -28,7 +31,7 @@ function sortedPrices(list) {
 // Sort the objects by their name field, return just the names.
 
 function byName(list) {
-  return list.toSorted((a, b) => a.name.localeCompare(b.name)).map(item => item.name);
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -36,7 +39,7 @@ function byName(list) {
 // Sort by price, most expensive first, return the skus.
 
 function byPriceDesc(list) {
-  return list.toSorted((a, b) => b.price - a.price).map(item => item.sku);
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -46,7 +49,7 @@ function byPriceDesc(list) {
 // The answer looks wrong until you know what sort does before comparing.
 
 function defaultTrap() {
-  return [10, 9, 100, 1].sort()
+  // here
 }
 
 // --- 5, spoken, nothing to write ------------------------------
