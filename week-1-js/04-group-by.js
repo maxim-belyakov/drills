@@ -25,7 +25,10 @@ const orders = [
 // Whole objects in the buckets, not skus.
 
 function groupByStatus(list) {
-  // here
+  return list.reduce((acc, line) => {
+    (acc[line.status] ??= []).push(line)
+    return acc;
+  }, {})
 }
 
 // --- 2 --------------------------------------------------------
@@ -33,7 +36,11 @@ function groupByStatus(list) {
 // Same shape of loop, numbers instead of arrays.
 
 function countByStatus(list) {
-  // here
+  return list.reduce((acc, line) => {
+    acc[line.status] ??= 0;
+    acc[line.status] += 1;
+    return acc;
+  }, {})
 }
 
 // --- 3 --------------------------------------------------------
@@ -42,16 +49,23 @@ function countByStatus(list) {
 // the same idea as a HashMap. Say that part out loud, it is a known gap.
 
 function indexBySku(list) {
-  // here
+  return list.reduce((acc, line) => {
+    acc[line.sku] = line;
+    return acc;
+  }, {})
 }
 
 // --- 4 --------------------------------------------------------
-// keyTypes() must group `orders` by the NUMERIC field `priority`
+// keyTypes(orders) must group the list by the NUMERIC field `priority`
 // and return Object.keys(...) of the result.
 // Two things happen at once here and both are the lesson. Do not hardcode.
 
-function keyTypes() {
-  // here
+function keyTypes(list) {
+  const ordersByPriority = orders.reduce((acc, line) => {
+    (acc[line.priority] ??= []).push(line);
+    return acc;
+  }, {})
+  return Object.keys(ordersByPriority);
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -71,5 +85,5 @@ runChecks([
   { name: "groupByStatus", fn: groupByStatus, run: () => groupByStatus(orders), expected: { paid: [orders[0], orders[2]], pending: [orders[1]] } },
   { name: "countByStatus", fn: countByStatus, run: () => countByStatus(orders), expected: { paid: 2, pending: 1 } },
   { name: "indexBySku", fn: indexBySku, run: () => indexBySku(orders), expected: { "A-1": orders[0], "B-7": orders[1], "C-2": orders[2] } },
-  { name: "keyTypes", fn: keyTypes, run: () => keyTypes(), expected: ["1", "2"] },
+  { name: "keyTypes", fn: keyTypes, run: () => keyTypes(orders), expected: ["1", "2"] },
 ]);
