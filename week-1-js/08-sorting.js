@@ -23,7 +23,7 @@ const items = [
 // Both are checked separately. The second one is the point of the drill.
 
 function sortedPrices(list) {
-  // here
+  return [...list].sort((a, b) => a.price - b.price).map(item => item.price);
 }
 
 // --- 2 --------------------------------------------------------
@@ -31,7 +31,7 @@ function sortedPrices(list) {
 // Sort the objects by their name field, return just the names.
 
 function byName(list) {
-  // here
+  return list.toSorted((a, b) => a.name.localeCompare(b.name)).map(item => item.name);
 }
 
 // --- 3 --------------------------------------------------------
@@ -39,7 +39,7 @@ function byName(list) {
 // Sort by price, most expensive first, return the skus.
 
 function byPriceDesc(list) {
-  // here
+  return [...list].sort((a, b) => b.price - a.price).map(item => item.sku);
 }
 
 // --- 4 --------------------------------------------------------
@@ -49,7 +49,7 @@ function byPriceDesc(list) {
 // The answer looks wrong until you know what sort does before comparing.
 
 function defaultTrap() {
-  // here
+  return [10, 9, 100, 1].sort();
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -57,7 +57,7 @@ function defaultTrap() {
 //   a) the comparator gets (a, b) and returns a number. What do a negative,
 //      a positive and a zero each mean -- negative - a goes eirlier b, positive - vice versa, zero -- nothing changes
 //   b) why [10, 9, 100, 1].sort() gives what it gives - what happens to the
-//      elements before they are compared
+//      elements before they are compared - because it sorted by A-Z
 //   c) sort has been stable since ES2019. What does stable mean, and why does it
 //      let you sort by two keys with two separate sorts
 
