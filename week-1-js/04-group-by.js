@@ -61,7 +61,7 @@ function indexBySku(list) {
 // Two things happen at once here and both are the lesson. Do not hardcode.
 
 function keyTypes(list) {
-  const ordersByPriority = orders.reduce((acc, line) => {
+  const ordersByPriority = list.reduce((acc, line) => {
     (acc[line.priority] ??= []).push(line);
     return acc;
   }, {})
