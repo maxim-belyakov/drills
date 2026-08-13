@@ -21,8 +21,8 @@ const user = {
 // greet(user) -> "Ada from Warsaw"
 // Destructure in the PARAMETER LIST, not in the body. Nested, two levels.
 
-function greet({}) {
-  // here
+function greet({ name, address: { city } }) {
+  return `${name} from ${city}`;
 }
 
 // --- 2 --------------------------------------------------------
@@ -31,7 +31,8 @@ function greet({}) {
 // default in case tags comes back empty. No indexing with [0].
 
 function firstTag(u) {
-  // here
+  const [ firstTag, ...rest ] = u.tags;
+  return firstTag;
 }
 
 // --- 3 --------------------------------------------------------
@@ -39,7 +40,8 @@ function firstTag(u) {
 // Array destructuring with rest. Return an object with both.
 
 function splitHead(list) {
-  // here
+  const [ head, ...tail ] = list;
+  return { head, tail };
 }
 
 // --- 4 --------------------------------------------------------
@@ -50,7 +52,12 @@ function splitHead(list) {
 // One of them is not what most people expect, and that is the whole drill.
 
 function defaultsEdge() {
-  // here
+   const { a: defaultUndefined = 'fallback' } = { a: undefined };
+   const { a: defaultNull = 'fallback' } = { a: null };
+  return [
+    defaultUndefined,
+    defaultNull
+  ]
 }
 
 // --- 5, spoken, nothing to write ------------------------------
