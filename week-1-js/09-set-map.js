@@ -82,7 +82,11 @@ function identityEdge() {
 // Say out loud, before running the tests:
 //   a) a Set versus an array for "have I seen this already" - what changes, and
 //      at what size does it stop mattering -- Set give 0(1) time compexety
-//   b) three concrete reasons to reach for a Map instead of a plain object - ?
+//   b) three concrete reasons to reach for a Map instead of a plain object - 
+//      1 just object has only string keys, Map has whatever as keys
+//      2 Map not changing the orders of the keys, object always sorting ans ordering it
+//      3 do not have proto keys: toString etc + size better than Object.keys(o).length
+//      BUT just Object is better then you need JSON.stringify
 //   c) how you get a plain array back out of a Set, and out of a Map -- spread instrument [...a]
 
 // --------------------------------------------------------------
