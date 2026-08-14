@@ -27,8 +27,8 @@ Only the third counts as closed.
 ## Counter
 
 Start: 2026-08-03
-Closed cold: **8 of 40**
-Day streak: **10**
+Closed cold: **9 of 40**
+Day streak: **12**
 
 ## Log
 
@@ -43,3 +43,4 @@ Day streak: **10**
 | 2026-08-09 | repeat 01 + 06 spread and rest | ✅ repeat 01 green on the first re-run after six days, under five minutes. 06 all five checks cold, narrated. Spoken parts (b) rest vs `arguments` and (c) deep copy needed support |
 | 2026-08-10 | repeat 02 + 07 optional chaining and nullish | ✅ repeat 02 green on the first re-run including some/every. 07 green, but two functions were green for the wrong reason until the check was hardened: `||` where `??` was the point, and a chainTrap that only worked because the throw always happened. First pass had no worked example - my miss, now a written rule |
 | 2026-08-12 | repeat 04 + 08 sorting, second pass | ✅ 04 closed after five self-corrected iterations - the seed came back on its own, the accumulator SHAPE did not. 08 cold, localeCompare written unaided this time. sortedPrices took three tries, all of them tuning the operator while the real fault was the operands |
+| 2026-08-14 | 05 third pass + 09 Set and Map, second pass | ✅ both cold, fresh examples on new data. 05 clean in one go after failing the same two spots twice. 09 self-corrected without looking anything up; `??=` on a function result was the only real block |

@@ -24,7 +24,12 @@ const words = ["tea", "coffee", "tea", "tea", "water"];
 // An ARRAY back, not a Set. Order of first appearance is preserved.
 
 function unique(list) {
-  // here
+  const seen = new Set();
+  for (const item of list) {
+    if (seen.has(item)) continue;
+    seen.add(item);
+  }
+  return [...seen]
 }
 
 // --- 2 --------------------------------------------------------
@@ -33,7 +38,14 @@ function unique(list) {
 // A plain Set of the objects will not do this - think about what you put in it.
 
 function uniqueBySku(list) {
-  // here
+  const seen = new Set();
+  const rows = [];
+  for (const item of list) {
+    if (seen.has(item.sku)) continue;
+    seen.add(item.sku);
+    rows.push(item);
+  }
+  return rows;
 }
 
 // --- 3 --------------------------------------------------------
@@ -41,7 +53,11 @@ function uniqueBySku(list) {
 // Return a real Map, not an object. Insertion order is first appearance.
 
 function countBy(list) {
-  // here
+  const itemsMap = new Map();
+  for (const item of list) {
+    itemsMap.set(item, (itemsMap.get(item) ?? 0) + 1);
+  }
+  return itemsMap;
 }
 
 // --- 4 --------------------------------------------------------
@@ -53,7 +69,11 @@ function countBy(list) {
 // Two of the three surprise people. Expected: [2, 1, false]
 
 function identityEdge() {
-  // here
+  return [
+    new Set([{}, {}]).size,
+    new Set([NaN, NaN]).size,
+    NaN === NaN
+  ]
 }
 
 // --- 5, spoken, nothing to write ------------------------------
