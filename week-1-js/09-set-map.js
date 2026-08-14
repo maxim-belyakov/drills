@@ -4,6 +4,9 @@
 //   1. all four from memory, no hints, under 90 seconds each, tests green
 //   2. narrated out loud WHILE typing
 //
+// SECOND PASS - 2026-08-14. First pass was 🔁: countBy got looked up.
+// Fresh example given, different data.
+//
 // Run:  node week-1-js/09-set-map.js          all checks
 //       node week-1-js/09-set-map.js edge     only checks matching "edge"
 // Run after EVERY function.
@@ -21,13 +24,7 @@ const words = ["tea", "coffee", "tea", "tea", "water"];
 // An ARRAY back, not a Set. Order of first appearance is preserved.
 
 function unique(list) {
-  const u = new Set();
-  list.map(item => {
-    if (u.has(item)) return;
-    u.add(item);
-  })
-
-  return [...u];
+  // here
 }
 
 // --- 2 --------------------------------------------------------
@@ -36,16 +33,7 @@ function unique(list) {
 // A plain Set of the objects will not do this - think about what you put in it.
 
 function uniqueBySku(list) {
-  const seen = new Set();
-  const filtered = list.filter(item => {
-    if (seen.has(item.sku)) {
-      return false
-    };
-    seen.add(item.sku);
-    return true
-  })
-
-  return filtered;
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -53,13 +41,7 @@ function uniqueBySku(list) {
 // Return a real Map, not an object. Insertion order is first appearance.
 
 function countBy(list) {
-  const itemsMap = new Map();
-
-  for (const item of list) {
-    itemsMap.set(item, (itemsMap.get(item) ?? 0) + 1);
-  }
-
-  return itemsMap;
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -71,11 +53,7 @@ function countBy(list) {
 // Two of the three surprise people. Expected: [2, 1, false]
 
 function identityEdge() {
-  return [
-    new Set([{}, {}]).size,
-    new Set([NaN, NaN]).size,
-    NaN === NaN
-  ]
+  // here
 }
 
 // --- 5, spoken, nothing to write ------------------------------

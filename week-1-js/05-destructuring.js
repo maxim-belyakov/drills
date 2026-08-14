@@ -4,7 +4,9 @@
 //   1. all four from memory, no hints, under 90 seconds each, tests green
 //   2. narrated out loud WHILE typing
 //
-// SPACED REPEAT - 2026-08-13. Task 1 wants the pattern in the PARAMETER LIST.
+// THIRD PASS - 2026-08-14. Failed twice in the same two places: firstTag
+// reached into the object instead of its array field, and defaultsEdge needed
+// the rename form. Fresh example given, different data.
 //
 // Run:  node week-1-js/05-destructuring.js         all checks
 //       node week-1-js/05-destructuring.js head    only checks matching "head"
@@ -21,8 +23,8 @@ const user = {
 // greet(user) -> "Ada from Warsaw"
 // Destructure in the PARAMETER LIST, not in the body. Nested, two levels.
 
-function greet({ name, address: { city } }) {
-  return `${name} from ${city}`;
+function greet({}) {
+  // here
 }
 
 // --- 2 --------------------------------------------------------
@@ -31,8 +33,7 @@ function greet({ name, address: { city } }) {
 // default in case tags comes back empty. No indexing with [0].
 
 function firstTag(u) {
-  const [ firstTag, ...rest ] = u.tags;
-  return firstTag;
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -40,8 +41,7 @@ function firstTag(u) {
 // Array destructuring with rest. Return an object with both.
 
 function splitHead(list) {
-  const [ head, ...tail ] = list;
-  return { head, tail };
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -52,12 +52,7 @@ function splitHead(list) {
 // One of them is not what most people expect, and that is the whole drill.
 
 function defaultsEdge() {
-   const { a: defaultUndefined = 'fallback' } = { a: undefined };
-   const { a: defaultNull = 'fallback' } = { a: null };
-  return [
-    defaultUndefined,
-    defaultNull
-  ]
+  // here
 }
 
 // --- 5, spoken, nothing to write ------------------------------
