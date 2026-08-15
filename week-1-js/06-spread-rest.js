@@ -4,6 +4,10 @@
 //   1. all four from memory, no hints, under 90 seconds each, tests green
 //   2. narrated out loud WHILE typing
 //
+// SPACED REPEAT - 2026-08-15, six days after it was first closed.
+// No example. Task 3 wants rest in the parameter list; name things for what
+// they are this time.
+//
 // Run:  node week-1-js/06-spread-rest.js         all checks
 //       node week-1-js/06-spread-rest.js sum     only checks matching "sum"
 // Run after EVERY function.
@@ -20,7 +24,7 @@ const order = {
 // in Redux and useState.
 
 function withStatus(o, status) {
-  return { ...o, status };
+  // here
 }
 
 // --- 2 --------------------------------------------------------
@@ -28,15 +32,15 @@ function withStatus(o, status) {
 // One new array, neither input touched.
 
 function mergeLists(a, b) {
-  return [ ...a, ...b ];
+  // here
 }
 
 // --- 3 --------------------------------------------------------
 // sum(1, 2, 3) -> 6, sum() -> 0
 // Collect the arguments with rest in the parameter list. No `arguments`.
 
-function sum( ...sum ) {
-  return sum.reduce((sum, line) => sum + line, 0);
+function sum() {
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -47,9 +51,7 @@ function sum( ...sum ) {
 // Do not hardcode. Expected: ["Krakow", "Krakow"] - and that is the lesson.
 
 function shallowProof() {
-  const copyOrder = {...order};
-  copyOrder.customer.city = "Krakow";
-  return [ order.customer.city, copyOrder.customer.city ]
+  // here
 }
 
 // --- 5, spoken, nothing to write ------------------------------
