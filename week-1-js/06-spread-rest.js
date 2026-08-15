@@ -24,7 +24,7 @@ const order = {
 // in Redux and useState.
 
 function withStatus(o, status) {
-  // here
+  return {...o, status};
 }
 
 // --- 2 --------------------------------------------------------
@@ -32,15 +32,15 @@ function withStatus(o, status) {
 // One new array, neither input touched.
 
 function mergeLists(a, b) {
-  // here
+  return [ ...a, ...b ]
 }
 
 // --- 3 --------------------------------------------------------
 // sum(1, 2, 3) -> 6, sum() -> 0
 // Collect the arguments with rest in the parameter list. No `arguments`.
 
-function sum() {
-  // here
+function sum(...sumParams) {
+  return sumParams.reduce((acc, line) => acc + line, 0)
 }
 
 // --- 4 --------------------------------------------------------
@@ -51,7 +51,9 @@ function sum() {
 // Do not hardcode. Expected: ["Krakow", "Krakow"] - and that is the lesson.
 
 function shallowProof() {
-  // here
+  const copy = {...order};
+  copy.customer.city = 'Krakow';
+  return [ order.customer.city,copy.customer.city ]
 }
 
 // --- 5, spoken, nothing to write ------------------------------
