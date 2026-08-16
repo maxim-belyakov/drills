@@ -15,7 +15,11 @@
 // Two counters made separately must not share their number.
 
 function makeCounter() {
-  // here
+  let count = 0;
+  return function () {
+    count++;
+    return count;
+  }
 }
 
 // --- 2 --------------------------------------------------------
@@ -25,7 +29,9 @@ function makeCounter() {
 //   init(); init(); init();   ->  "ready" every time, but fn ran once
 
 function once(fn) {
-  // here
+  return function () {
+    return fn();
+  }
 }
 
 // --- 3 --------------------------------------------------------

@@ -28,7 +28,7 @@ Only the third counts as closed.
 
 Start: 2026-08-03
 Closed cold: **9 of 40**
-Day streak: **12**
+Day streak: **14**
 
 ## Log
 
@@ -42,5 +42,9 @@ Day streak: **12**
 | 2026-08-08 | 05 destructuring, second pass | ✅ cold, no example, narrated out loud. `greet` was green for the wrong reason at first - it read the module-level object instead of its parameter; check hardened, then fixed |
 | 2026-08-09 | repeat 01 + 06 spread and rest | ✅ repeat 01 green on the first re-run after six days, under five minutes. 06 all five checks cold, narrated. Spoken parts (b) rest vs `arguments` and (c) deep copy needed support |
 | 2026-08-10 | repeat 02 + 07 optional chaining and nullish | ✅ repeat 02 green on the first re-run including some/every. 07 green, but two functions were green for the wrong reason until the check was hardened: `||` where `??` was the point, and a chainTrap that only worked because the throw always happened. First pass had no worked example - my miss, now a written rule |
+| 2026-08-11 | repeat 03 + 08 sorting | ✅ repeat 03 green, the seed was there in all four. 08 🔁 - looked up the spelling of localeCompare, and byName mutated the shared array while the other two did not |
 | 2026-08-12 | repeat 04 + 08 sorting, second pass | ✅ 04 closed after five self-corrected iterations - the seed came back on its own, the accumulator SHAPE did not. 08 cold, localeCompare written unaided this time. sortedPrices took three tries, all of them tuning the operator while the real fault was the operands |
+| 2026-08-13 | repeat 05 + 09 Set and Map | 🔁 both. 05 reproduced the same two misses as its first pass. 09 peeked on countBy. Named three new gaps: the `for` family, mutating vs non-mutating methods, map used for side effects |
 | 2026-08-14 | 05 third pass + 09 Set and Map, second pass | ✅ both cold, fresh examples on new data. 05 clean in one go after failing the same two spots twice. 09 self-corrected without looking anything up; `??=` on a function result was the only real block |
+| 2026-08-15 | repeat 06 + 10 closures | ✅ 06 green. 10 🔁 and not a recall failure - six attempts all computed from a parameter, never declaring a variable that lives between calls. Conceptual, needed a lecture the format did not give |
+| 2026-08-16 | 10 closures, makeCounter from a phone | ✅ written cold in chat, ran green including counter independence. One day after failing it six times and googling it - the lecture was the missing piece, not repetition |
