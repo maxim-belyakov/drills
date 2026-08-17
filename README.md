@@ -24,11 +24,55 @@ Passes ✅. Peeked 🔁, comes back in a day.
 **Three states:** new → 🔁 written with a hint → ✅ written cold.
 Only the third counts as closed.
 
+## Paradigm shift, 2026-08-16
+
+The cycle was scoped as 40 drills in 4 weeks. After 14 days, 9 were closed - week 1
+had taken exactly twice its planned time, which put cycle 1 into October and cycle 3
+past the offer horizon.
+
+Two things came out of the review:
+
+1. **The plan counted work as pending that was already done.** Seven of the ten
+   Next.js drills were closed by hand on 2026-07-28..08-01 while building
+   `mapbox-drill`, and are documented in the vault session log.
+2. **The 5-minute norm was calibrated against a problem that no longer exists.**
+   It was insurance against avoidance - the mechanism that cost a Wolters Kluwer
+   round on 08-03. Fifteen days, zero misses, including an interview day and a day
+   spent on a coach. Avoidance is closed.
+
+What changed:
+
+- 30 remaining drills collapse to **17** - merged where they train one movement,
+  struck where already closed
+- the **minimum stays 5 minutes**; the **target becomes one 45-60 minute session**,
+  two or three drills
+- the timed builds stop being a final exam. **Saturday is a timed run, every week** -
+  the Mapbox round was exactly that format, and the 90-minute build is where the
+  failure was, so it cannot be the last thing trained
+- written repeats only for drills that actually failed: 04, 05, 09, 10. Drills 01,
+  02, 03, 06, 07, 08 closed on their first repeat and move to the Anki deck
+
 ## Counter
 
 Start: 2026-08-03
-Closed cold: **9 of 40**
-Day streak: **14**
+Closed cold: **9 of 26**
+Day streak: **15**
+Cycle 1 target: **end of August**
+
+## Remaining - 17
+
+**Async (6)** - 11 promise from scratch + two styles · 12 try/catch in async code ·
+13 all vs allSettled · 14 sequential vs parallel · 15 fetch error handling +
+AbortController · 16 event loop out loud
+
+**React (7)** - 17 useState · 18 useEffect cleanup + deps array · 19 keys in a list ·
+20 controlled form + lifting state · 21 useMemo / useCallback / React.memo ·
+22 custom useFetch with loading, error, empty · 23 debounce
+
+**Next.js and assembly (3, plus the weekly run)** - 24 POST with a body ·
+25 a 45-minute build out loud · 26 a 90-minute full run with changing requirements
+
+Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the end.
 
 ## Log
 
