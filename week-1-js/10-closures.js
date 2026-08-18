@@ -51,17 +51,11 @@ function makeAdder(a) {
 }
 
 // --- 4 --------------------------------------------------------
-// The classic var-vs-let question. Build it in four steps:
-//
-//   1. an empty array `fromVar`, then a loop `for (var i = 0; i < 3; i++)`
-//      and inside it push a FUNCTION that returns i  (push the function,
-//      do not call it here)
-//   2. the same again into `fromLet`, but with `for (let j = 0; j < 3; j++)`
-//   3. now call every function in both arrays and collect what they return
-//   4. return [ <results from the var loop>, <results from the let loop> ]
-//
-// Nothing is hardcoded - the whole point is to see what the six calls give.
-// Expected: [[3, 3, 3], [0, 1, 2]]
+// The classic. loopTrap() must build three functions in a `var` loop and three
+// in a `let` loop, call all six, and return the two arrays of results:
+//   [ <results from the var loop>, <results from the let loop> ]
+// Each loop counts 0, 1, 2 and each function returns the loop variable.
+// Write both loops for real. Expected: [[3, 3, 3], [0, 1, 2]]
 
 function loopTrap() {
   var fromVar = [];
@@ -72,7 +66,7 @@ function loopTrap() {
   for (let j = 0; j < 3; j++) {
     fromLet.push(() => { return j });
   }
-  return [ fromVar.map(item => item()), fromLet.map(item => item()) ]
+  return [ fromVar, fromLet ]
 }
 
 // --- 5, spoken, nothing to write ------------------------------

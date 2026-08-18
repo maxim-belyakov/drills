@@ -55,7 +55,7 @@ What changed:
 ## Counter
 
 Start: 2026-08-03
-Closed cold: **10 of 26**
+Closed cold: **11 of 26**
 Day streak: **17**
 Cycle 1 target: **end of August**
 
@@ -92,3 +92,4 @@ Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the en
 | 2026-08-14 | 05 third pass + 09 Set and Map, second pass | ✅ both cold, fresh examples on new data. 05 clean in one go after failing the same two spots twice. 09 self-corrected without looking anything up; `??=` on a function result was the only real block |
 | 2026-08-15 | repeat 06 + 10 closures | ✅ 06 green. 10 🔁 and not a recall failure - six attempts all computed from a parameter, never declaring a variable that lives between calls. Conceptual, needed a lecture the format did not give |
 | 2026-08-16 | 10 closures, makeCounter from a phone | ✅ written cold in chat, ran green including counter independence. One day after failing it six times and googling it - the lecture was the missing piece, not repetition |
+| 2026-08-18 | 11 promise basics | 🔁 written against the example, not from memory. ok and fail ignored their parameters until the checks were hardened - eighth sighting of a function reading something other than what it was given. order needed teaching: `.then` takes a function, not a value |

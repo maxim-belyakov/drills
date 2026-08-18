@@ -14,7 +14,9 @@
 //   await ok("hi")  ->  "hi"
 
 function ok(value) {
-  // here
+  return new Promise((resolve, reject) => {
+    resolve(value);
+  })
 }
 
 // --- 2 --------------------------------------------------------
@@ -22,7 +24,9 @@ function ok(value) {
 //   await fail("boom")  ->  throws Error("boom")
 
 function fail(message) {
-  // here
+  return new Promise((resolve, reject) => {
+    reject(new Error(message));
+  })
 }
 
 // --- 3 --------------------------------------------------------
@@ -32,11 +36,12 @@ function fail(message) {
 //   viaAwait(ok(21))  ->  42     written with async/await, no .then
 
 function viaThen(p) {
-  // here, with .then
+  return p.then((number) => number * 2);
 }
 
-function viaAwait(p) {
-  // here, with async/await
+async function viaAwait(p) {
+  const number = await p;
+  return number * 2;
 }
 
 // --- 4 --------------------------------------------------------
@@ -49,8 +54,19 @@ function viaAwait(p) {
 // Do not hardcode. Build the array for real and return it.
 // Two of these three are not where people expect. Expected: ["executor", "after", "then"]
 
-function order() {
-  // here
+async function order() {
+  const log = [];
+  const prom = new Promise((resolve) => {
+    log.push('executor')
+    resolve();
+  });
+  prom.then(() => {
+    log.push('then')
+  })
+  log.push('after');
+
+  await prom;
+  return log;
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -67,9 +83,9 @@ function order() {
 const { runChecks } = require("../lib/checks");
 
 runChecks([
-  { name: "ok fulfils", fn: ok, run: () => ok("hi"), expected: "hi" },
+  { name: "ok fulfils with what it was given", fn: ok, run: () => ok("anything at all"), expected: "anything at all" },
   { name: "ok returns a promise", fn: ok, run: () => ok("hi") instanceof Promise, expected: true },
-  { name: "fail rejects", fn: fail, run: async () => { try { await fail("boom"); return "did not throw"; } catch (e) { return e.message; } }, expected: "boom" },
+  { name: "fail rejects with the message it was given", fn: fail, run: async () => { try { await fail("disk on fire"); return "did not throw"; } catch (e) { return [e instanceof Error, e.message]; } }, expected: [true, "disk on fire"] },
   { name: "viaThen", fn: viaThen, run: () => viaThen(Promise.resolve(21)), expected: 42 },
   { name: "viaAwait", fn: viaAwait, run: () => viaAwait(Promise.resolve(21)), expected: 42 },
   { name: "order", fn: order, run: () => order(), expected: ["executor", "after", "then"] },
