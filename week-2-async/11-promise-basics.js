@@ -4,6 +4,10 @@
 //   1. all four from memory, no hints, under 90 seconds each, tests green
 //   2. narrated out loud WHILE typing
 //
+// SECOND PASS - 2026-08-19. First pass was written while looking at the example.
+// No example this time. Note that ok and fail are checked with values the
+// example never mentioned - the parameter has to be used.
+//
 // Run:  node week-2-async/11-promise-basics.js        all checks
 //       node week-2-async/11-promise-basics.js order  only checks matching "order"
 // Run after EVERY function.
@@ -14,9 +18,7 @@
 //   await ok("hi")  ->  "hi"
 
 function ok(value) {
-  return new Promise((resolve, reject) => {
-    resolve(value);
-  })
+  // here
 }
 
 // --- 2 --------------------------------------------------------
@@ -24,9 +26,7 @@ function ok(value) {
 //   await fail("boom")  ->  throws Error("boom")
 
 function fail(message) {
-  return new Promise((resolve, reject) => {
-    reject(new Error(message));
-  })
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -36,12 +36,11 @@ function fail(message) {
 //   viaAwait(ok(21))  ->  42     written with async/await, no .then
 
 function viaThen(p) {
-  return p.then((number) => number * 2);
+  // here
 }
 
-async function viaAwait(p) {
-  const number = await p;
-  return number * 2;
+function viaAwait(p) {
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -54,19 +53,8 @@ async function viaAwait(p) {
 // Do not hardcode. Build the array for real and return it.
 // Two of these three are not where people expect. Expected: ["executor", "after", "then"]
 
-async function order() {
-  const log = [];
-  const prom = new Promise((resolve) => {
-    log.push('executor')
-    resolve();
-  });
-  prom.then(() => {
-    log.push('then')
-  })
-  log.push('after');
-
-  await prom;
-  return log;
+function order() {
+  // here
 }
 
 // --- 5, spoken, nothing to write ------------------------------
