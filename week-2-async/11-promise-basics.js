@@ -79,10 +79,10 @@ const { resolve } = require("node:dns");
 // --- 5, spoken, nothing to write ------------------------------
 // Say out loud, before running the tests:
 //   a) the executor - the function you pass to `new Promise` - when does it run,
-//      and on which turn of the loop
-//   b) a promise has three states. Name them, and say which transitions exist
+//      and on which turn of the loop -- immediately and sync, but callbacks(then) will go to microtask queue
+//   b) a promise has three states. Name them, and say which transitions exist - peding, fulfiled and rejected, p -> f or p -> r, no back
 //   c) `return` inside .then versus `return` inside an async function - what does
-//      the caller get in each case
+//      the caller get in each case - no difference but syntax, you don't need to write steps of then, that's it
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.

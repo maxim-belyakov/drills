@@ -85,9 +85,9 @@ async function forgotten() {
 
 const test = require("node:test");
 // --- 5, spoken, nothing to write ------------------------------
-//   a) what does `await` actually do to a rejected promise -- it catch default errors
-//   b) why does a try/catch not see an error from an un-awaited call -- because try is a sugar for promise object, it gives you possibility to add wait response into microtask list
-//   c) `.catch()` versus try/catch - when is each the better fit - don't know
+//   a) what does `await` actually do to a rejected promise -- it return default throw exception
+//   b) why does a try/catch not see an error from an un-awaited call -- try/catch is sync construct which protect only things what handle only inside of the block, so you need to write what the system should wait the response inside of try/catch
+//   c) `.catch()` versus try/catch - when is each the better fit - first one is better then work with Promise as value/prop/item in array, promise.all, when you need plan b, try/catch with all else
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
