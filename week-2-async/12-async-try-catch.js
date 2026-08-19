@@ -12,8 +12,12 @@ const fine = () => Promise.resolve("ok");
 // safeAwait() must await boom() inside try/catch and return the caught message.
 //   -> "boom"
 
-function safeAwait() {
-  // here
+async function safeAwait() {
+  try {
+    await boom();
+  } catch (e) {
+    return e.message;
+  }
 }
 
 // --- 2 --------------------------------------------------------
@@ -26,8 +30,19 @@ function safeAwait() {
 // Then await the stored promise separately so node does not warn, ignoring the error.
 // Expected: [false, "promise"]
 
-function missedCatch() {
-  // here
+async function missedCatch() {
+  let catchFire = false;
+  let re;
+  try {
+    re = boom();
+    re.catch(() => {});
+    return [ catchFire, re instanceof Promise ? 'promise' : '' ];
+  } catch (e) {
+    catchFire = true;
+    return [ catchFire, re instanceof Promise ? 'promise' : '' ];
+  }
+
+  
 }
 
 // --- 3 --------------------------------------------------------
@@ -36,8 +51,17 @@ function missedCatch() {
 // block that actually executes, and return the array.
 // One of the three does not run. Expected: ["catch", "finally"]
 
-function finallyRuns() {
-  // here
+async function finallyRuns() {
+  let log = [];
+  try {
+    await boom();
+    log.push('try');
+  } catch {
+    log.push('catch');
+  } finally {
+    log.push('finally');
+  }
+  return log;
 }
 
 // --- 4 --------------------------------------------------------
@@ -48,14 +72,22 @@ function finallyRuns() {
 //   - return true if catch did NOT fire
 // Expected: true. Say out loud why, and what you would use instead of forEach.
 
-function forgotten() {
-  // here
+async function forgotten() {
+  let testCatch = true;
+  try {
+    [1].forEach(async () => { throw new Error('inside') })
+  } catch (e) {
+    testCatch = false;
+    return e.message;
+  }
+  return testCatch;
 }
 
+const test = require("node:test");
 // --- 5, spoken, nothing to write ------------------------------
-//   a) what does `await` actually do to a rejected promise
-//   b) why does a try/catch not see an error from an un-awaited call
-//   c) `.catch()` versus try/catch - when is each the better fit
+//   a) what does `await` actually do to a rejected promise -- it catch default errors
+//   b) why does a try/catch not see an error from an un-awaited call -- because try is a sugar for promise object, it gives you possibility to add wait response into microtask list
+//   c) `.catch()` versus try/catch - when is each the better fit - don't know
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.

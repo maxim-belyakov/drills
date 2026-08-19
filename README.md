@@ -55,8 +55,8 @@ What changed:
 ## Counter
 
 Start: 2026-08-03
-Closed cold: **10 of 26**
-Day streak: **17**
+Closed cold: **11 of 26**
+Day streak: **18**
 Cycle 1 target: **end of August**
 
 ## Remaining - 17
@@ -93,3 +93,4 @@ Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the en
 | 2026-08-15 | repeat 06 + 10 closures | ✅ 06 green. 10 🔁 and not a recall failure - six attempts all computed from a parameter, never declaring a variable that lives between calls. Conceptual, needed a lecture the format did not give |
 | 2026-08-16 | 10 closures, makeCounter from a phone | ✅ written cold in chat, ran green including counter independence. One day after failing it six times and googling it - the lecture was the missing piece, not repetition |
 | 2026-08-18 | 11 promise basics | 🔁 written against the example, not from memory. ok and fail ignored their parameters until the checks were hardened - eighth sighting of a function reading something other than what it was given. order needed teaching: `.then` takes a function, not a value |
+| 2026-08-19 | 11 promise basics, second pass + 12 async try/catch | ✅ 11 cold, parameters used this time. 12 🔁 - safeAwait was looked up after three attempts awaiting the function itself instead of calling it. viaThen took six attempts, all of them trying to pull a value out of a promise into a sync variable - the central async misconception, caught here rather than in a round |

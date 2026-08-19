@@ -18,7 +18,9 @@
 //   await ok("hi")  ->  "hi"
 
 function ok(value) {
-  // here
+  return new Promise((resolve) => {
+    resolve(value)
+  })
 }
 
 // --- 2 --------------------------------------------------------
@@ -26,7 +28,9 @@ function ok(value) {
 //   await fail("boom")  ->  throws Error("boom")
 
 function fail(message) {
-  // here
+  return new Promise((resolve, reject) => {
+    reject(new Error(message))
+  })
 }
 
 // --- 3 --------------------------------------------------------
@@ -36,11 +40,12 @@ function fail(message) {
 //   viaAwait(ok(21))  ->  42     written with async/await, no .then
 
 function viaThen(p) {
-  // here
+  return p.then((response) => response * 2);  
 }
 
-function viaAwait(p) {
-  // here
+async function viaAwait(p) {
+  let response = await p;
+  return response * 2;
 }
 
 // --- 4 --------------------------------------------------------
@@ -53,10 +58,24 @@ function viaAwait(p) {
 // Do not hardcode. Build the array for real and return it.
 // Two of these three are not where people expect. Expected: ["executor", "after", "then"]
 
-function order() {
-  // here
+async function order() {
+  const log = [];
+  const p = new Promise((resolve) => {
+    log.push('executor');
+    resolve();
+  })
+
+  p.then(() => {
+    log.push('then');
+  })
+
+  log.push('after');
+
+  await p;
+  return log;
 }
 
+const { resolve } = require("node:dns");
 // --- 5, spoken, nothing to write ------------------------------
 // Say out loud, before running the tests:
 //   a) the executor - the function you pass to `new Promise` - when does it run,
