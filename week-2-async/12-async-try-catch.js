@@ -15,8 +15,13 @@ const fine = () => Promise.resolve("ok");
 // safeAwait() must await boom() inside try/catch and return the caught message.
 //   -> "boom"
 
-function safeAwait() {
-  // here
+async function safeAwait() {
+  try {
+    const response = await boom()
+    return response;
+  } catch (e) {
+    return e.message
+  }
 }
 
 // --- 2 --------------------------------------------------------
@@ -29,8 +34,16 @@ function safeAwait() {
 // Then await the stored promise separately so node does not warn, ignoring the error.
 // Expected: [false, "promise"]
 
-function missedCatch() {
-  // here
+async function missedCatch() {
+  let response;
+  let error = false;
+  try {
+    response = boom();
+    return [error, response instanceof Promise ? 'promise' : 'value']
+  } catch (e) {
+    error = true;
+    return [error, response instanceof Promise ? 'promise' : 'value']
+  }
 }
 
 // --- 3 --------------------------------------------------------
@@ -39,8 +52,17 @@ function missedCatch() {
 // block that actually executes, and return the array.
 // One of the three does not run. Expected: ["catch", "finally"]
 
-function finallyRuns() {
-  // here
+async function finallyRuns() {
+  let log = [];
+  try {
+    await boom()
+    log.push('try');
+  } catch {
+    log.push('catch');
+  } finally {
+    log.push('finally');
+  }
+  return log;
 }
 
 // --- 4 --------------------------------------------------------
@@ -51,8 +73,13 @@ function finallyRuns() {
 //   - return true if catch did NOT fire
 // Expected: true. Say out loud why, and what you would use instead of forEach.
 
-function forgotten() {
-  // here
+async function forgotten() {
+  try {
+    [1].forEach(async () => { throw new Error("inside") })
+    return true
+  } catch (e) {
+    return e.message;
+  }
 }
 
 const test = require("node:test");
