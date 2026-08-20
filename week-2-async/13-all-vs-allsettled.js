@@ -13,8 +13,13 @@ const bad = (m) => Promise.reject(new Error(m));
 // ok(3) - and return the array of their values.
 //   -> [1, 2, 3]
 
-function happyAll() {
-  // here
+async function happyAll() {
+  try {
+    const response = await Promise.all([ok(1), ok(2), ok(3)])
+    return response;
+  } catch (e) {
+    return e.message;
+  }
 }
 
 // --- 2 --------------------------------------------------------
@@ -25,8 +30,14 @@ function happyAll() {
 // Expected: ["no disk", 0]
 // Say out loud what happened to the two promises that DID succeed.
 
-function brokenAll() {
-  // here
+async function brokenAll() {
+  let response
+  try {
+    response = await Promise.all([ok(1), bad("no disk"), ok(3)])
+    return response;
+  } catch (e) {
+    return [e.message, 0];
+  }
 }
 
 // --- 3 --------------------------------------------------------
@@ -34,8 +45,13 @@ function brokenAll() {
 // Do not reshape it - the shape of each entry is the lesson.
 // Expected: three objects. Work out what they look like by running it.
 
-function settled() {
-  // here
+async function settled() {
+  try {
+    const response = await Promise.allSettled([ok(1), bad("no disk"), ok(3)])
+    return response;
+  } catch (e) {
+    return e.message;
+  }
 }
 
 // --- 4 --------------------------------------------------------
@@ -43,8 +59,13 @@ function settled() {
 // succeeded, using allSettled.
 //   -> [1, 3]
 
-function onlyGood() {
-  // here
+async function onlyGood() {
+  try {
+    const response = await Promise.allSettled([ok(1), bad("boom"), ok(3)])
+    return response.filter(item => item.status === 'fulfilled').map(item => item.value);
+  } catch (e) {
+    return e.message;
+  }
 }
 
 // --- 5, spoken, nothing to write ------------------------------

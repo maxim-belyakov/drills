@@ -27,3 +27,5 @@ Everything that surfaced during the cycle and asks to be added to the programme.
 - **`instanceof` and the prototype chain** (2026-08-19, asked directly). Does not know what `instanceof` is. Sits inside the wider prototype topic already parked, and is the practical entry point to it. Cycle 2.
 - **Unhandled rejections** (2026-08-19, drill 12). Left one escaping twice: once by skipping the handler, once from `forEach` with an async callback, which discards the promises it creates. Node has exited the process on this since v15 - in a service that is an outage. Cycle 2: a drill on where rejections go when nobody is holding the promise.
 - **Dead code after return** (2026-08-19, drill 12). Put the fix after `return` in both branches and could not see why nothing changed. Cheap to catch with a linter rule; worth one trace-prediction card.
+- **The promise combinators take an ITERABLE, not loose arguments** (2026-08-20, drill 13). Wrote `Promise.all(ok(1), ok(2))` twice before looking it up. Same for `race`, `any`, `allSettled` - one array in. Cheap card, and it is the kind of thing that stalls a live round for a minute.
+
