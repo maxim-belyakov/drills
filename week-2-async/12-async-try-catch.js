@@ -2,6 +2,9 @@
 //
 // Green criterion, two parts: cold from memory, and narrated out loud.
 //
+// SECOND PASS - 2026-08-20. First pass was 🔁: safeAwait was looked up after three
+// attempts that awaited the function itself instead of calling it. No example now.
+//
 // Run:  node week-2-async/12-async-try-catch.js
 // Run after EVERY function.
 
@@ -12,12 +15,8 @@ const fine = () => Promise.resolve("ok");
 // safeAwait() must await boom() inside try/catch and return the caught message.
 //   -> "boom"
 
-async function safeAwait() {
-  try {
-    await boom();
-  } catch (e) {
-    return e.message;
-  }
+function safeAwait() {
+  // here
 }
 
 // --- 2 --------------------------------------------------------
@@ -30,19 +29,8 @@ async function safeAwait() {
 // Then await the stored promise separately so node does not warn, ignoring the error.
 // Expected: [false, "promise"]
 
-async function missedCatch() {
-  let catchFire = false;
-  let re;
-  try {
-    re = boom();
-    re.catch(() => {});
-    return [ catchFire, re instanceof Promise ? 'promise' : '' ];
-  } catch (e) {
-    catchFire = true;
-    return [ catchFire, re instanceof Promise ? 'promise' : '' ];
-  }
-
-  
+function missedCatch() {
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -51,17 +39,8 @@ async function missedCatch() {
 // block that actually executes, and return the array.
 // One of the three does not run. Expected: ["catch", "finally"]
 
-async function finallyRuns() {
-  let log = [];
-  try {
-    await boom();
-    log.push('try');
-  } catch {
-    log.push('catch');
-  } finally {
-    log.push('finally');
-  }
-  return log;
+function finallyRuns() {
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -72,15 +51,8 @@ async function finallyRuns() {
 //   - return true if catch did NOT fire
 // Expected: true. Say out loud why, and what you would use instead of forEach.
 
-async function forgotten() {
-  let testCatch = true;
-  try {
-    [1].forEach(async () => { throw new Error('inside') })
-  } catch (e) {
-    testCatch = false;
-    return e.message;
-  }
-  return testCatch;
+function forgotten() {
+  // here
 }
 
 const test = require("node:test");
