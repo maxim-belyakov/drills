@@ -2,6 +2,9 @@
 //
 // Green criterion, two parts: cold from memory, and narrated out loud.
 //
+// SECOND PASS - 2026-08-21. First pass was 🔁: happyAll was looked up after two
+// attempts passing loose arguments instead of one array. No example now.
+//
 // Run:  node week-2-async/13-all-vs-allsettled.js
 // Run after EVERY function.
 
@@ -13,13 +16,8 @@ const bad = (m) => Promise.reject(new Error(m));
 // ok(3) - and return the array of their values.
 //   -> [1, 2, 3]
 
-async function happyAll() {
-  try {
-    const response = await Promise.all([ok(1), ok(2), ok(3)])
-    return response;
-  } catch (e) {
-    return e.message;
-  }
+function happyAll() {
+  // here
 }
 
 // --- 2 --------------------------------------------------------
@@ -30,14 +28,8 @@ async function happyAll() {
 // Expected: ["no disk", 0]
 // Say out loud what happened to the two promises that DID succeed.
 
-async function brokenAll() {
-  let response
-  try {
-    response = await Promise.all([ok(1), bad("no disk"), ok(3)])
-    return response;
-  } catch (e) {
-    return [e.message, 0];
-  }
+function brokenAll() {
+  // here
 }
 
 // --- 3 --------------------------------------------------------
@@ -45,13 +37,8 @@ async function brokenAll() {
 // Do not reshape it - the shape of each entry is the lesson.
 // Expected: three objects. Work out what they look like by running it.
 
-async function settled() {
-  try {
-    const response = await Promise.allSettled([ok(1), bad("no disk"), ok(3)])
-    return response;
-  } catch (e) {
-    return e.message;
-  }
+function settled() {
+  // here
 }
 
 // --- 4 --------------------------------------------------------
@@ -59,13 +46,8 @@ async function settled() {
 // succeeded, using allSettled.
 //   -> [1, 3]
 
-async function onlyGood() {
-  try {
-    const response = await Promise.allSettled([ok(1), bad("boom"), ok(3)])
-    return response.filter(item => item.status === 'fulfilled').map(item => item.value);
-  } catch (e) {
-    return e.message;
-  }
+function onlyGood() {
+  // here
 }
 
 // --- 5, spoken, nothing to write ------------------------------
