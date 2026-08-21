@@ -28,6 +28,11 @@ public class J6Sql {
     //
     // Data is printed by the runner if you pass "data" as an argument:
     //   java -cp lib/h2.jar java-1-storage/J6Sql.java data
+    //
+    // FIRST PASS OF A DRILL OPENS WITH A WORKED EXAMPLE. Two queries on this same
+    // schema, different questions from the ones you have to write, shown with their
+    // output. Spend 3-5 minutes on them, then close them and write your own:
+    //   java -cp lib/h2.jar java-1-storage/J6Sql.java example
 
     // --- 1 -------------------------------------------------------
     // JOIN + GROUP BY + HAVING. One statement.
@@ -74,6 +79,7 @@ public class J6Sql {
         try (Connection cn = DriverManager.getConnection("jdbc:h2:mem:j6", "sa", "")) {
             seed(cn);
             if (args.length > 0 && args[0].equals("data")) { dump(cn); return; }
+            if (args.length > 0 && args[0].equals("example")) { examples(cn); return; }
 
             System.out.println();
             System.out.println("  OK   harness - H2 is up, " + scalar(cn, "SELECT count(*) FROM txn") + " transactions seeded");
@@ -180,6 +186,37 @@ public class J6Sql {
 
     static String scalar(Connection cn, String sql) throws SQLException {
         return rows(cn, sql).get(0);
+    }
+
+    static void examples(Connection cn) throws SQLException {
+        String a = """
+            SELECT c.country, count(*) AS cnt, sum(t.amount) AS total
+            FROM txn t JOIN client c ON c.id = t.client_id
+            GROUP BY c.country
+            HAVING count(*) >= 2
+            ORDER BY total DESC
+            """;
+        String b = """
+            SELECT c.name, t.id, t.amount,
+                   count(*) OVER (PARTITION BY t.client_id) AS txns_of_client
+            FROM txn t JOIN client c ON c.id = t.client_id
+            ORDER BY t.id
+            """;
+        System.out.println("\n--- example A: JOIN + GROUP BY + HAVING ---");
+        System.out.println("Per country: how many transactions and their total, only countries with 2 or more.");
+        System.out.println(a);
+        System.out.println("country | cnt | total");
+        for (String r : rows(cn, a)) System.out.println("  " + r);
+        System.out.println("\nUK is gone: one transaction, and it was the biggest one, 5000.");
+        System.out.println("Rows collapse into one row per group. Nothing else survives.");
+
+        System.out.println("\n--- example B: the same count, as a window ---");
+        System.out.println("Every transaction stays a row, and carries the count for its own client.");
+        System.out.println(b);
+        System.out.println("name | id | amount | txns_of_client");
+        for (String r : rows(cn, b)) System.out.println("  " + r);
+        System.out.println("\nTen rows in, ten rows out. PARTITION BY groups for the calculation only.");
+        System.out.println();
     }
 
     static void dump(Connection cn) throws SQLException {
