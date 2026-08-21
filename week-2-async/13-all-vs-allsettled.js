@@ -13,11 +13,12 @@ const bad = (m) => Promise.reject(new Error(m));
 
 // --- 1 --------------------------------------------------------
 // happyAll() must run Promise.all over three fulfilled promises - ok(1), ok(2),
-// ok(3) - and return the array of their values.
+// ok(3) - and return the array of their values.`
 //   -> [1, 2, 3]
 
 function happyAll() {
-  // here
+  const response = Promise.all([ok(1), ok(2), ok(3)]);
+  return response
 }
 
 // --- 2 --------------------------------------------------------
@@ -28,8 +29,14 @@ function happyAll() {
 // Expected: ["no disk", 0]
 // Say out loud what happened to the two promises that DID succeed.
 
-function brokenAll() {
-  // here
+async function brokenAll() {
+  let response
+  try {
+    response = await Promise.all([ok(1), bad("no disk"), ok(3)]);
+    return response
+  } catch (e) {
+    return [e.message, response ? response : 0]
+  }
 }
 
 // --- 3 --------------------------------------------------------
@@ -38,7 +45,8 @@ function brokenAll() {
 // Expected: three objects. Work out what they look like by running it.
 
 function settled() {
-  // here
+  const response = Promise.allSettled([ok(1), bad("no disk"), ok(3)])
+  return response
 }
 
 // --- 4 --------------------------------------------------------
@@ -46,13 +54,19 @@ function settled() {
 // succeeded, using allSettled.
 //   -> [1, 3]
 
-function onlyGood() {
-  // here
+async function onlyGood() {
+  let response
+  try {
+    response = await Promise.allSettled([ok(1), bad("no disk"), ok(3)])
+    return response.filter(item => item.status === 'fulfilled').map(item => item.value)
+  } catch (e) {
+    return e.message
+  }
 }
 
 // --- 5, spoken, nothing to write ------------------------------
 //   a) when the first promise rejects, what happens to the others - are they
-//      cancelled, and does their work stop
+//      cancelled, and does their work stop -- undefined fir the value and reject with the error
 //   b) the shape of an allSettled entry, both cases, field by field
 //   c) `Promise.race` and `Promise.any` - one sentence each, and how they differ
 //      from these two
@@ -65,10 +79,12 @@ const { runChecks } = require("../lib/checks");
 runChecks([
   { name: "happyAll", fn: happyAll, run: () => happyAll(), expected: [1, 2, 3] },
   { name: "brokenAll", fn: brokenAll, run: () => brokenAll(), expected: ["no disk", 0] },
-  { name: "settled", fn: settled, run: () => settled(), expected: [
+  {
+    name: "settled", fn: settled, run: () => settled(), expected: [
       { status: "fulfilled", value: 1 },
       { status: "rejected", reason: new Error("no disk") },
       { status: "fulfilled", value: 3 },
-    ] },
+    ]
+  },
   { name: "onlyGood", fn: onlyGood, run: () => onlyGood(), expected: [1, 3] },
 ]);
