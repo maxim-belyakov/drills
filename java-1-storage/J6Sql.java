@@ -14,6 +14,19 @@
 //
 // A query left as `return null;` is reported "not written yet", not FAIL.
 
+// CLAUSE ORDER IS FIXED. Always this sequence, nothing may move:
+//
+//     SELECT    what to show
+//     FROM      where from
+//     JOIN      what to glue on
+//     WHERE     which ROWS to throw away        (before the piles exist)
+//     GROUP BY  what to glue rows into
+//     HAVING    which PILES to throw away       (after the piles exist)
+//     ORDER BY  how to sort
+//
+// WHERE after GROUP BY is a syntax error, not a style choice: it asks the database
+// to filter rows that no longer exist.
+
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
@@ -76,9 +89,7 @@ public class J6Sql {
         return """
             SELECT c.name, count(*) AS cnt, sum(t.amount) AS total
             FROM txn t JOIN client c ON c.id = t.client_id
-            GROUP BY c.country
-            WHERE status = "SETTLED"
-            ORDER BY total DESC
+            GROUP BY c.id
                 """;
     }
 

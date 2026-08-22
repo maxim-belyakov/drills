@@ -16,6 +16,19 @@
 //   flat table of rows, then throws rows away, then glues the survivors into piles.
 //   Every step below does exactly one of those.
 
+// CLAUSE ORDER IS FIXED. Always this sequence, nothing may move:
+//
+//     SELECT    what to show
+//     FROM      where from
+//     JOIN      what to glue on
+//     WHERE     which ROWS to throw away        (before the piles exist)
+//     GROUP BY  what to glue rows into
+//     HAVING    which PILES to throw away       (after the piles exist)
+//     ORDER BY  how to sort
+//
+// WHERE after GROUP BY is a syntax error, not a style choice: it asks the database
+// to filter rows that no longer exist.
+
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
