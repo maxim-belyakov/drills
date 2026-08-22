@@ -89,7 +89,9 @@ public class J6Sql {
         return """
             SELECT c.name, count(*) AS cnt, sum(t.amount) AS total
             FROM txn t JOIN client c ON c.id = t.client_id
+            WHERE t.status = 'SETTLED'
             GROUP BY c.id
+            HAVING count(*) >= 3
                 """;
     }
 
@@ -171,7 +173,13 @@ public class J6Sql {
                     System.out.println("  ERR  " + c.name() + " - " + e.getMessage().split("\n")[0]);
                     continue;
                 }
-                if (actual.equals(c.expected())) {
+                if (actual.equals(c.expected()) && !c.sql().toLowerCase().contains("order by")) {
+                    failed++;
+                    System.out.println("  FAIL " + c.name() + " - rows are right, but the order is luck:");
+                    System.out.println("       there is no ORDER BY in the query, so the database is free to");
+                    System.out.println("       return these rows in any order it likes. Every task here names");
+                    System.out.println("       the order it wants. Say it out loud, then write it.");
+                } else if (actual.equals(c.expected())) {
                     ok++;
                     System.out.println("  OK   " + c.name());
                 } else {

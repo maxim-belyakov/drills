@@ -135,7 +135,13 @@ public class J6Steps {
                     System.out.println("  ERR  " + c.name() + " - " + e.getMessage().split("\n")[0]);
                     continue;
                 }
-                if (actual.equals(c.expected())) {
+                if (actual.equals(c.expected()) && !c.sql().toLowerCase().contains("order by")) {
+                    failed++;
+                    System.out.println("  FAIL " + c.name() + " - rows are right, but the order is luck:");
+                    System.out.println("       there is no ORDER BY in the query, so the database is free to");
+                    System.out.println("       return these rows in any order it likes. Every task here names");
+                    System.out.println("       the order it wants. Say it out loud, then write it.");
+                } else if (actual.equals(c.expected())) {
                     ok++;
                     System.out.println("  OK   " + c.name());
                 } else {
