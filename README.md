@@ -56,7 +56,7 @@ What changed:
 
 Start: 2026-08-03
 Closed cold: **14 of 26**
-Day streak: **20**
+Day streak: **21**
 Cycle 1 target: **end of August**
 
 ## Remaining - 17
@@ -96,3 +96,4 @@ Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the en
 | 2026-08-19 | 11 promise basics, second pass + 12 async try/catch | ✅ 11 cold, parameters used this time. 12 🔁 - safeAwait was looked up after three attempts awaiting the function itself instead of calling it. viaThen took six attempts, all of them trying to pull a value out of a promise into a sync variable - the central async misconception, caught here rather than in a round |
 | 2026-08-20 | 12 async try/catch, second pass | ✅ cold, no example. `await boom()` written with the call this time, after three attempts yesterday awaiting the function itself |
 | 2026-08-21 | 13 all vs allSettled, second pass + 14 sequential vs parallel | ✅ both. 13 clean, the array argument came without prompting. 14 had allAtOnce calling Promise.all over plain numbers instead of promises - green because the values matched, tenth sighting; a timing check now makes that impossible |
+| 2026-08-22 | mobile trace drill (no machine) | 🔁 4 of 8. Correct: event-loop order, default sort, destructuring defaults, and that try/catch does not catch a rejected async call. Missed: `.map(slow)` calls slow twice synchronously (yesterday's lesson, one day old), an ascending comparator read as descending, a reduce callback with no return (should throw TypeError), and `||` vs `??` on `0` and `""` read as booleans. Timed build 1 deferred, folder is ready |
