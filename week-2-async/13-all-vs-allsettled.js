@@ -66,10 +66,10 @@ async function onlyGood() {
 
 // --- 5, spoken, nothing to write ------------------------------
 //   a) when the first promise rejects, what happens to the others - are they
-//      cancelled, and does their work stop -- undefined fir the value and reject with the error
-//   b) the shape of an allSettled entry, both cases, field by field
+//      cancelled, and does their work stop - undefined fir the value and reject with the error
+//   b) the shape of an allSettled entry, both cases, field by field - object with status(fulfilled OR rejected), and value OR reason, allSettled never reject so do not use try/catch for it
 //   c) `Promise.race` and `Promise.any` - one sentence each, and how they differ
-//      from these two
+//      from these two - race - who is the first finished, any - whi is the first successfully finished
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.

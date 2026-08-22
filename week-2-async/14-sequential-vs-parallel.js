@@ -89,10 +89,11 @@ async function mapTrap() {
 }
 
 // --- 5, spoken, nothing to write ------------------------------
-//   a) at which exact moment does a promise start doing its work
-//   b) why is version 4 above fast, even though it awaits inside a loop
+//   a) at which exact moment does a promise start doing its work - in createation moment, not in await
+//   b) why is version 4 above fast, even though it awaits inside a loop - because the engine start slow before the loop
 //   c) you have 500 items and an API that allows 5 at a time. Promise.all over
-//      all 500 is wrong - what do you do instead, and what is that called
+//      all 500 is wrong - what do you do instead, and what is that called - ограниченый параллелизм, bounded cocurrency, libs p-limit, p-map, 
+//      only lazy work! pool(list.map(slow)) will not work! but pool(list.map(id => () => slow(id)), 5)
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
