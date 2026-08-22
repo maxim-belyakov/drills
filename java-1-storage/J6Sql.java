@@ -34,6 +34,31 @@ public class J6Sql {
     // output. Spend 3-5 minutes on them, then close them and write your own:
     //   java -cp lib/h2.jar java-1-storage/J6Sql.java example
 
+    // ============ WHAT A FINISHED ANSWER LOOKS LIKE ============
+    //
+    // You are not writing Java here. You are writing SQL text and handing it back.
+    // This is example A from `example` mode, written as if it were one of the tasks:
+    //
+    //     static String qCountries() {
+    //         return """
+    //             SELECT c.country, count(*) AS cnt, sum(t.amount) AS total
+    //             FROM txn t JOIN client c ON c.id = t.client_id
+    //             GROUP BY c.country
+    //             HAVING count(*) >= 2
+    //             ORDER BY total DESC
+    //             """;
+    //     }
+    //
+    // That is the whole shape. `"""` opens a text block - a multi-line string, the
+    // same thing as a backtick template literal in JS. Delete `return null; // here`,
+    // put your query in its place.
+    //
+    // If the text block gets in the way, a plain one-line string is just as valid:
+    //
+    //     return "SELECT c.country, count(*) FROM txn t JOIN client c ON c.id = t.client_id GROUP BY c.country";
+    //
+    // No semicolon inside the SQL. The `;` after the closing `"""` is Java's.
+
     // --- 1 -------------------------------------------------------
     // JOIN + GROUP BY + HAVING. One statement.
     // Per client: how many SETTLED transactions and their total amount.
