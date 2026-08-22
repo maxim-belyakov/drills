@@ -92,6 +92,7 @@ public class J6Sql {
             WHERE t.status = 'SETTLED'
             GROUP BY c.id
             HAVING count(*) >= 3
+            ORDER BY total DESC
                 """;
     }
 
