@@ -43,7 +43,7 @@ const { fetchOrderIds, fetchOrder } = require("./api");
 async function buildReport() {
   let totalRevenue = 0;
   let byStatus = {};
-  let topCustomers;
+  let topCustomers = [];
   let failed = [];
 
   const orderIds = await fetchOrderIds();
@@ -51,7 +51,7 @@ async function buildReport() {
   for (let i = 1; i < orderIds.length; i += 5) {
     let potentialIds = []
     for (let j = i; j < i + 5; j++) {
-      if (!!orderIds[j - 1]) potentialIds.push(j);
+      if (!!orderIds[j - 1]) potentialIds.push(orderIds[j - 1]);
     }
     const promises = potentialIds.map(o => fetchOrder(o));
     const response = await Promise.allSettled(promises);
@@ -68,18 +68,39 @@ async function buildReport() {
       byStatus[item?.value?.status] ??= 0;
       byStatus[item?.value?.status] = byStatus[item?.value?.status] + 1
     }
-    if (item?.value?.amount) {
-      console.log('item?.value?.amount', item?.value?.amount)
+    if (item?.value?.amount && item?.value?.status === 'paid') {
       totalRevenue += item.value.amount
     }
-
   });
-  
-  return [
+
+  const customerAmounts = orders.reduce((acc, line) => {
+    if (!line?.value || line?.value.status !== 'paid') return acc
+
+    acc[line.value.customer] ??= 0;
+    acc[line.value.customer] += line.value.amount
+
+    return acc;
+  }, {})
+
+  const sortedAmountCustomers = [...Object.keys(customerAmounts)].sort((a, b) => {
+    return customerAmounts[b] - customerAmounts[a] || a.localeCompare(b);
+  })
+
+  for (let i = 0; i <= 2; i++) {
+    const key = sortedAmountCustomers[i];
+
+    topCustomers.push({
+      name: key, 
+      spent: customerAmounts[key]
+    })
+  }
+
+  return {
     totalRevenue,
     byStatus,
-    failed
-  ]
+    failed,
+    topCustomers
+  }
 
 }
 
