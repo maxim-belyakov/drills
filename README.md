@@ -56,8 +56,15 @@ What changed:
 
 Start: 2026-08-03
 Closed cold: **14 of 26**
-Day streak: **21**
-Cycle 1 target: **end of August**
+Day streak: **22** - unbroken
+Sessions: 19 · of them 📱 mobile: 2 · days with no drill: 1 (08-17, spent rewriting the plan)
+
+**Closes per week: 6 · 4 · 4.** The 08-16 paradigm shift changed the plan and did not
+change the rate. At 4 a week the remaining 10 drills land around 10 September, so
+**"end of August" is not reachable** and is kept here only as the thing that was missed.
+
+Streak and closes now measure different things. The streak measures showing up, which
+has been solved since 08-03 and no longer carries information. Closes are the number.
 
 ## Remaining - 17
 
@@ -76,24 +83,26 @@ Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the en
 
 ## Log
 
-| Date | Drill | Result |
-| --- | --- | --- |
-| 2026-08-03 | 01 map ids | ✅ all three under 90 s, no hints. Did not narrate out loud yet - that half is the target tomorrow |
-| 2026-08-04 | 02 filter vs find | ✅ all four cold, narrated out loud. some/every came out fuzzy in the spoken part, rewritten by hand as part 6 - green. Slip: typed `=` for `===` twice, caught it myself |
-| 2026-08-05 | 03 reduce sum and aggregate | ✅ all four cold, narrated out loud. Notes: tie-breaking in a max-reduce, accumulator kept on the left, flag initialised explicitly |
-| 2026-08-06 | 04 group by | 🔁 peeked at the example. Green afterwards, narrated out loud throughout. Systematic miss: forgot the `{}` initial value in all four - one habit, not four mistakes. Returns tomorrow |
-| 2026-08-07 | 04 group by, second pass | ✅ cold, no example, narrated out loud. The initial value was there in all four this time. Chose `??=` over `||=` unprompted - correct for both the array and the counter |
-| 2026-08-08 | 05 destructuring, second pass | ✅ cold, no example, narrated out loud. `greet` was green for the wrong reason at first - it read the module-level object instead of its parameter; check hardened, then fixed |
-| 2026-08-09 | repeat 01 + 06 spread and rest | ✅ repeat 01 green on the first re-run after six days, under five minutes. 06 all five checks cold, narrated. Spoken parts (b) rest vs `arguments` and (c) deep copy needed support |
-| 2026-08-10 | repeat 02 + 07 optional chaining and nullish | ✅ repeat 02 green on the first re-run including some/every. 07 green, but two functions were green for the wrong reason until the check was hardened: `||` where `??` was the point, and a chainTrap that only worked because the throw always happened. First pass had no worked example - my miss, now a written rule |
-| 2026-08-11 | repeat 03 + 08 sorting | ✅ repeat 03 green, the seed was there in all four. 08 🔁 - looked up the spelling of localeCompare, and byName mutated the shared array while the other two did not |
-| 2026-08-12 | repeat 04 + 08 sorting, second pass | ✅ 04 closed after five self-corrected iterations - the seed came back on its own, the accumulator SHAPE did not. 08 cold, localeCompare written unaided this time. sortedPrices took three tries, all of them tuning the operator while the real fault was the operands |
-| 2026-08-13 | repeat 05 + 09 Set and Map | 🔁 both. 05 reproduced the same two misses as its first pass. 09 peeked on countBy. Named three new gaps: the `for` family, mutating vs non-mutating methods, map used for side effects |
-| 2026-08-14 | 05 third pass + 09 Set and Map, second pass | ✅ both cold, fresh examples on new data. 05 clean in one go after failing the same two spots twice. 09 self-corrected without looking anything up; `??=` on a function result was the only real block |
-| 2026-08-15 | repeat 06 + 10 closures | ✅ 06 green. 10 🔁 and not a recall failure - six attempts all computed from a parameter, never declaring a variable that lives between calls. Conceptual, needed a lecture the format did not give |
-| 2026-08-16 | 10 closures, makeCounter from a phone | ✅ written cold in chat, ran green including counter independence. One day after failing it six times and googling it - the lecture was the missing piece, not repetition |
-| 2026-08-18 | 11 promise basics | 🔁 written against the example, not from memory. ok and fail ignored their parameters until the checks were hardened - eighth sighting of a function reading something other than what it was given. order needed teaching: `.then` takes a function, not a value |
-| 2026-08-19 | 11 promise basics, second pass + 12 async try/catch | ✅ 11 cold, parameters used this time. 12 🔁 - safeAwait was looked up after three attempts awaiting the function itself instead of calling it. viaThen took six attempts, all of them trying to pull a value out of a promise into a sync variable - the central async misconception, caught here rather than in a round |
-| 2026-08-20 | 12 async try/catch, second pass | ✅ cold, no example. `await boom()` written with the call this time, after three attempts yesterday awaiting the function itself |
-| 2026-08-21 | 13 all vs allSettled, second pass + 14 sequential vs parallel | ✅ both. 13 clean, the array argument came without prompting. 14 had allAtOnce calling Promise.all over plain numbers instead of promises - green because the values matched, tenth sighting; a timing check now makes that impossible |
-| 2026-08-22 | mobile trace drill (no machine) | 🔁 4 of 8. Correct: event-loop order, default sort, destructuring defaults, and that try/catch does not catch a rejected async call. Missed: `.map(slow)` calls slow twice synchronously (yesterday's lesson, one day old), an ascending comparator read as descending, a reduce callback with no return (should throw TypeError), and `||` vs `??` on `0` and `""` read as booleans. Timed build 1 deferred, folder is ready |
+**Format column:** 💻 a full session at the machine · 📱 a mobile session, done from the phone in chat with no editor and no runner · ⏱ a timed run. A mobile session keeps the day, but it is not interchangeable with a full one - it cannot close a drill that has to be typed. Marked so the two can be counted apart.
+
+| Date | Drill | Format | Result |
+| --- | --- | :-: | --- |
+| 2026-08-03 | 01 map ids | 💻 | ✅ all three under 90 s, no hints. Did not narrate out loud yet - that half is the target tomorrow |
+| 2026-08-04 | 02 filter vs find | 💻 | ✅ all four cold, narrated out loud. some/every came out fuzzy in the spoken part, rewritten by hand as part 6 - green. Slip: typed `=` for `===` twice, caught it myself |
+| 2026-08-05 | 03 reduce sum and aggregate | 💻 | ✅ all four cold, narrated out loud. Notes: tie-breaking in a max-reduce, accumulator kept on the left, flag initialised explicitly |
+| 2026-08-06 | 04 group by | 💻 | 🔁 peeked at the example. Green afterwards, narrated out loud throughout. Systematic miss: forgot the `{}` initial value in all four - one habit, not four mistakes. Returns tomorrow |
+| 2026-08-07 | 04 group by, second pass | 💻 | ✅ cold, no example, narrated out loud. The initial value was there in all four this time. Chose `??=` over `||=` unprompted - correct for both the array and the counter |
+| 2026-08-08 | 05 destructuring, second pass | 💻 | ✅ cold, no example, narrated out loud. `greet` was green for the wrong reason at first - it read the module-level object instead of its parameter; check hardened, then fixed |
+| 2026-08-09 | repeat 01 + 06 spread and rest | 💻 | ✅ repeat 01 green on the first re-run after six days, under five minutes. 06 all five checks cold, narrated. Spoken parts (b) rest vs `arguments` and (c) deep copy needed support |
+| 2026-08-10 | repeat 02 + 07 optional chaining and nullish | 💻 | ✅ repeat 02 green on the first re-run including some/every. 07 green, but two functions were green for the wrong reason until the check was hardened: `||` where `??` was the point, and a chainTrap that only worked because the throw always happened. First pass had no worked example - my miss, now a written rule |
+| 2026-08-11 | repeat 03 + 08 sorting | 💻 | ✅ repeat 03 green, the seed was there in all four. 08 🔁 - looked up the spelling of localeCompare, and byName mutated the shared array while the other two did not |
+| 2026-08-12 | repeat 04 + 08 sorting, second pass | 💻 | ✅ 04 closed after five self-corrected iterations - the seed came back on its own, the accumulator SHAPE did not. 08 cold, localeCompare written unaided this time. sortedPrices took three tries, all of them tuning the operator while the real fault was the operands |
+| 2026-08-13 | repeat 05 + 09 Set and Map | 💻 | 🔁 both. 05 reproduced the same two misses as its first pass. 09 peeked on countBy. Named three new gaps: the `for` family, mutating vs non-mutating methods, map used for side effects |
+| 2026-08-14 | 05 third pass + 09 Set and Map, second pass | 💻 | ✅ both cold, fresh examples on new data. 05 clean in one go after failing the same two spots twice. 09 self-corrected without looking anything up; `??=` on a function result was the only real block |
+| 2026-08-15 | repeat 06 + 10 closures | 💻 | ✅ 06 green. 10 🔁 and not a recall failure - six attempts all computed from a parameter, never declaring a variable that lives between calls. Conceptual, needed a lecture the format did not give |
+| 2026-08-16 | 10 closures, makeCounter from a phone | 📱 | ✅ written cold in chat, ran green including counter independence. One day after failing it six times and googling it - the lecture was the missing piece, not repetition |
+| 2026-08-18 | 11 promise basics | 💻 | 🔁 written against the example, not from memory. ok and fail ignored their parameters until the checks were hardened - eighth sighting of a function reading something other than what it was given. order needed teaching: `.then` takes a function, not a value |
+| 2026-08-19 | 11 promise basics, second pass + 12 async try/catch | 💻 | ✅ 11 cold, parameters used this time. 12 🔁 - safeAwait was looked up after three attempts awaiting the function itself instead of calling it. viaThen took six attempts, all of them trying to pull a value out of a promise into a sync variable - the central async misconception, caught here rather than in a round |
+| 2026-08-20 | 12 async try/catch, second pass | 💻 | ✅ cold, no example. `await boom()` written with the call this time, after three attempts yesterday awaiting the function itself |
+| 2026-08-21 | 13 all vs allSettled, second pass + 14 sequential vs parallel | 💻 | ✅ both. 13 clean, the array argument came without prompting. 14 had allAtOnce calling Promise.all over plain numbers instead of promises - green because the values matched, tenth sighting; a timing check now makes that impossible |
+| 2026-08-22 | mobile trace drill (no machine) | 📱 | 🔁 4 of 8. Correct: event-loop order, default sort, destructuring defaults, and that try/catch does not catch a rejected async call. Missed: `.map(slow)` calls slow twice synchronously (yesterday's lesson, one day old), an ascending comparator read as descending, a reduce callback with no return (should throw TypeError), and `||` vs `??` on `0` and `""` read as booleans. Timed build 1 deferred, folder is ready |
