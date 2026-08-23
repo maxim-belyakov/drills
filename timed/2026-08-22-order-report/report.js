@@ -41,26 +41,46 @@
 const { fetchOrderIds, fetchOrder } = require("./api");
 
 async function buildReport() {
-  let totalRevenue;
-  let byStatus;
+  let totalRevenue = 0;
+  let byStatus = {};
   let topCustomers;
-  let failed;
+  let failed = [];
 
-  try {
-    const orderIds = await fetchOrderIds();
-    const orders = [];
-
-    for (let i = 1; i < orderIds.length; i += 5) {
-      const promises = [i, i+1, i+2, i+3, i+4].map(o => fetchOrder(o));
-      const response = await Promise.allSettled(promises);
-      console.log('response', response)
+  const orderIds = await fetchOrderIds();
+  const orders = [];
+  for (let i = 1; i < orderIds.length; i += 5) {
+    let potentialIds = []
+    for (let j = i; j < i + 5; j++) {
+      if (!!orderIds[j - 1]) potentialIds.push(j);
     }
-    // const order = await fetchOrderById(1);
-    console.log('orders', orders);
-    // console.log('order', order);
-  } catch {
-    console.log('check');
+    const promises = potentialIds.map(o => fetchOrder(o));
+    const response = await Promise.allSettled(promises);
+    orders.push(...response.map((item, index) => {
+      return { ...item, id: i + index }
+    }))
   }
+
+  orders.forEach(item => {
+    if (item.reason) {
+      failed.push(item.id);
+    }
+    if (item?.value?.status) {
+      byStatus[item?.value?.status] ??= 0;
+      byStatus[item?.value?.status] = byStatus[item?.value?.status] + 1
+    }
+    if (item?.value?.amount) {
+      console.log('item?.value?.amount', item?.value?.amount)
+      totalRevenue += item.value.amount
+    }
+
+  });
+  
+  return [
+    totalRevenue,
+    byStatus,
+    failed
+  ]
+
 }
 
 module.exports = { buildReport };
