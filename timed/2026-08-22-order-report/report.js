@@ -38,8 +38,29 @@
 // Run: node check.js
 // Narrate out loud while you type.
 
+const { fetchOrderIds, fetchOrder } = require("./api");
+
 async function buildReport() {
-  // here
+  let totalRevenue;
+  let byStatus;
+  let topCustomers;
+  let failed;
+
+  try {
+    const orderIds = await fetchOrderIds();
+    const orders = [];
+
+    for (let i = 1; i < orderIds.length; i += 5) {
+      const promises = [i, i+1, i+2, i+3, i+4].map(o => fetchOrder(o));
+      const response = await Promise.allSettled(promises);
+      console.log('response', response)
+    }
+    // const order = await fetchOrderById(1);
+    console.log('orders', orders);
+    // console.log('order', order);
+  } catch {
+    console.log('check');
+  }
 }
 
 module.exports = { buildReport };
