@@ -6,8 +6,9 @@
 // Green criterion, two parts: written cold in 90 seconds, and narrated out loud
 // while writing. Green in silence is a repeat.
 //
-// Run:  cd ~/Documents/my-repos/code-challenges/2026.07/drills
-//       java -cp lib/h2.jar java-1-storage/J6Sql.java
+// Run, from anywhere, no cd needed:
+//       ~/Documents/my-repos/code-challenges/2026.07/drills/j J6Sql
+//       from inside java-1-storage:  ../j J6Sql
 //
 // RUN IT FIRST, BEFORE WRITING ANYTHING. The first line of every session is a
 // failing test. Then run it after EVERY query, not at the end.
@@ -40,12 +41,12 @@ public class J6Sql {
     // status VARCHAR, created_at DATE) status in SETTLED | FAILED
     //
     // Data is printed by the runner if you pass "data" as an argument:
-    // java -cp lib/h2.jar java-1-storage/J6Sql.java data
+    // ../j J6Sql data
     //
     // FIRST PASS OF A DRILL OPENS WITH A WORKED EXAMPLE. Two queries on this same
     // schema, different questions from the ones you have to write, shown with their
     // output. Spend 3-5 minutes on them, then close them and write your own:
-    // java -cp lib/h2.jar java-1-storage/J6Sql.java example
+    // ../j J6Sql example
 
     // ============ WHAT A FINISHED ANSWER LOOKS LIKE ============
     //

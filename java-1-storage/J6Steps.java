@@ -4,8 +4,9 @@
 // clause added to the previous one. Copy your previous answer down, add the new
 // bit, run. Twenty seconds each, not ninety.
 //
-// Run:  cd ~/Documents/my-repos/code-challenges/2026.07/drills
-//       java -cp lib/h2.jar java-1-storage/J6Steps.java
+// Run, from anywhere, no cd needed:
+//       ~/Documents/my-repos/code-challenges/2026.07/drills/j J6Steps
+//       from inside java-1-storage:  ../j J6Steps
 //
 // The tables:
 //   client(id, name, country)
