@@ -56,7 +56,7 @@ What changed:
 
 Start: 2026-08-03
 Closed cold: **14 of 26**
-Day streak: **22** - unbroken
+Day streak: **broken at 21, 2026-08-24** - one deliberate skip for a live round
 Sessions: 19 · of them 📱 mobile: 2 · days with no drill: 1 (08-17, spent rewriting the plan)
 
 **Closes per week: 6 · 4 · 4.** The 08-16 paradigm shift changed the plan and did not
@@ -107,3 +107,4 @@ Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the en
 | 2026-08-21 | 13 all vs allSettled, second pass + 14 sequential vs parallel | 💻 | ✅ both. 13 clean, the array argument came without prompting. 14 had allAtOnce calling Promise.all over plain numbers instead of promises - green because the values matched, tenth sighting; a timing check now makes that impossible |
 | 2026-08-22 | mobile trace drill (no machine) | 📱 | 🔁 4 of 8. Correct: event-loop order, default sort, destructuring defaults, and that try/catch does not catch a rejected async call. Missed: `.map(slow)` calls slow twice synchronously (yesterday's lesson, one day old), an ascending comparator read as descending, a reduce callback with no return (should throw TypeError), and `||` vs `??` on `0` and `""` read as booleans. Timed build 1 deferred, folder is ready |
 | 2026-08-23 | timed build 1, order report | ⏱ | 🔁 **4 of 8 on the clock, 8 of 8 an hour later.** All four "how it ran" checks green on the very first run: 24 calls, never above 5 in flight, genuinely parallel, 232 ms - batching by 5 was his own choice and it is correct. The four reds were not concurrency: returned an array instead of the object (byStatus and failed were both already right inside it), summed every order instead of paid only, topCustomers never started. After the clock all four closed, the last one being the deliberate tie: Cleo and Bo both on 385.75, a comparator with no second level returns 0, and a stable sort then ranks by insertion order instead of by name. One unblock at minute 12 - the `list.map(fn)` -> `allSettled` shape. Eleventh sighting of green for the wrong reason: positions used as ids, which only works because the ids happen to be 1..24; renumbering them to 101..124 made every single order fail. `report.reference.js` added next to it |
+| 2026-08-24 | none | - | **Skipped, deliberately.** An interview at 14:00 on 08-25; the evening went to preparing for that round in the Java chat instead. Not avoidance - avoidance was the original problem and it has been closed since 08-03. A real round outranks a drill. Recorded as a gap rather than fudged, because the log is only useful if it is true |
