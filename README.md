@@ -52,6 +52,22 @@ What changed:
 - written repeats only for drills that actually failed: 04, 05, 09, 10. Drills 01,
   02, 03, 06, 07, 08 closed on their first repeat and move to the Anki deck
 
+## The one finding that keeps repeating
+
+Not a JS gap. **Reading the task.** Three independent sightings in four days:
+
+- **08-22, trace drill.** Three of four misses were on code he can write.
+- **08-23, timed build 1.** Two correct values did not count: the spec said "return an
+  object" and "paid orders only". Both were written down. Both were skipped.
+- **08-25, Goldman CoderPad, a real round.** Task two: 13 of 38 minutes spent writing a
+  new solution instead of debugging the existing one, and the line requiring
+  case-insensitive matching was applied 17 minutes after it could have been.
+
+The rule written here on 08-23 - *first two minutes, re-read the spec out loud and type
+the empty answer skeleton* - and the 90-second intake protocol written after the round
+are the same rule, found twice from two directions. It is now the first step of every
+assembly.
+
 ## Counter
 
 Start: 2026-08-03
