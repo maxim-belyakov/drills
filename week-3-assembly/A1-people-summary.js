@@ -10,16 +10,16 @@
 // Run:  node week-3-assembly/A1-people-summary.js
 
 const people = [
-  { name: "Nadia", dept: "eng",    salary: 7100,  active: true  },
-  { name: "Ravi",  dept: "design", salary: 6100,  active: true  },
-  { name: "Eyal",  dept: "design", salary: 12000, active: false },
-  { name: "Tomas", dept: "sales",  salary: 7400,  active: false },
-  { name: "Wei",   dept: "eng",    salary: 8300,  active: true  },
-  { name: "Anke",  dept: "design", salary: 5800,  active: false },
-  { name: "Bruno", dept: "sales",  salary: 7100,  active: true  },
-  { name: "Clara", dept: "eng",    salary: 9900,  active: true  },
-  { name: "Diego", dept: "sales",  salary: 6600,  active: true  },
-  { name: "Ines",  dept: "eng",    salary: 7000,  active: true  },
+  { name: "Nadia", dept: "eng", salary: 7100, active: true },
+  { name: "Ravi", dept: "design", salary: 6100, active: true },
+  { name: "Eyal", dept: "design", salary: 12000, active: false },
+  { name: "Tomas", dept: "sales", salary: 7400, active: false },
+  { name: "Wei", dept: "eng", salary: 8300, active: true },
+  { name: "Anke", dept: "design", salary: 5800, active: false },
+  { name: "Bruno", dept: "sales", salary: 7100, active: true },
+  { name: "Clara", dept: "eng", salary: 9900, active: true },
+  { name: "Diego", dept: "sales", salary: 6600, active: true },
+  { name: "Ines", dept: "eng", salary: 7000, active: true },
 ];
 
 // --- 0, do this FIRST, out loud -------------------------------
@@ -49,7 +49,41 @@ const people = [
 // Everything is already in memory. No await, no promises, nothing to fetch.
 
 function summary(list) {
-  // here
+  let deptMap = new Map();
+  let headcount = [];
+  let payroll;
+  let topEarners;
+  let inactive;
+  const activePeople = list.filter(line => line.active);
+
+  activePeople.forEach(line => {
+    const name = line.dept;
+    deptMap.set(name, (deptMap.get(name) ?? 0) + 1);
+  })
+
+  headcount = [...deptMap].reduce((acc, line) => {
+    acc[line[0]] = line[1];
+    return acc;
+  }, {})
+
+  payroll = activePeople.reduce((acc, line) => {
+    acc += line.salary;
+    return acc;
+  }, 0);
+
+  topEarners = activePeople.sort((a, b) => {
+    return b.salary - a.salary || a.name.localeCompare(b.name)
+  }).slice(0, 3).map(item => { return { name: item.name, salary: item.salary } });
+
+  inactive = list.filter(line => !line.active).map(item => item.name).sort();
+
+
+  return {
+    headcount,
+    payroll,
+    topEarners,
+    inactive,
+  }
 }
 
 // --- 2, spoken, nothing to write ------------------------------
@@ -79,8 +113,8 @@ const EXPECTED = {
 
 // a second, smaller list - so the function cannot be written against the first one
 const other = [
-  { name: "Zoe",  dept: "ops", salary: 5000, active: true  },
-  { name: "Adam", dept: "ops", salary: 5000, active: true  },
+  { name: "Zoe", dept: "ops", salary: 5000, active: true },
+  { name: "Adam", dept: "ops", salary: 5000, active: true },
   { name: "Mira", dept: "eng", salary: 9000, active: false },
 ];
 
@@ -91,10 +125,12 @@ runChecks([
   { name: "topEarners", fn: summary, run: () => summary(people).topEarners, expected: EXPECTED.topEarners },
   { name: "inactive", fn: summary, run: () => summary(people).inactive, expected: EXPECTED.inactive },
   // it must read its parameter, not the module-level `people`
-  { name: "works on a different list too", fn: summary, run: () => summary(other), expected: {
+  {
+    name: "works on a different list too", fn: summary, run: () => summary(other), expected: {
       headcount: { ops: 2 },
       payroll: 10000,
       topEarners: [{ name: "Adam", salary: 5000 }, { name: "Zoe", salary: 5000 }],
       inactive: ["Mira"],
-    } },
+    }
+  },
 ]);

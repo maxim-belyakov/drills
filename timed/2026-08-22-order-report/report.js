@@ -83,6 +83,8 @@ async function buildReport() {
   }, {})
 
   const sortedAmountCustomers = [...Object.keys(customerAmounts)].sort((a, b) => {
+    console.log('a', a)
+    console.log('b', b)
     return customerAmounts[b] - customerAmounts[a] || a.localeCompare(b);
   })
 
