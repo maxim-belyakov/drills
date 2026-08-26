@@ -9,16 +9,16 @@
 
 // this is what a caller will hand you - an async function returning the array
 const loadTickets = async () => [
-  { id: 12, project: "web", hours: 3,  assignee: "Ola"  },
-  { id: 4,  project: "api", hours: 8,  assignee: "Pim"  },
-  { id: 31, project: "web", hours: 12, assignee: null   },
-  { id: 7,  project: "ops", hours: 5,  assignee: "Ola"  },
-  { id: 25, project: "api", hours: 6,  assignee: "Nils" },
-  { id: 3,  project: "web", hours: 9,  assignee: "Pim"  },
-  { id: 5,  project: "ops", hours: 9,  assignee: null   },
-  { id: 9,  project: "api", hours: 4,  assignee: "Nils" },
-  { id: 22, project: "web", hours: 7,  assignee: "Kaya" },
-  { id: 15, project: "ops", hours: 3,  assignee: "Kaya" },
+  { id: 12, project: "web", hours: 3, assignee: "Ola" },
+  { id: 4, project: "api", hours: 8, assignee: "Pim" },
+  { id: 31, project: "web", hours: 12, assignee: null },
+  { id: 7, project: "ops", hours: 5, assignee: "Ola" },
+  { id: 25, project: "api", hours: 6, assignee: "Nils" },
+  { id: 3, project: "web", hours: 9, assignee: "Pim" },
+  { id: 5, project: "ops", hours: 9, assignee: null },
+  { id: 9, project: "api", hours: 4, assignee: "Nils" },
+  { id: 22, project: "web", hours: 7, assignee: "Kaya" },
+  { id: 15, project: "ops", hours: 3, assignee: "Kaya" },
 ];
 
 // --- 0, do this FIRST, out loud -------------------------------
@@ -45,7 +45,49 @@ const loadTickets = async () => [
 //      ids of tickets whose assignee is null, ASCENDING.
 
 async function report(load) {
-  // here
+  const orders = await load();
+  const assignedOrders = orders.filter(item => item.assignee);
+
+  const byProject = orders
+  .reduce((acc, line) => {
+    acc[line.project] = acc[line.project] ?? [];
+    acc[line.project].push(line.id);
+    return acc;
+  }, {});
+
+  for (const key in byProject) {
+    byProject[key].sort((a, b) => a - b);
+  }
+
+  const totalHours = orders.reduce((acc, line) => {
+    acc += line.hours
+    return acc;
+  }, 0);
+
+  const hoursByAssignee = assignedOrders
+    .reduce((acc, line) => {
+      acc[line.assignee] = (acc[line.assignee] ?? 0) + line.hours
+      return acc;
+    }, {});
+
+  const busiest = Object.entries(hoursByAssignee)
+    .sort((a, b) => {
+      return b[1] - a[1] || a[0].localeCompare(b[0])
+    })
+    .slice(0, 2)
+    .map(item => ({
+      assignee: item[0],
+      hours: item[1]
+    }));
+
+  const unassigned = orders.filter(item => !item.assignee).map(item => item.id).sort((a, b) => a - b);
+
+  return {
+    byProject: byProject,
+    totalHours,
+    busiest,
+    unassigned
+  }
 }
 
 // --- 2, spoken, nothing to write ------------------------------
@@ -74,8 +116,8 @@ const EXPECTED = {
 // a second loader - so the function cannot be written against the first data
 const loadOther = async () => [
   { id: 40, project: "ml", hours: 4, assignee: "Iva" },
-  { id: 8,  project: "ml", hours: 4, assignee: "Ada" },
-  { id: 2,  project: "ml", hours: 1, assignee: null  },
+  { id: 8, project: "ml", hours: 4, assignee: "Ada" },
+  { id: 2, project: "ml", hours: 1, assignee: null },
 ];
 
 runChecks([
@@ -84,10 +126,12 @@ runChecks([
   { name: "totalHours", fn: report, run: async () => (await report(loadTickets)).totalHours, expected: EXPECTED.totalHours },
   { name: "busiest", fn: report, run: async () => (await report(loadTickets)).busiest, expected: EXPECTED.busiest },
   { name: "unassigned", fn: report, run: async () => (await report(loadTickets)).unassigned, expected: EXPECTED.unassigned },
-  { name: "works with a different loader too", fn: report, run: () => report(loadOther), expected: {
+  {
+    name: "works with a different loader too", fn: report, run: () => report(loadOther), expected: {
       byProject: { ml: [2, 8, 40] },
       totalHours: 9,
       busiest: [{ assignee: "Ada", hours: 4 }, { assignee: "Iva", hours: 4 }],
       unassigned: [2],
-    } },
+    }
+  },
 ]);
