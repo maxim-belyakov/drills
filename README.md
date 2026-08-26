@@ -19,6 +19,11 @@ Passes ✅. Peeked 🔁, comes back in a day.
 
 **Week 2 rhythm (from 2026-08-09):** every session is **one new drill plus a cold re-run of the oldest closed drill**, about five minutes extra. The programme's spaced repeat - a day later, then a week later - was not happening; this makes it part of the session instead of a separate intention.
 
+**The spoken part is checked, always.** Section 2 of every drill and assembly is not
+optional and not homework - it is answered out loud in the session and graded here, same
+as the code. It was skipped on A1 (2026-08-26) and he flagged it himself. A drill whose
+spoken part was never answered is not closed.
+
 **Every closed drill ends with a commit AND a push**, in the same sitting - no unpushed work left overnight.
 
 **Three states:** new → 🔁 written with a hint → ✅ written cold.
