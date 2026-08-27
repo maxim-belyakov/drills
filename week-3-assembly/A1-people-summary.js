@@ -1,5 +1,9 @@
 // Assembly 1 - one function, four answers, no async at all.
 //
+// SECOND PASS, 2026-08-27. No worked example, no hints. The salaries have been
+// reshuffled since the first pass, so the tie now falls on a different pair -
+// remembering last time's answer will not help you.
+//
 // A NEW TYPE of session, added 2026-08-25. A drill trains ONE move. An assembly
 // makes you combine moves you have already closed into a single function, and
 // hold the shape of the answer in your head while you do it. Nothing here is new
@@ -10,15 +14,15 @@
 // Run:  node week-3-assembly/A1-people-summary.js
 
 const people = [
-  { name: "Nadia", dept: "eng", salary: 7100, active: true },
-  { name: "Ravi", dept: "design", salary: 6100, active: true },
+  { name: "Nadia", dept: "eng", salary: 8300, active: true },
+  { name: "Ravi", dept: "design", salary: 6600, active: true },
   { name: "Eyal", dept: "design", salary: 12000, active: false },
   { name: "Tomas", dept: "sales", salary: 7400, active: false },
-  { name: "Wei", dept: "eng", salary: 8300, active: true },
+  { name: "Wei", dept: "eng", salary: 7100, active: true },
   { name: "Anke", dept: "design", salary: 5800, active: false },
-  { name: "Bruno", dept: "sales", salary: 7100, active: true },
-  { name: "Clara", dept: "eng", salary: 9900, active: true },
-  { name: "Diego", dept: "sales", salary: 6600, active: true },
+  { name: "Bruno", dept: "sales", salary: 9900, active: true },
+  { name: "Clara", dept: "eng", salary: 7100, active: true },
+  { name: "Diego", dept: "sales", salary: 6200, active: true },
   { name: "Ines", dept: "eng", salary: 7000, active: true },
 ];
 
@@ -49,41 +53,7 @@ const people = [
 // Everything is already in memory. No await, no promises, nothing to fetch.
 
 function summary(list) {
-  let deptMap = new Map();
-  let headcount = [];
-  let payroll;
-  let topEarners;
-  let inactive;
-  const activePeople = list.filter(line => line.active);
-
-  activePeople.forEach(line => {
-    const name = line.dept;
-    deptMap.set(name, (deptMap.get(name) ?? 0) + 1);
-  })
-
-  headcount = [...deptMap].reduce((acc, line) => {
-    acc[line[0]] = line[1];
-    return acc;
-  }, {})
-
-  payroll = activePeople.reduce((acc, line) => {
-    acc += line.salary;
-    return acc;
-  }, 0);
-
-  topEarners = activePeople.sort((a, b) => {
-    return b.salary - a.salary || a.name.localeCompare(b.name)
-  }).slice(0, 3).map(item => { return { name: item.name, salary: item.salary } });
-
-  inactive = list.filter(line => !line.active).map(item => item.name).sort();
-
-
-  return {
-    headcount,
-    payroll,
-    topEarners,
-    inactive,
-  }
+  // here
 }
 
 // --- 2, spoken, nothing to write ------------------------------
@@ -102,11 +72,11 @@ const { runChecks } = require("../lib/checks");
 
 const EXPECTED = {
   headcount: { eng: 4, design: 1, sales: 2 },
-  payroll: 52100,
+  payroll: 52200,
   topEarners: [
-    { name: "Clara", salary: 9900 },
-    { name: "Wei", salary: 8300 },
-    { name: "Bruno", salary: 7100 },
+    { name: "Bruno", salary: 9900 },
+    { name: "Nadia", salary: 8300 },
+    { name: "Clara", salary: 7100 },
   ],
   inactive: ["Anke", "Eyal", "Tomas"],
 };
