@@ -53,7 +53,36 @@ const people = [
 // Everything is already in memory. No await, no promises, nothing to fetch.
 
 function summary(list) {
-  // here
+  const activePeople = list.filter(item => item.active);
+  const headcount = activePeople.reduce((acc, line) => {
+    acc[line.dept] = acc[line.dept] ?? 0
+    acc[line.dept] += 1;
+    return acc;
+  }, {});
+
+  const payroll = activePeople.reduce((acc, line) => {
+    acc += line.salary;
+    return acc;
+  }, 0);
+
+  const topEarners = activePeople
+    .sort((a, b) => {
+      return b.salary - a.salary || a.name.localeCompare(b.name);
+    })
+    .map(item => ({ name: item.name, salary: item.salary }))
+    .slice(0, 3);
+
+  const inactive = list.filter(item => !item.active)
+    .map(item => item.name)
+    .sort((a,b) => a.localeCompare(b))
+
+
+  return {
+    headcount,
+    payroll,
+    topEarners,
+    inactive
+  }
 }
 
 // --- 2, spoken, nothing to write ------------------------------
