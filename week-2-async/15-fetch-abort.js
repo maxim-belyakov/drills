@@ -61,7 +61,14 @@ const fetch = (url, options = {}) =>
 // The response object has: res.ok (boolean), res.status (number), res.json().
 
 async function fetchJson(url) {
-  // here
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error('HTTP ' + response.status);
+  }
+  const data = await response.json();
+
+  return data;
 }
 
 // --- 2 --------------------------------------------------------
@@ -74,7 +81,18 @@ async function fetchJson(url) {
 // Note that the last one is a DIFFERENT kind of failure from the middle one.
 
 async function safeFetchJson(url) {
-  // here
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error('HTTP ' + response.status);
+    }
+    const data = await response.json();
+
+    return { ok: true, data }
+  } catch (e) {
+    return { ok: false, error: e.message }
+  }
 }
 
 // --- 3 --------------------------------------------------------
@@ -92,7 +110,25 @@ async function safeFetchJson(url) {
 // Catch it and tell it apart from every other failure.
 
 async function withTimeout(url, ms) {
-  // here
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+
+    if (!response.ok) {
+      throw new Error('HTTP ' + response.status);
+    }
+
+    const data = await response.json();
+
+    return data
+  } catch (e) {
+    if (e.name === 'AbortError') return 'timeout'
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 // --- 4, spoken, nothing to write ------------------------------
@@ -123,11 +159,17 @@ runChecks([
   { name: "withTimeout, arrives in time", fn: withTimeout, run: () => withTimeout("/ok", 100), expected: { id: 1, name: "ok" } },
   { name: "withTimeout, too slow", fn: withTimeout, run: () => withTimeout("/slow", 100), expected: "timeout" },
   // it must ABORT, not sit and wait out the full 300 ms
-  { name: "withTimeout really aborts", fn: withTimeout, run: async () => {
-      const t = Date.now(); await withTimeout("/slow", 100); return Date.now() - t < 200; }, expected: true },
+  {
+    name: "withTimeout really aborts", fn: withTimeout, run: async () => {
+      const t = Date.now(); await withTimeout("/slow", 100); return Date.now() - t < 200;
+    }, expected: true
+  },
   // and it must clear its own timer on the happy path
-  { name: "withTimeout clears its timer", fn: withTimeout, run: async () => {
+  {
+    name: "withTimeout clears its timer", fn: withTimeout, run: async () => {
       await withTimeout("/ok", 5000);
       await new Promise((r) => setImmediate(r));
-      return process.getActiveResourcesInfo().filter((x) => x === "Timeout").length; }, expected: 0 },
+      return process.getActiveResourcesInfo().filter((x) => x === "Timeout").length;
+    }, expected: 0
+  },
 ]);
