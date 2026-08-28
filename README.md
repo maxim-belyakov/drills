@@ -19,6 +19,12 @@ Passes ✅. Peeked 🔁, comes back in a day.
 
 **Week 2 rhythm (from 2026-08-09):** every session is **one new drill plus a cold re-run of the oldest closed drill**, about five minutes extra. The programme's spaced repeat - a day later, then a week later - was not happening; this makes it part of the session instead of a separate intention.
 
+**Every session opens with three trace snippets.** Not a warm-up in spirit - a graded
+part of the session. It exists because of two findings four days apart: on 2026-08-22
+three of four trace misses were on code he can write, and on 2026-08-25 a real round was
+lost to reading rather than to JavaScript. Reading and writing are trained separately,
+and only one of them was being trained.
+
 **The spoken part is checked, always.** Section 2 of every drill and assembly is not
 optional and not homework - it is answered out loud in the session and graded here, same
 as the code. It was skipped on A1 (2026-08-26) and he flagged it himself. A drill whose
