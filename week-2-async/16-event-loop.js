@@ -33,7 +33,7 @@ async function snippet2(log) {
   log("4");
   await p;
   log("5");
-}
+} 
 
 function snippet3(log) {
   setTimeout(() => {
@@ -43,24 +43,24 @@ function snippet3(log) {
   setTimeout(() => log("t2"), 0);
   Promise.resolve().then(() => log("micro"));
   log("sync");
-}
+} 
 
 // --- 1 --------------------------------------------------------
 // Fill in the order snippet1 prints. Say each step out loud as you write it.
 // Do NOT run it first.
 
-const guess1 = [];
+const guess1 = ['A', 'D', 'C', 'B'];
 
 // --- 2 --------------------------------------------------------
 // Same for snippet2. Note that `await null` still suspends - awaiting a
 // non-promise still hands control back and continues in a microtask.
 
-const guess2 = [];
+const guess2 = ['1', '2', '4', '3', '5'];
 
 // --- 3 --------------------------------------------------------
 // Same for snippet3. Two timers, and one of them queues a microtask of its own.
 
-const guess3 = [];
+const guess3 = ['sync', 'micro', 't1', 't1-micro', 't2'];
 
 // --- 4, this one you write ------------------------------------
 // schedule(log) must produce exactly ["now", "micro", "macro"].
@@ -69,7 +69,9 @@ const guess3 = [];
 // with different delays, that is guessing, not scheduling.
 
 function schedule(log) {
-  // here
+  log("now");
+  Promise.resolve().then(() => log("micro"))
+  setTimeout(() => log("macro"), 0)
 }
 
 // --- 5, spoken, nothing to write ------------------------------
