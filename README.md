@@ -86,9 +86,25 @@ Closed cold: **14 of 26** numbered drills · assemblies closed cold: **2** (A1 s
 Day streak: **broken at 21, 2026-08-24** - one deliberate skip for a live round
 Sessions: 19 · of them 📱 mobile: 2 · days with no drill: 1 (08-17, spent rewriting the plan)
 
-**Closes per week: 6 · 4 · 4.** The 08-16 paradigm shift changed the plan and did not
-change the rate. At 4 a week the remaining 10 drills land around 10 September, so
-**"end of August" is not reachable** and is kept here only as the thing that was missed.
+**Closes per week: 6 · 4 · 4 · 0.**
+
+Week four closed **no numbered drill at all**. Drills 15 and 16 were both written and both
+came back green, and both returned - one for peeking, one for naming the mechanism
+backwards. Honest by the criterion, empty by the counter. What did close was two
+**assemblies**, A2 cold with no help at all and A1 on its second pass; but assemblies are
+not part of the 26.
+
+The real finding of the 08-30 review is not the rate, it is **what is left**. Ten drills
+remain and **seven of them are React** (17-23), untouched, while a week and a half went
+into polishing async that was already complete in content. React is the stack he presents
+himself on. Next week is a React week: 17-23, one a day. Drills 15 and 16 come back only
+as warm-up snippets, never as the content of a day.
+
+**The Saturday timed run is not surviving.** Instituted 08-16 as weekly. Run once, on
+Sunday 08-23. Deferred on 08-23-week and missed outright on 08-29. It is the only element
+that needs an unbroken 45 minutes at the machine, and it is the only element that keeps
+failing. Two options on the table, his call: move it to a weekday evening, or cut it to
+25 minutes.
 
 Streak and closes now measure different things. The streak measures showing up, which
 has been solved since 08-03 and no longer carries information. Closes are the number.
@@ -141,3 +157,5 @@ Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the en
 | 2026-08-27 | assembly A1, second pass | 💻 | ✅ cold, no hints, narrated. Salaries had been reshuffled so the tie fell on Wei/Clara instead of the pair he saw on 08-26 - he wrote the tie-break up front and never stepped on it. Note for later: `.map(...).slice(0,3)` transforms all seven then keeps three; cut first, transform second |
 | 2026-08-27 | 15 fetch, HTTP errors and AbortController | 💻 | 🔁 all ten green, two peeks. First pass, so it opened with theory. Faults, in order: called `fetchJson` recursively instead of `fetch` (stack overflow read to him as "endless re-requests"); wrapped part 1 in a try/catch that swallowed the very throw the spec asked for; `setImmediate` instead of `setTimeout`, which ignores the delay and fires on the next tick, so every request aborted before it could answer. Accidentally correct and worth keeping: he awaited `res.json()` inside the try of `safeFetchJson` but not in `fetchJson` - the first needs it or a parse failure escapes the catch, the second does not because an async function adopts a returned promise. 🔴 Spoken 1.5 of 3, and (b) came out INVERTED: he said try/catch around `await fetch` catches non-2xx statuses. It is the exact opposite - it catches only transport failure, and 404/500 fulfil. That is the whole point of the drill, so it returns |
 | 2026-08-28 | 16 event loop | 💻 | 🔁 all four green cold - three predictions and `schedule`, revised in his head rather than by running, and narrated. But the drill is about the model, not the output, and the model has one hole: he described the code after `await` as going to the MACROtask queue. It is a microtask, exactly like a `.then` callback. In snippet2 there are no timers, so the wrong mechanism still produced the right order - green for the wrong reason again, this time in reasoning rather than in code. Spoken 2 of 3. (a) right in substance, called it a closure instead of starvation. (b) mechanism right, did not say what the 0 actually is (a minimum delay, not a promise; clamped to ~4 ms after five nested timers). (c) right answer, wrong reason - said macrotasks give 'clearer separation'; the real reason is that microtasks all drain inside the same tick and never yield, so chunking into them freezes the page just the same. Measured it: 2000 chunks via microtasks let the UI tick 0 times, via macrotasks 1999 times |
+| 2026-08-29 | none | - | **Missed.** No session. Not a deliberate skip like 08-24 and not a mobile one - the day simply did not happen. Timed build 2 was due here and slipped with it, second Saturday running |
+| 2026-08-30 | trace warm-up + drill 15 from memory | 📱 | 🔁 **2 of 3 on the trace, `withTimeout` written on a phone but peeked.** First session under the new rule that a session opens with three trace snippets, and these were built so the two queues actually interleave - 08-28's snippet2 had no timers, so a wrong model still produced the right order. A and B green with correct reasoning: he put the `await` continuation ahead of a timer scheduled earlier, which the "macrotask" model from 08-28 could not have produced. The model moved in two days. 🔴 C missed, an adjacent gap rather than the old one: in `await g()` he queued `g` itself as a microtask. The CALL happens first and synchronously - an async function runs to its own first `await` before anything is queued. Third sighting of one idea from three directions (drill 14 `list.map(slow)`, snippet A today, now C): **calling starts the work, `await` only waits.** `withTimeout` came back structurally complete from memory - try/catch/finally, signal passed, `res.ok`, `AbortError` told apart, rethrow, `clearTimeout` in `finally`. He peeked, so 15 returns again, but what he peeked for was API spelling, not shape - and that distinction is worth keeping. Two real slips survived the phone: the parameter is `md` while the body uses `ms` (second parameter-name mismatch this week, after `setImmediate`), and `"http +" + status` puts the plus inside the string |
