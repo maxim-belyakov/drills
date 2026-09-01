@@ -1,0 +1,32 @@
+{
+  "name": "drills",
+  "version": "1.0.0",
+  "description": "Artifact for the 4-week recall programme kept in the Obsidian vault (`\ud83c\udfaf \u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430 \u0435\u0436\u0435\u0434\u043d\u0435\u0432\u043d\u044b\u0445 \u043f\u043e\u0432\u0442\u043e\u0440\u0435\u043d\u0438\u0439 (4 \u043d\u0435\u0434\u0435\u043b\u0438)`).",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "drill": "node lib/run.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxim-belyakov/drills.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/maxim-belyakov/drills/issues"
+  },
+  "homepage": "https://github.com/maxim-belyakov/drills#readme",
+  "dependencies": {
+    "esbuild": "^0.28.2",
+    "esbuild-register": "^3.6.0",
+    "jsdom": "^29.1.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "private": true
+}
