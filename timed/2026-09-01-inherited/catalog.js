@@ -13,12 +13,12 @@ const PRODUCTS = [
 ];
 
 function findByName(list, query) {
-  return list.filter((p) => p.name.includes(query)).map((p) => p.id);
+  return list.filter((p) => p.name.toLowerCase().includes(query.toLowerCase())).map((p) => p.id);
 }
 
 function topRated(list, n) {
-  return list
-    .sort((a, b) => b.rating - a.rating)
+  return [...list]
+    .sort((a, b) => b.rating - a.rating || a.name.localeCompare(b.name))
     .slice(0, n)
     .map((p) => ({ name: p.name, rating: p.rating }));
 }
@@ -27,15 +27,17 @@ function priceBands(list) {
   const bands = { cheap: [], mid: [], pricey: [] };
   for (const p of list) {
     if (p.price < 50) bands.cheap.push(p.id);
-    else if (p.price < 500) bands.mid.push(p.id);
+    else if (p.price <= 500) bands.mid.push(p.id);
     else bands.pricey.push(p.id);
   }
   return bands;
 }
 
 function stockSummary(list) {
-  const total = list.reduce((sum, p) => sum + p.price, 0);
-  return { count: list.length, averagePrice: (total / list.length).toFixed(2) };
+  const activeProducts = list.filter(item => item.inStock);
+  const total = activeProducts.reduce((sum, p) => sum + p.price, 0);
+
+  return { count: activeProducts.length, averagePrice: parseFloat((total / activeProducts.length).toFixed(2)) };
 }
 
 module.exports = { PRODUCTS, findByName, topRated, priceBands, stockSummary };
