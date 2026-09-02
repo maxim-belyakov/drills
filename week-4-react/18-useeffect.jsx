@@ -30,7 +30,21 @@ const load = (id) =>
 // waits, and looks at whether tick() kept firing.
 
 function Clock() {
-  return "__HERE__";
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCount(prev => prev + 1);
+      tick()
+    }, 10);
+
+    return () => {
+      clearInterval(timer);
+    }
+  }, [])
+  return (
+    <p id="n">{count}</p>
+  );
 }
 
 // --- 2 --------------------------------------------------------
@@ -44,7 +58,13 @@ function Clock() {
 // The check reads log.titles and expects exactly ["a", "b"].
 
 function Title({ text }) {
-  return "__HERE__";
+  useEffect(() => {
+    setTitle(text)
+  }, [text])
+
+  return (
+    <p id="t">{text}</p>
+  );
 }
 
 // --- 3 --------------------------------------------------------
@@ -60,7 +80,21 @@ function Title({ text }) {
 // This is a debounce, and the cancelling half is the point.
 
 function Search({ query }) {
-  return "__HERE__";
+  const [searchResult, setSearchResult] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchResult(runSearch(query));
+    }, 30)
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [query])
+
+  return (
+    <p id="r">{searchResult}</p>
+  );
 }
 
 // --- 4 --------------------------------------------------------
@@ -76,7 +110,22 @@ function Search({ query }) {
 // An effect cannot un-await a promise. What it CAN do is refuse the answer.
 
 function Loader({ id }) {
-  return "__HERE__";
+  const [value, setValue] = useState('loading');
+
+  useEffect(() => {
+    let current = true;
+
+    load(id).then((answer) => {
+      if (current) setValue(answer);
+    });
+
+    return () => {
+      current = false;
+    };
+  }, [id])
+
+
+  return <p id="v">{value}</p>;
 }
 
 // --- 5, spoken, nothing to write ------------------------------
