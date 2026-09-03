@@ -21,6 +21,8 @@ technique is not a drill, it is a riddle.
 
 **First pass gets a worked example, repeats do not.** Every drill opened for the first time starts with 3-5 minutes looking at a working analogue - that is the format, not a concession. A drill coming back as 🔁 or as a spaced repeat gets nothing: it has been seen.
 
+**One worked example per TASK, not one per drill** (2026-09-03, named by him mid-session: *"the example before the drill has stopped explaining what is actually wanted from me"*). A drill-level explanation teaches the CONCEPT; it does not tell you the SHAPE of the answer for task 3. Each numbered task gets its own three-to-six-line worked analogue on unrelated data, showing the shape and nothing else. Where a task hangs off given code the student must not edit, that given code is quoted in the session message too - not left to be found in the file.
+
 **A drill coming back for the THIRD time gets a fresh worked example on different data.** Twice-failed means the first example did not transfer, so repeating it is not a repetition, it is the same failed lesson. New data, same technique.
 
 **Week 2 rhythm (from 2026-08-09):** every session is **one new drill plus a cold re-run of the oldest closed drill**, about five minutes extra. The programme's spaced repeat - a day later, then a week later - was not happening; this makes it part of the session instead of a separate intention.
