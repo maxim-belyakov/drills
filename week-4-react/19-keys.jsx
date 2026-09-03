@@ -48,7 +48,11 @@ function Draft({ user }) {
 // "bo", and fails if React logs a key warning.
 
 function Roster({ people }) {
-  return "__HERE__";
+  return (
+    <ul>
+      {people.map(item => <Row key={item.id} person={item} />)}
+    </ul>
+  );
 }
 
 // --- 2 --------------------------------------------------------
@@ -63,7 +67,16 @@ function Roster({ people }) {
 // does.
 
 function Pairs({ rows }) {
-  return "__HERE__";
+  return (
+    <dl>
+      {rows.map(item => (
+        <Fragment key={item.id}>
+          <dt>{item.term}</dt>
+          <dd>{item.def}</dd>
+        </Fragment>
+      ))}
+    </dl>
+  );
 }
 
 // --- 3 --------------------------------------------------------
@@ -76,7 +89,9 @@ function Pairs({ rows }) {
 // Make React throw the old one away.
 
 function Profile({ user }) {
-  return "__HERE__";
+  return (
+    <Draft key={user.id} user={user} />
+  );
 }
 
 // --- 4 --------------------------------------------------------
@@ -91,7 +106,13 @@ function Profile({ user }) {
 // back in the order it was given.
 
 function SortedRoster({ people, by }) {
-  return "__HERE__";
+  const ordered = [...people].sort((a, b) => by === 'name' ? a.name.localeCompare(b.name) : b.score - a.score);
+
+  return (
+    <ul>
+      {ordered.map((p) => <Row key={p.id} person={p} />)}
+    </ul>
+  )
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -124,7 +145,8 @@ const SCORED = () => [
 ];
 
 runChecks([
-  { name: "Roster keeps a row's own state when the list grows", fn: Roster, run: () => {
+  {
+    name: "Roster keeps a row's own state when the list grows", fn: Roster, run: () => {
       const people = THREE();
       const s = render(<Roster people={people} />);
       s.click("#b-bo"); s.click("#b-bo"); s.click("#b-bo");
@@ -132,15 +154,19 @@ runChecks([
       const shown = s.find("#b-bo").textContent;
       s.unmount();
       return shown;
-    }, expected: "bo:3" },
+    }, expected: "bo:3"
+  },
 
-  { name: "Roster survives two people with the same name", fn: Roster, run: () => {
+  {
+    name: "Roster survives two people with the same name", fn: Roster, run: () => {
       const people = [{ id: 1, name: "ann" }, { id: 2, name: "bo" }, { id: 3, name: "bo" }];
       const warned = catchWarn(() => { render(<Roster people={people} />).unmount(); });
       return warned ? "warned" : "quiet";
-    }, expected: "quiet" },
+    }, expected: "quiet"
+  },
 
-  { name: "Pairs puts dt and dd straight into the dl", fn: Pairs, run: () => {
+  {
+    name: "Pairs puts dt and dd straight into the dl", fn: Pairs, run: () => {
       const rows = [{ id: 1, term: "a", def: "1" }, { id: 2, term: "b", def: "2" }];
       let tags = "";
       const warned = catchWarn(() => {
@@ -149,18 +175,22 @@ runChecks([
         s.unmount();
       });
       return { tags, warned };
-    }, expected: { tags: "dt,dd,dt,dd", warned: false } },
+    }, expected: { tags: "dt,dd,dt,dd", warned: false }
+  },
 
-  { name: "Profile clears the draft when the user changes", fn: Profile, run: () => {
+  {
+    name: "Profile clears the draft when the user changes", fn: Profile, run: () => {
       const s = render(<Profile user={{ id: 1, name: "ann" }} />);
       s.type("#note", "hello");
       s.rerender(<Profile user={{ id: 2, name: "bo" }} />);
       const out = { who: s.find("#who").textContent, note: s.find("#note").value };
       s.unmount();
       return out;
-    }, expected: { who: "bo", note: "" } },
+    }, expected: { who: "bo", note: "" }
+  },
 
-  { name: "SortedRoster keeps each count through a re-sort", fn: SortedRoster, run: () => {
+  {
+    name: "SortedRoster keeps each count through a re-sort", fn: SortedRoster, run: () => {
       const people = SCORED();
       const s = render(<SortedRoster people={people} by="name" />);
       s.click("#b-cy"); s.click("#b-cy");
@@ -171,13 +201,16 @@ runChecks([
       };
       s.unmount();
       return out;
-    }, expected: { cy: "cy:2", order: "b-bo,b-ann,b-cy" } },
+    }, expected: { cy: "cy:2", order: "b-bo,b-ann,b-cy" }
+  },
 
-  { name: "SortedRoster does not touch the array it was given", fn: SortedRoster, run: () => {
+  {
+    name: "SortedRoster does not touch the array it was given", fn: SortedRoster, run: () => {
       const people = SCORED();
       const before = people.map((p) => p.name).join(",");
       const s = render(<SortedRoster people={people} by="score" />);
       s.unmount();
       return people.map((p) => p.name).join(",") === before;
-    }, expected: true },
+    }, expected: true
+  },
 ]);
