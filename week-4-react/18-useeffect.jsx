@@ -130,11 +130,11 @@ function Loader({ id }) {
 
 // --- 5, spoken, nothing to write ------------------------------
 //   a) what exactly does the function you return from an effect do, and name the
-//      TWO moments React calls it - one of them is not "on unmount".
+//      TWO moments React calls it - one of them is not "on unmount". -- after next start of useEffect and before unmount
 //   b) `useEffect(fn)` with no second argument, `useEffect(fn, [])` and
-//      `useEffect(fn, [x])` - say the three behaviours out loud.
+//      `useEffect(fn, [x])` - say the three behaviours out loud. -- 1 after each re-render, 2 one time after mount, 3 after mount and each time when x changes
 //   c) part 4 - the slow answer for id 1 still arrives. Your code did not stop
-//      it. So what did you actually do to keep it off the screen?
+//      it. So what did you actually do to keep it off the screen? I refuse to take the answer, 
 
 // --------------------------------------------------------------
 // Do not touch below. This is the check.
