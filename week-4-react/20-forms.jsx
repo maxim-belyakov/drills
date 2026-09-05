@@ -1,57 +1,64 @@
-// Приём 20 - управляемая форма и подъём состояния наверх
-// (drill 20 - controlled inputs and lifting state up)
+// Drill 20 - controlled inputs and lifting state up
 //
-// Правило, ради которого существует приём: в управляемом поле источник истины -
-// состояние React, а не DOM. Поле только ПОКАЗЫВАЕТ значение и СООБЩАЕТ о попытке
-// его изменить. А когда одно значение нужно двум компонентам, оно переезжает в
-// их ближайшего общего родителя.
+// The rule this drill exists for: in a controlled field the source of truth is
+// React state, not the DOM. The field only SHOWS a value and REPORTS an attempt
+// to change it. And when one value is needed by two components, it moves up to
+// their nearest common parent.
 //
-// Зелёный критерий: холодно по памяти и проговорено вслух.
+// Green criterion: cold from memory, and narrated out loud.
 //
-// Запуск:  npm run drill week-4-react/20-forms.jsx
+// Run:  npm run drill week-4-react/20-forms.jsx
 
 const { React } = require("../lib/react-harness.js");
 const { useState } = React;
 
 // --- 1 ----------------------------------------------------------
-// <SearchField /> - одно текстовое поле, которое ВСЕГДА показывает строчные буквы.
+// <SearchField /> - a single text field that ALWAYS shows lower case.
 //
-//   <input id="q">      значение всегда в нижнем регистре
-//   <p id="echo">       то же самое значение
+//   <input id="q">      the value, always lower case
+//   <p id="echo">       the same value
 //
-// Проверка печатает "AbC" и ждёт, что и в поле, и в эхо будет "abc".
-// Неуправляемое поле здесь не пройдёт: браузер оставит в нём "AbC".
+// The check types "AbC" and expects "abc" in both the field and the echo.
+// An uncontrolled field cannot pass: the browser would leave "AbC" in it.
 //
-// Пример формы ответа, на посторонних данных:
+// The shape of the answer, on unrelated data:
 //
 //   function CityField() {
 //     const [city, setCity] = useState("");
 //     return (
 //       <div>
-//         <input id="city" value={city} onChange={(e) => setCity(e.target.value.trim())} />
+//         <input id="city" value={city} onChange={(e) => setCity(e.target.value.toUpperCase())} />
 //         <p id="shown">{city}</p>
 //       </div>
 //     );
 //   }
 //
-// Три обязательные части: состояние, value из состояния, onChange обратно в состояние.
+// Three required parts: the state, value taken from it, onChange writing back to it.
 
 function SearchField() {
-  return "__HERE__";
+  const [query, setQuery] = useState('');
+
+  return (
+    <div>
+      <input id="q" value={query} onChange={(e) => setQuery(e.target.value.trim().toLowerCase())} />
+      <p id="echo">{query}</p>
+    </div>
+  );
 }
 
 // --- 2 ----------------------------------------------------------
-// <QuantityField /> - поле количества и посчитанная сумма по 3 за штуку.
+// <QuantityField /> - a quantity field and a total at 3 apiece.
 //
-//   <input id="qty">    то, что ввели
-//   <p id="total">      количество * 3
+//   <input id="qty">    what was typed
+//   <p id="total">      quantity * 3
 //
-// Проверка печатает "5" и ждёт в total "15". Потом стирает всё и ждёт "0".
+// The check types "5" and expects "15" in total. Then it clears the field and
+// expects "0".
 //
-// Ловушка: e.target.value - это ВСЕГДА строка, даже у type="number" и даже у
-// пустого поля (там пустая строка "").
+// The trap: e.target.value is ALWAYS a string - with type="number" too, and for
+// an empty field as well (there it is the empty string "").
 //
-// Пример формы ответа, на посторонних данных:
+// The shape of the answer, on unrelated data:
 //
 //   function MinutesField() {
 //     const [text, setText] = useState("");
@@ -64,26 +71,34 @@ function SearchField() {
 //     );
 //   }
 //
-// Обрати внимание: в состоянии лежит ТЕКСТ поля, а число вычисляется при рендере.
-// Второго состояния под число не заводят.
+// Note: the state holds the field's TEXT, and the number is computed during
+// render. You do not keep a second piece of state for the number.
 
 function QuantityField() {
-  return "__HERE__";
+  const [num, setNum] = useState('');
+  const sum = Number((num || 0) * 3);
+
+  return (
+    <div>
+      <input id='qty' value={num} onChange={(e) => setNum(e.target.value)} />
+      <p id="total">{sum || 0}</p>
+    </div>
+  );
 }
 
 // --- 3 ----------------------------------------------------------
-// <AgreementBox initial={true | false} /> - галочка согласия.
+// <AgreementBox initial={true | false} /> - a consent tick box.
 //
-//   <input id="agree" type="checkbox">   состояние галочки
-//   <p id="state">                       "yes" когда стоит, "no" когда снята
+//   <input id="agree" type="checkbox">   the state of the box
+//   <p id="state">                       "yes" when ticked, "no" when not
 //
-// Проверка рендерит с initial={true} и ждёт, что галочка УЖЕ стоит. Потом кликает
-// и ждёт "no".
+// The check renders with initial={true} and expects the box to be ticked
+// ALREADY. Then it clicks and expects "no".
 //
-// Ловушка: у чекбокса управляемый атрибут называется checked, а не value.
-// А в обработчике читают e.target.checked, а не e.target.value.
+// The trap: on a checkbox the controlled attribute is called checked, not value.
+// And the handler reads e.target.checked, not e.target.value.
 //
-// Пример формы ответа, на посторонних данных:
+// The shape of the answer, on unrelated data:
 //
 //   function NightMode({ startsOn }) {
 //     const [on, setOn] = useState(startsOn);
@@ -96,33 +111,39 @@ function QuantityField() {
 //   }
 
 function AgreementBox({ initial }) {
-  return "__HERE__";
+  const [on, setOn] = useState(initial || true);
+  return (
+    <div>
+      <input id="agree" type="checkbox" checked={on} onChange={(e) => setOn(e.target.checked)} />
+      <p id="state">{on ? "yes" : "no"}</p>
+    </div>
+  );
 }
 
 // --- 4 ----------------------------------------------------------
-// Подъём состояния наверх.
+// Lifting state up.
 //
-// Даны два поля, править их НЕЛЬЗЯ. Каждое из них управляется снаружи: оно не
-// имеет своего состояния, а принимает value и onChange - тот же договор, что у
-// обычного <input>.
+// Two fields are given, and they must NOT be edited. Each is controlled from the
+// outside: it holds no state of its own and takes value and onChange - the same
+// contract a plain <input> has.
 //
 //   function CelsiusField({ value, onChange })     -> <input id="c">
 //   function FahrenheitField({ value, onChange })  -> <input id="f">
 //
-// <Thermometer /> держит ОДНО состояние - градусы Цельсия в виде текста - и
-// раздаёт его обоим полям.
-//
-//   печатаем "100" в #c  ->  #c показывает "100", #f показывает "212"
-//   печатаем "32"  в #f  ->  #c показывает "0",   #f показывает "32"
-//   <p id="advice">      ->  "boiling" при 100 и выше, иначе "not boiling"
+//   type "100" into #c  ->  #c shows "100", #f shows "212"
+//   type "32"  into #f  ->  #c shows "0",   #f shows "32"
+//   <p id="advice">     ->  "boiling" at 100 and above, otherwise "not boiling"
 //
 //   f = c * 9 / 5 + 32       c = (f - 32) * 5 / 9
 //
-// Пустое поле остаётся пустым в обоих полях.
+// <Thermometer /> holds ONE piece of state - celsius as text - and hands it to
+// both fields.
 //
-// Пример формы ответа, на посторонних данных:
+// An empty field stays empty in both fields.
 //
-//   // дано, править нельзя
+// The shape of the answer, on unrelated data:
+//
+//   // given, do not edit
 //   function MetersField({ value, onChange }) {
 //     return <input id="m" value={value} onChange={(e) => onChange(e.target.value)} />;
 //   }
@@ -130,7 +151,7 @@ function AgreementBox({ initial }) {
 //     return <input id="ft" value={value} onChange={(e) => onChange(e.target.value)} />;
 //   }
 //
-//   // а это пишешь ты
+//   // and this is what you write
 //   function Distance() {
 //     const [meters, setMeters] = useState("");
 //     const feet = meters === "" ? "" : String(Number(meters) * 3);
@@ -142,8 +163,8 @@ function AgreementBox({ initial }) {
 //     );
 //   }
 //
-// Состояние ОДНО. Второе поле - вычисленное из него, и его onChange пересчитывает
-// обратно в единственный источник истины.
+// There is ONE piece of state. The second field is computed from it, and its
+// onChange converts back into that single source of truth.
 
 function CelsiusField({ value, onChange }) {
   return <input id="c" value={value} onChange={(e) => onChange(e.target.value)} />;
@@ -154,33 +175,45 @@ function FahrenheitField({ value, onChange }) {
 }
 
 function Thermometer() {
-  return "__HERE__";
+  const [celsius, setCelsius] = useState('');
+  const fahrenheit = celsius === '' ? '' : Number(celsius) * 9 / 5 + 32;
+
+  return (
+    <div>
+      <CelsiusField value={celsius} onChange={setCelsius} />
+      <FahrenheitField value={fahrenheit} onChange={(f) => setCelsius(f === '' ? '' : String((Number(f) - 32) * 5 / 9))} />
+      <p id="advice">{Number(celsius) > 99 ? 'boiling' : 'not boiling'}</p>
+    </div>
+  );
 }
 
-// --- 5, проговариваемая часть, писать нечего --------------------
-//   a) назови три обязательные части управляемого поля. И скажи, что именно
-//      сломается, если убрать onChange, но оставить value.
-//   b) когда состояние поднимают наверх, и что при этом получает ребёнок вместо
-//      собственного состояния.
-//   c) в четвёртом задании состояние ОДНО, а полей два. Откуда берётся значение
-//      второго поля, и почему для него не завели второй useState.
+// --- 5, spoken, nothing to write --------------------------------
+//   a) name the three required parts of a controlled field. Then say what
+//      exactly breaks if you drop onChange but keep value.
+//   b) when is state lifted up, and what does the child get in place of state
+//      of its own.
+//   c) in part 4 there is ONE piece of state and two fields. Where does the
+//      second field's value come from, and why is there no second useState.
 
 // ----------------------------------------------------------------
-// Ниже не трогать. Это проверка.
+// Do not touch below. This is the check.
 
 const { render } = require("../lib/react-harness.js");
 const { runChecks } = require("../lib/checks");
 
 runChecks([
-  { name: "SearchField keeps the input itself lowercase", fn: SearchField, run: () => {
+  {
+    name: "SearchField keeps the input itself lowercase", fn: SearchField, run: () => {
       const s = render(<SearchField />);
       s.type("#q", "AbC");
       const out = { field: s.find("#q").value, echo: s.find("#echo").textContent };
       s.unmount();
       return out;
-    }, expected: { field: "abc", echo: "abc" } },
+    }, expected: { field: "abc", echo: "abc" }
+  },
 
-  { name: "QuantityField multiplies, and survives an empty field", fn: QuantityField, run: () => {
+  {
+    name: "QuantityField multiplies, and survives an empty field", fn: QuantityField, run: () => {
       const s = render(<QuantityField />);
       s.type("#qty", "5");
       const filled = s.find("#total").textContent;
@@ -188,39 +221,48 @@ runChecks([
       const empty = s.find("#total").textContent;
       s.unmount();
       return { filled, empty };
-    }, expected: { filled: "15", empty: "0" } },
+    }, expected: { filled: "15", empty: "0" }
+  },
 
-  { name: "AgreementBox starts already ticked and can be unticked", fn: AgreementBox, run: () => {
+  {
+    name: "AgreementBox starts already ticked and can be unticked", fn: AgreementBox, run: () => {
       const s = render(<AgreementBox initial={true} />);
       const start = { ticked: s.find("#agree").checked, text: s.find("#state").textContent };
       s.click("#agree");
       const after = { ticked: s.find("#agree").checked, text: s.find("#state").textContent };
       s.unmount();
       return { start, after };
-    }, expected: { start: { ticked: true, text: "yes" }, after: { ticked: false, text: "no" } } },
+    }, expected: { start: { ticked: true, text: "yes" }, after: { ticked: false, text: "no" } }
+  },
 
-  { name: "Thermometer fills fahrenheit when celsius is typed", fn: Thermometer, run: () => {
+  {
+    name: "Thermometer fills fahrenheit when celsius is typed", fn: Thermometer, run: () => {
       const s = render(<Thermometer />);
       s.type("#c", "100");
       const out = { c: s.find("#c").value, f: s.find("#f").value, advice: s.find("#advice").textContent };
       s.unmount();
       return out;
-    }, expected: { c: "100", f: "212", advice: "boiling" } },
+    }, expected: { c: "100", f: "212", advice: "boiling" }
+  },
 
-  { name: "Thermometer works the other way round too", fn: Thermometer, run: () => {
+  {
+    name: "Thermometer works the other way round too", fn: Thermometer, run: () => {
       const s = render(<Thermometer />);
       s.type("#f", "32");
       const out = { c: s.find("#c").value, f: s.find("#f").value, advice: s.find("#advice").textContent };
       s.unmount();
       return out;
-    }, expected: { c: "0", f: "32", advice: "not boiling" } },
+    }, expected: { c: "0", f: "32", advice: "not boiling" }
+  },
 
-  { name: "Thermometer leaves both fields empty when one is cleared", fn: Thermometer, run: () => {
+  {
+    name: "Thermometer leaves both fields empty when one is cleared", fn: Thermometer, run: () => {
       const s = render(<Thermometer />);
       s.type("#c", "20");
       s.type("#c", "");
       const out = { c: s.find("#c").value, f: s.find("#f").value };
       s.unmount();
       return out;
-    }, expected: { c: "", f: "" } },
+    }, expected: { c: "", f: "" }
+  },
 ]);
