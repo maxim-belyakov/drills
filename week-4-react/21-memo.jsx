@@ -10,6 +10,8 @@
 //
 // Run:  npm run drill week-4-react/21-memo.jsx
 
+import { use } from "react";
+
 const { React } = require("../lib/react-harness.js");
 const { useState, useMemo, useCallback, memo } = React;
 
@@ -61,7 +63,21 @@ const StepChild = memo(function StepChild({ onStep }) {
 // dependency did not change.
 
 function FilteredList() {
-  return "__HERE__";
+  const [query, setQuery] = useState('');
+  const [count, setCount] = useState(0);
+
+  const filtredNames = useMemo(() => {
+    return slowFilter(ITEMS, query);
+  }, [query])
+
+  return (
+    <>
+      <input id='q' value={query} onChange={(e) => setQuery(e.target.value.toLowerCase())} />
+      <button id="bump" onClick={() => setCount(prev => prev + 1)}>Click</button>
+      <p id="clicks">{count}</p>
+      <p id="found">{filtredNames.length}</p>
+    </>
+  );
 }
 
 // --- 2 ----------------------------------------------------------
@@ -90,8 +106,18 @@ function FilteredList() {
 // useMemo here is not about cost. It is about handing the child the SAME object
 // as long as the data behind it has not changed.
 
+
 function OptionsPanel({ label }) {
-  return "__HERE__";
+  const [count, setCount] = useState(0);
+  const options = useMemo(() => ({ label }), [label]);
+
+  return (
+    <>
+      <button id="bump2" onClick={() => setCount(prev => prev + 1)}>Click</button>
+      <p id="clicks2">{count}</p>
+      <OptionsChild options={options} />
+    </>
+  );
 }
 
 // --- 3 ----------------------------------------------------------
@@ -120,7 +146,15 @@ function OptionsPanel({ label }) {
 // of closing over it. One function for the whole life of the component.
 
 function StepPanel() {
-  return "__HERE__";
+  const [count, setCount] = useState(0);
+  const add = useCallback(() => setCount((prev) => prev + 1), []);
+
+  return (
+    <>
+      <p id="n">{count}</p>
+      <StepChild onStep={add} />
+    </>
+  );
 }
 
 // --- 4, spoken, nothing to write --------------------------------
@@ -140,57 +174,69 @@ const { runChecks } = require("../lib/checks");
 const reset = () => { log.filterCalls = 0; log.optionRenders = 0; log.stepRenders = 0; };
 
 runChecks([
-  { name: "1. the filter does not re-run on unrelated state", fn: FilteredList, run: () => {
+  {
+    name: "1. the filter does not re-run on unrelated state", fn: FilteredList, run: () => {
       reset();
       const s = render(<FilteredList />);
       s.click("#bump"); s.click("#bump"); s.click("#bump");
       const out = { calls: log.filterCalls, clicks: s.find("#clicks").textContent, found: s.find("#found").textContent };
       s.unmount();
       return out;
-    }, expected: { calls: 1, clicks: "3", found: "4" } },
+    }, expected: { calls: 1, clicks: "3", found: "4" }
+  },
 
-  { name: "2. the filter does re-run when the query changes", fn: FilteredList, run: () => {
+  {
+    name: "2. the filter does re-run when the query changes", fn: FilteredList, run: () => {
       reset();
       const s = render(<FilteredList />);
       s.type("#q", "el");
       const out = { calls: log.filterCalls, found: s.find("#found").textContent };
       s.unmount();
       return out;
-    }, expected: { calls: 2, found: "1" } },
+    }, expected: { calls: 2, found: "1" }
+  },
 
-  { name: "3. the memoised child ignores unrelated state", fn: OptionsPanel, run: () => {
+  {
+    name: "3. the memoised child ignores unrelated state", fn: OptionsPanel, run: () => {
       reset();
       const s = render(<OptionsPanel label="one" />);
       s.click("#bump2"); s.click("#bump2"); s.click("#bump2");
       const out = { renders: log.optionRenders, clicks: s.find("#clicks2").textContent, text: s.find("#opt").textContent };
       s.unmount();
       return out;
-    }, expected: { renders: 1, clicks: "3", text: "one" } },
+    }, expected: { renders: 1, clicks: "3", text: "one" }
+  },
 
-  { name: "4. but it does re-render when the label changes", fn: OptionsPanel, run: () => {
+  {
+    name: "4. but it does re-render when the label changes", fn: OptionsPanel, run: () => {
       reset();
       const s = render(<OptionsPanel label="one" />);
       s.rerender(<OptionsPanel label="two" />);
       const out = { renders: log.optionRenders, text: s.find("#opt").textContent };
       s.unmount();
       return out;
-    }, expected: { renders: 2, text: "two" } },
+    }, expected: { renders: 2, text: "two" }
+  },
 
-  { name: "5. the step button counts", fn: StepPanel, run: () => {
+  {
+    name: "5. the step button counts", fn: StepPanel, run: () => {
       reset();
       const s = render(<StepPanel />);
       s.click("#step"); s.click("#step"); s.click("#step");
       const out = s.find("#n").textContent;
       s.unmount();
       return out;
-    }, expected: "3" },
+    }, expected: "3"
+  },
 
-  { name: "6. and the step child rendered exactly once", fn: StepPanel, run: () => {
+  {
+    name: "6. and the step child rendered exactly once", fn: StepPanel, run: () => {
       reset();
       const s = render(<StepPanel />);
       s.click("#step"); s.click("#step"); s.click("#step");
       const out = log.stepRenders;
       s.unmount();
       return out;
-    }, expected: 1 },
+    }, expected: 1
+  },
 ]);
