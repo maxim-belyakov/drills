@@ -89,51 +89,69 @@ the empty answer skeleton* - and the 90-second intake protocol written after the
 are the same rule, found twice from two directions. It is now the first step of every
 assembly.
 
+## The second finding, named 2026-09-07
+
+**Correct for the value I was shown, wrong for the value that will come.** Four sightings
+in four days, all in his own code, all passing their checks:
+
+- `useState(initial || true)` - ignores the prop entirely, but the check only ever passes `true` (09-04)
+- `Number(celsius) > 99` where the spec said "100 and above" - the check feeds exactly 100 (09-04)
+- `value={openOnly}` on a checkbox - works under a click, breaks under a programmatic reset (09-05)
+- `tasks` missing from a dependency array - every check mounts fresh, so no check ever hands it a second array (09-05)
+
+This is not carelessness and it is not a knowledge gap: every one of these he can explain
+correctly when asked. It is a habit of writing against **the example in front of him**
+rather than against the **rule**. It is the mirror image of the reading finding: that one
+was not reading the spec, this one is reading the test instead of the spec.
+
+The counter-question, to be asked out loud before every task is called done: **what input
+would break this that the check never sends?**
+
 ## Counter
 
-Start: 2026-08-03
-Closed cold: **14 of 26** numbered drills · assemblies closed cold: **2** (A1 second pass, A2)
-Day streak: **broken at 21, 2026-08-24** - one deliberate skip for a live round
-Sessions: 19 · of them 📱 mobile: 2 · days with no drill: 1 (08-17, spent rewriting the plan)
+Start: 2026-08-03 · reviewed 2026-09-07
+Closed cold: **14 of 26** numbered drills · assemblies closed cold: **2** · timed builds run: **3**
+Sessions: 25 · of them mobile: 4 · timed: 3 · days with no session: 4 (08-17, 08-29, 08-31, 09-06) plus one deliberate skip (08-24)
 
-**Closes per week: 6 · 4 · 4 · 0.**
+**Closes per week: 6 · 4 · 4 · 0 · 0.**
 
-Week four closed **no numbered drill at all**. Drills 15 and 16 were both written and both
-came back green, and both returned - one for peeking, one for naming the mechanism
-backwards. Honest by the criterion, empty by the counter. What did close was two
-**assemblies**, A2 cold with no help at all and A1 on its second pass; but assemblies are
-not part of the 26.
+**Two weeks at zero, and the second zero means the opposite of the first.** Week four was
+empty because the work went into async that was already complete. Week five was empty
+because every React drill came back for a real reason - 17 for my own dodgeable checks,
+18 for a handed-over task, 19 for two, 20 for three defects and a half-answered spoken
+part - while the capability underneath moved further in one week than in any other.
 
-The real finding of the 08-30 review is not the rate, it is **what is left**. Ten drills
-remain and **seven of them are React** (17-23), untouched, while a week and a half went
-into polishing async that was already complete in content. React is the stack he presents
-himself on. Next week is a React week: 17-23, one a day. Drills 15 and 16 come back only
-as warm-up snippets, never as the content of a day.
+The measurement that matters is not the counter, it is the pair of dates. On **09-01** he
+could not write a React component: props passed as state, strings returned instead of
+JSX, `useState` destructured with braces, a setter called during render. On **09-05** he
+wrote a filtered, sorted, keyed board from scratch, in React, 8 of 8 in 41 minutes of 45,
+with no help. Four days.
 
-**The Saturday timed run was not surviving** - instituted 08-16 as weekly, run once on
-08-23, deferred once and missed outright on 08-29. Settled on 2026-09-01 by doing it on a
-weekday evening instead of arguing about the schedule: **the run happens whenever he is at
-the machine with 45 free minutes, Saturday or not.** The fixed day was the part that kept
-failing, not the exercise.
+So the counter is not lying, it is measuring recall while the week produced capability.
+The fix is not to loosen the criterion. It is to **collect the debt**: 17, 18, 19 and 20
+each come back once, cold, as the second half of a session. That is the week-2 rhythm rule
+that was written on 08-09 and quietly stopped being followed during React week.
 
-**A timed run is not always "write it from scratch".** Build 2 was four planted faults in
-working-looking code, and it trained the thing that actually loses rounds: reading a spec
-and debugging what is already on screen. Alternate the two shapes.
+**Rhythm from 2026-09-07, reinstated:** every session is **one new drill plus one cold
+re-run of the oldest open drill**. The re-run is five minutes and it is not optional; it
+is what turns a 🔁 into a number.
 
-Streak and closes now measure different things. The streak measures showing up, which
-has been solved since 08-03 and no longer carries information. Closes are the number.
+**The Saturday timed run has stopped being a problem.** Three builds now, in three
+different shapes - write-from-scratch async (08-23), find-the-planted-faults (09-01),
+write-from-scratch React (09-05) - and the last two needed nothing from me. Keep
+alternating shapes; the next one is a fault-hunt again, and it should be in React.
 
-## Remaining - 17
+## Remaining - 12 new, plus 6 to re-run
 
 **Running the React drills:** `npm run drill week-4-react/17-usestate.jsx` (add a name to run one check).
 
-**Async (6)** - 11 promise from scratch + two styles · 12 try/catch in async code ·
-13 all vs allSettled · 14 sequential vs parallel · 15 fetch error handling +
-AbortController · 16 event loop out loud
+**Async** - all six written; 15 and 16 are still open and sit in the re-run list below
 
-**React (7)** - 17 useState · 18 useEffect cleanup + deps array · 19 keys in a list ·
-20 controlled form + lifting state · 21 useMemo / useCallback / React.memo ·
-22 custom useFetch with loading, error, empty · 23 debounce
+**React (3 new)** - 21 useMemo / useCallback / React.memo · 22 custom useFetch with
+loading, error, empty · 23 debounce
+
+**To re-run cold (6)** - 15 fetch + AbortController · 16 event loop · 17 useState ·
+18 useEffect cleanup · 19 keys in a list · 20 controlled form + lifting state
 
 **Next.js and assembly (3, plus the weekly run)** - 24 POST with a body ·
 25 a 45-minute build out loud · 26 a 90-minute full run with changing requirements
@@ -182,3 +200,4 @@ Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the en
 | 2026-09-03 | 19 keys in a list | 💻 | 🔁 all six green, two of the four handed over. ✅ **3 of 3 on the trace - the first clean opener since the rule started on 08-30.** Closures read correctly at call time, `a === b` on two identical literals, `[...a] === a`, and `reverse` returning the same array with `toSorted` returning a new one - that last one he answered `false` on 09-02 and answered right today. ✅ `Roster` keyed by `p.id` first time, unprompted, and `Pairs` written correctly with `<Fragment key={r.id}>` - he read up on `dl`/`dt`/`dd`, which he had never used, and got it in one. 🔴 `Roster` still threw first, on `person={item.name}` instead of `person={item}` - he did not read the given `Row` before writing against it, and the error printed `id="b-undefined"`, which was the answer. Same reading failure as 08-25, and he named it himself before I did. 🔴 Tasks 3 and 4 both stalled at *"I completely do not understand what is wanted"* and were handed over as worked examples. **And he was right about why:** *"the example before the drill has stopped explaining what is actually wanted from me. Let us change the approach."* A drill-level explanation teaches the concept and leaves the SHAPE of each answer to be guessed - that is a riddle again, in a new form, three days after the same rule was made absolute for React. Fixed and committed: **one worked example per TASK**, plus given code quoted in the session message rather than left in the file. Second process fault of my own: English component names (`Roster`, `Draft`) cost him a translation step for nothing - names go transparent from drill 20. 🔴 Spoken 1 of 3. (a) half - had the index rule and the append-only exception, but framed a key as a uniqueness label rather than as React's answer to "which of these is the one I had last time", and missed that uniqueness is among siblings only. (b) knew the replacement, not the reason: `<>` is sugar with nowhere to put attributes, and `<key={x}>` is a parse error, not a React rule. (c) missed - said he had not changed a key, when `key={user.id}` going from 1 to 2 IS the change; the answer is unmount of the old, cleanup, mount of a fresh one. 📌 He raised ADHD as the reason for the reading misses; the answer given was a protocol, not encouragement - before writing a line, write out for each given component its name, its props, what it reads off each prop, and what it renders |
 | 2026-09-04 | 20 controlled inputs and lifting state up | 💻 | 🔁 **all six green cold, and three of them green for the wrong reason.** First drill built under the two rules he named on 09-03 - a worked example per TASK and transparent component names - and the format worked: no "I do not understand what is wanted" in the whole session, and the lifted state in `Thermometer` came out right on his own, one state with the second field derived and the reverse conversion in its `onChange`. Self-corrected twice without help: `<p id="total">{num}</p>` where it should have been `{sum}`, and `setMeters` copied out of my example. 🔴 Three defects the checks let through, all confirmed by probe. `useState(initial || true)` ignores the prop entirely - with `initial={false}` the box still renders ticked; thirteenth sighting, and this one is `||` erasing a legitimate `false`, which is drill 07 material. `.trim()` inside `onChange` runs on every keystroke, so a space never survives - typing "John Smith" one character at a time produces `"johnsmith"`, and the user physically cannot enter a space; my own `CityField` example put `.trim()` there, so half of that one is mine. `Number(celsius) > 99` instead of `>= 100` - the spec said "100 and above", the check feeds exactly 100, and 99.5 comes out boiling; the same boundary trap he FOUND when it was planted for him on 09-01, written by himself today. 🔴 Trace 2 of 3. A: `Number("  ")` guessed as 2 (whitespace trims to empty, so 0) and `Boolean("0")` called false (only the empty string is falsy). B: put `p` before `b` - the mirror image of the 09-03 miss, and one rule covers both: **a task enters the microtask queue at the moment the promise is ALREADY settled**, so `await Promise.resolve()` queues immediately while `.then` on a pending promise queues nothing. C right. 🔴 Spoken 2 of 3. (a) the frozen input was right, but he listed `id` as one of the three required parts - `id` is only the check's selector; the three are the state, `value` from it, `onChange` back into it. (b) "the child gets a reference to the parent's state" - it gets a VALUE and a function to report with; state is never handed out by reference, and he did not say WHEN state is lifted. (c) right in full |
 | 2026-09-05 | timed build 3, task board in React | ⏱ | ✅ **8 of 8 in 41 minutes of the 45, from scratch, in React, with no help at all.** Third build and a third shape: build 1 was write-from-scratch async, build 2 was find-the-planted-faults, this one was write-from-scratch React - the shape an actual front-end round uses. It folded in every drill of the week: state, controlled fields, keys, derived values, non-mutating sort. ✅ **He spent the first 12 minutes reading the task and the checks before writing a line.** That is the top finding of this whole log - first sighted 08-22, and it cost him the 08-25 round - acted on deliberately, unprompted, for the first time. ✅ Written unaided and right first time: case-insensitivity on BOTH sides, `toSorted` rather than a mutating sort, `key={item.id}`, the count against the original length, `#empty` rendered conditionally so it is absent from the DOM. He added the title tie-break himself in a last pass after asking what the word meant. 🔴 Three defects the checks did not catch, all confirmed by probe. `value={openOnly}` instead of `checked` leaves the box uncontrolled - it happens to work under a click, but a programmatic reset leaves the DOM ticked while state says false: two sources of truth, which is exactly what drill 20 was about, a day later. Derived data kept in `useState` and filled from `useEffect` instead of computed during render, which costs two real bugs: `tasks` is not in the dependency array, so a new `tasks` prop is ignored forever (probe: list stays `1,2` when handed `7,8,9`), and the first render pass shows the empty state before the effect runs (probe: pass 1 renders 0 rows with "Nothing found" visible, pass 2 renders the list). And `import { useEffect } from "react"` spliced into a CommonJS file - esbuild swallows it, a real project would not. 📌 At his request all drill and build files switch to English from here: the spec is the language of the round, my explanations stay Russian |
+| 2026-09-06 | none | - | **Missed.** Unavailable all day; the weekly review slipped with it and was done on Monday 09-07 instead. Fourth miss since 08-24, and the second one that took the review down with it |

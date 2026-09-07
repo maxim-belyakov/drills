@@ -5,19 +5,18 @@
 //
 // Run the checks:  npm run drill timed/2026-09-05-task-board/check.jsx
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const { React } = require("../../lib/react-harness.js");
-const { useState } = React;
 
 // --- given: the data. Do not edit. -----------------------------
 
 const TASKS = [
-  { id: 1, title: "Fix login redirect",   done: false, due: "2026-09-12" },
-  { id: 2, title: "Update deploy docs",   done: true,  due: "2026-09-08" },
+  { id: 1, title: "Fix login redirect", done: false, due: "2026-09-12" },
+  { id: 2, title: "Update deploy docs", done: true, due: "2026-09-08" },
   { id: 3, title: "Add retry to uploader", done: false, due: "2026-09-20" },
-  { id: 4, title: "Review Ana's PR",      done: false, due: "2026-09-08" },
-  { id: 5, title: "Drop legacy endpoint", done: true,  due: "2026-09-05" },
+  { id: 4, title: "Review Ana's PR", done: false, due: "2026-09-08" },
+  { id: 5, title: "Drop legacy endpoint", done: true, due: "2026-09-05" },
 ];
 
 // --- given: one row of the list. Do not edit. ------------------
@@ -61,21 +60,23 @@ function TaskRow({ task }) {
 function TaskBoard({ tasks }) {
   const [query, setQuery] = useState('');
   const [openOnly, setOpenOnly] = useState(false);
-  const [visibleTasks, setVisibleTasks] = useState([]);
+  const [visibleTasks, setVisibleTasks] = useState([...tasks]);
 
   useEffect(() => {
-    let result = tasks.toSorted((a, b) => new Date(a.due) - new Date(b.due) || a.title.localeCompare(b.title));
+    let result = [...tasks];
     if (openOnly) {
       result = result.filter(item => !item.done);
     }
-    result = result.filter(item => item.title.toLowerCase().includes(query.toLowerCase()));
+    result = result
+      .filter(item => item.title.toLowerCase().includes(query.toLowerCase()))
+      .toSorted((a, b) => new Date(a.due) - new Date(b.due) || a.title.localeCompare(b.title));
     setVisibleTasks(result);
-  }, [query, openOnly]);
+  }, [query, openOnly, tasks]);
 
   return (
     <>
       <input id="q" value={query} onChange={(e) => setQuery(e.target.value)} />
-      <input id="open-only" type="checkbox" value={openOnly} onChange={(e) => setOpenOnly(e.target.checked)} />
+      <input id="open-only" type="checkbox" checked={openOnly} onChange={(e) => setOpenOnly(e.target.checked)} />
       <ul id="list">
         {visibleTasks.map(item => (
           <TaskRow key={item.id} task={item} />
