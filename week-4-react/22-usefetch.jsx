@@ -66,7 +66,38 @@ const fetchJson = (url) =>
 // that way the three can never disagree with each other.
 
 function useFetch(url) {
-  return "__HERE__";
+  const [state, setState] = useState({ data: null, error: null, loading: false });
+
+  useEffect(() => {
+    if (!url) {
+      setState({ data: null, error: null, loading: false });
+      return;
+    }
+
+    let current = true;
+    setState({ data: null, error: null, loading: true });
+
+    async function load() {
+      try {
+        const data = await fetchJson(url);
+        if (current) {
+          setState({ data, error: null, loading: false });
+        }
+      } catch (error) {
+        if (current) {
+          setState({ data: null, error, loading: false });
+        }
+      }
+    }
+
+    load();
+
+    return () => {
+      current = false;
+    };
+  }, [url]);
+
+  return state;
 }
 
 // --- 2 ----------------------------------------------------------
@@ -100,7 +131,25 @@ function useFetch(url) {
 // AFTER loading and error have been ruled out.
 
 function UserList({ url }) {
-  return "__HERE__";
+  const { data, error, loading } = useFetch(url);
+
+  if (!url) return <p id="state">idle</p>;
+  if (loading) return <p id="state">loading</p>;
+  if (error) return (
+    <>
+      <p id="state">error</p>
+      <p id="msg">{error.message}</p>
+    </>
+  );
+  if (data === null) return <p id="state">loading</p>;
+
+  if (data.length === 0) return <p id="state">empty</p>;
+  return (
+    <>
+      <p id="state">ready</p>
+      <ul id="list">{data.map((o) => <li key={o.id}>{o.name}</li>)}</ul>
+    </>
+  );
 }
 
 // --- 3, spoken, nothing to write --------------------------------
@@ -123,7 +172,8 @@ const rows = (s) => s.all("li").map((li) => li.textContent).join(",");
 const has = (s, sel) => s.container.querySelector(sel) !== null;
 
 runChecks([
-  { name: "1. loading first, then the rows", fn: UserList, run: async () => {
+  {
+    name: "1. loading first, then the rows", fn: UserList, run: async () => {
       reset();
       const s = render(<UserList url="/users" />);
       const first = s.find("#state").textContent;
@@ -131,36 +181,44 @@ runChecks([
       const out = { first, then: s.find("#state").textContent, rows: rows(s), msg: has(s, "#msg") };
       s.unmount();
       return out;
-    }, expected: { first: "loading", then: "ready", rows: "ann,bo", msg: false } },
+    }, expected: { first: "loading", then: "ready", rows: "ann,bo", msg: false }
+  },
 
-  { name: "2. an empty array is its own state", fn: UserList, run: async () => {
+  {
+    name: "2. an empty array is its own state", fn: UserList, run: async () => {
       reset();
       const s = render(<UserList url="/none" />);
       await wait(40);
       const out = { state: s.find("#state").textContent, list: has(s, "#list") };
       s.unmount();
       return out;
-    }, expected: { state: "empty", list: false } },
+    }, expected: { state: "empty", list: false }
+  },
 
-  { name: "3. a rejection becomes the error state, with its message", fn: UserList, run: async () => {
+  {
+    name: "3. a rejection becomes the error state, with its message", fn: UserList, run: async () => {
       reset();
       const s = render(<UserList url="/boom" />);
       await wait(40);
       const out = { state: s.find("#state").textContent, msg: s.find("#msg").textContent, list: has(s, "#list") };
       s.unmount();
       return out;
-    }, expected: { state: "error", msg: "http 500", list: false } },
+    }, expected: { state: "error", msg: "http 500", list: false }
+  },
 
-  { name: "4. no url means no request at all", fn: UserList, run: async () => {
+  {
+    name: "4. no url means no request at all", fn: UserList, run: async () => {
       reset();
       const s = render(<UserList url="" />);
       await wait(40);
       const out = { state: s.find("#state").textContent, calls: log.calls.length };
       s.unmount();
       return out;
-    }, expected: { state: "idle", calls: 0 } },
+    }, expected: { state: "idle", calls: 0 }
+  },
 
-  { name: "5. a new url refetches and goes back to loading", fn: UserList, run: async () => {
+  {
+    name: "5. a new url refetches and goes back to loading", fn: UserList, run: async () => {
       reset();
       const s = render(<UserList url="/users" />);
       await wait(40);
@@ -170,9 +228,11 @@ runChecks([
       const out = { during, then: s.find("#state").textContent, calls: log.calls.join(",") };
       s.unmount();
       return out;
-    }, expected: { during: "loading", then: "empty", calls: "/users,/none" } },
+    }, expected: { during: "loading", then: "empty", calls: "/users,/none" }
+  },
 
-  { name: "6. the slow answer for the old url never lands", fn: UserList, run: async () => {
+  {
+    name: "6. the slow answer for the old url never lands", fn: UserList, run: async () => {
       reset();
       const s = render(<UserList url="/slow" />);
       s.rerender(<UserList url="/users" />);
@@ -180,5 +240,6 @@ runChecks([
       const out = { state: s.find("#state").textContent, rows: rows(s), calls: log.calls.join(",") };
       s.unmount();
       return out;
-    }, expected: { state: "ready", rows: "ann,bo", calls: "/slow,/users" } },
+    }, expected: { state: "ready", rows: "ann,bo", calls: "/slow,/users" }
+  },
 ]);
