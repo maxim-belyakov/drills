@@ -14,7 +14,7 @@ const { useState, useEffect, useRef, useCallback } = React;
 
 // --- given instruments. Do not edit. ---------------------------
 // record() stands for the expensive thing - a request, a report, an analytics
-// event. log.runs is every time it actually ran.
+// event. log.runs is every time it actuallцy ran.
 
 const log = { runs: [] };
 const record = (label) => { log.runs.push(label); };
@@ -63,7 +63,19 @@ function PingBox() {
 // previous one started.
 
 function useDebouncedValue(value, ms) {
-  return "__HERE__";
+  const [text, setText] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setText(value);
+    }, ms)
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [value, ms])
+  
+  return text;
 }
 
 // --- 2 ----------------------------------------------------------
@@ -92,7 +104,16 @@ function useDebouncedValue(value, ms) {
 // its ONLY job is the cleanup on unmount.
 
 function useDebouncedCallback(fn, ms) {
-  return "__HERE__";
+  const timer = useRef(null);
+  useEffect(() => {
+    return () => clearTimeout(timer.current);
+  }, []);
+
+  const dc = useCallback((label) => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => fn(label), ms)
+  }, [fn, ms])
+  return dc;
 }
 
 // --- 3 ----------------------------------------------------------
@@ -120,7 +141,21 @@ function useDebouncedCallback(fn, ms) {
 // drives the work.
 
 function SearchBox() {
-  return "__HERE__";
+  const [query, setQuery] = useState('');
+  const settled = useDebouncedValue(query, 50);
+
+  useEffect(() => {
+    if (query.length > 2) {
+      record(query);
+    }
+  }, [settled])
+
+  return (
+    <>
+      <input id="q" value={query} onChange={(e) => setQuery(e.target.value)} />
+      <p id="fired">{settled}</p>
+    </>
+  );
 }
 
 // --- 4, spoken, nothing to write --------------------------------
