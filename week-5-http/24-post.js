@@ -89,7 +89,13 @@ global.fetch = async (url, options = {}) => {
 // "[object Object]" - no error anywhere, just nonsense in the database.
 
 async function createUser(user) {
-  // here
+  const res = await fetch('/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(user)
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
 }
 
 // --- 2 ----------------------------------------------------------
@@ -103,7 +109,14 @@ async function createUser(user) {
 // Decide what to return by the STATUS, not by the body.
 
 async function saveDraft(text) {
-  // here
+  const res = await fetch('/drafts/9', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(text)
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+  return true;
 }
 
 // --- 3 ----------------------------------------------------------
@@ -122,7 +135,18 @@ async function saveDraft(text) {
 //   submitForm({ email: "boom@x" })           ->  throws Error("HTTP 500")
 
 async function submitForm(payload) {
-  // here
+  const res = await fetch('/forms', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (res.status === 422) {
+    const data = await res.json();
+    return { ok: false, errors: data.errors }
+  }
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+  return { ok: true }
 }
 
 // --- 4 ----------------------------------------------------------
@@ -136,7 +160,16 @@ async function submitForm(payload) {
 // make the length 7.
 
 async function sendText(text) {
-  // here
+  const response = await fetch('/notes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: text,
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+  const result = await response.json();
+
+  return result.length
 }
 
 // --- 5, spoken, nothing to write --------------------------------

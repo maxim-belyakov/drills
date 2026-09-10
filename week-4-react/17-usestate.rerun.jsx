@@ -29,9 +29,15 @@ const { useState } = React;
 function Delayed() {
   const [count, setCount] = useState(0);
 
+  const handleClick = () => {
+    setTimeout(() => {
+      setCount(prev => prev + 1)
+    }, 20)
+  }
+
   return (
     <>
-      <button id="bump" onClick={() => setCount(count + 1)}>{`count: ${count}`}</button>
+      <button id="bump" onClick={handleClick}>{`count: ${count}`}</button>
     </>
   );
 }
