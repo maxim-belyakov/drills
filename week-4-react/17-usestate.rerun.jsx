@@ -27,7 +27,13 @@ const { useState } = React;
 // tell React what the next value is.
 
 function Delayed() {
-  return "__HERE__";
+  const [count, setCount] = useState(0);
+
+  return (
+    <>
+      <button id="bump" onClick={() => setCount(count + 1)}>{`count: ${count}`}</button>
+    </>
+  );
 }
 
 // --- 2 --------------------------------------------------------
@@ -40,7 +46,14 @@ function Delayed() {
 //   after typing "Ola" -> input value "Ola",  p "Hello, Ola!"
 
 function Greeter() {
-  return "__HERE__";
+  const [name, setName] = useState('');
+
+  return (
+    <>
+      <input id='name' value={name} onChange={(e) => setName(e.target.value)} />
+      <p id="out">Hello, {!!name ? name : 'stranger'}!</p>
+    </>
+  );
 }
 
 // --- 3 --------------------------------------------------------
@@ -58,7 +71,26 @@ function Greeter() {
 // even though the screen looks correct.
 
 const Tags = ({ initial }) => {
-  return "__HERE__";
+  const [tags, setTags] = useState(initial || []);
+  const [newTag, setNewTag] = useState('');
+
+  const handleAddNewTag = () => {
+    if (!newTag.length || newTag.length === 0) return
+
+    setTags(prev => [...prev, newTag]);
+    setNewTag('');
+  }
+
+  return (
+    <>
+      <input id="tag" value={newTag} onChange={(e) => setNewTag(e.target.value)} />
+      <button id="add" onClick={handleAddNewTag} />
+      <p id="count">{tags.length}</p>
+      <ul>
+        {tags.map(item => <li key={item}>{item}</li>)}
+      </ul>
+    </>
+  );
 }
 
 // --- 4 --------------------------------------------------------
@@ -81,7 +113,15 @@ function slowInit() {
 }
 
 const Lazy = () => {
-  return "__HERE__";
+  const [value, setValue] = useState(slowInit);
+  const [count, setCount] = useState(0);
+
+  return (
+    <>
+      <p id="value">{value}</p>
+      <button id="bump" onClick={() => setCount(count + 1)}>{`count: ${count}`}</button>
+    </>
+  );
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -101,10 +141,16 @@ const { runChecks } = require("../lib/checks");
 
 const delayed = async (clicks) => {
   const s = render(<Delayed />);
-  for (let i = 0; i < clicks; i++) s.click("#bump");
+  // all the clicks land inside ONE act, the way a fast user produces them:
+  // React has no chance to re-render between them.
+  act(() => {
+    const btn = s.find("#bump");
+    for (let i = 0; i < clicks; i++) btn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  });
+  const immediate = s.text();
   await new Promise((r) => setTimeout(r, 80));
-  act(() => {});
-  return s.text();
+  act(() => { });
+  return { immediate, after: s.text() };
 };
 
 const tagsRun = () => {
@@ -121,35 +167,50 @@ const tagsRun = () => {
 };
 
 runChecks([
-  { name: "Delayed starts at 0", fn: Delayed, run: () => delayed(0), expected: "count: 0" },
-  { name: "Delayed, one click then one tick", fn: Delayed, run: () => delayed(1), expected: "count: 1" },
-  { name: "Delayed, three fast clicks all land", fn: Delayed, run: () => delayed(3), expected: "count: 3" },
+  { name: "Delayed starts at 0", fn: Delayed, run: () => delayed(0),
+    expected: { immediate: "count: 0", after: "count: 0" } },
+  { name: "Delayed does not move until the timer fires", fn: Delayed, run: () => delayed(1),
+    expected: { immediate: "count: 0", after: "count: 1" } },
+  { name: "Delayed, three fast clicks all land", fn: Delayed, run: () => delayed(3),
+    expected: { immediate: "count: 0", after: "count: 3" } },
 
-  { name: "Greeter, empty state", fn: Greeter, run: () => {
+  {
+    name: "Greeter, empty state", fn: Greeter, run: () => {
       const s = render(<Greeter />);
       return { value: s.find("#name").value, out: s.find("#out").textContent };
-    }, expected: { value: "", out: "Hello, stranger!" } },
-  { name: "Greeter is controlled and reacts to typing", fn: Greeter, run: () => {
+    }, expected: { value: "", out: "Hello, stranger!" }
+  },
+  {
+    name: "Greeter is controlled and reacts to typing", fn: Greeter, run: () => {
       const s = render(<Greeter />);
       s.type("#name", "Ola");
       return { value: s.find("#name").value, out: s.find("#out").textContent };
-    }, expected: { value: "Ola", out: "Hello, Ola!" } },
+    }, expected: { value: "Ola", out: "Hello, Ola!" }
+  },
 
-  { name: "Tags appends, shows the count and clears the input", fn: Tags, run: () => tagsRun(),
-    expected: { before: ["js"], after: ["js", "css"], count: "2", inputAfter: "" } },
+  {
+    name: "Tags appends, shows the count and clears the input", fn: Tags, run: () => tagsRun(),
+    expected: { before: ["js"], after: ["js", "css"], count: "2", inputAfter: "" }
+  },
 
-  { name: "Lazy shows the value", fn: Lazy, run: () => {
+  {
+    name: "Lazy shows the value", fn: Lazy, run: () => {
       initCalls = 0;
       const s = render(<Lazy />);
       return s.find("#value").textContent;
-    }, expected: "heavy" },
-  { name: "slowInit ran exactly once across five re-renders", fn: Lazy, run: () => {
+    }, expected: "heavy"
+  },
+  {
+    name: "slowInit ran exactly once across five re-renders", fn: Lazy, run: () => {
       initCalls = 0;
       const s = render(<Lazy />);
       for (let i = 0; i < 5; i++) s.click("#bump");
       return initCalls;
-    }, expected: 1 },
-  { name: "Lazy does it without useEffect", fn: Lazy,
+    }, expected: 1
+  },
+  {
+    name: "Lazy does it without useEffect", fn: Lazy,
     run: () => /useEffect/.test(Lazy.toString()) ? "useEffect is not allowed in this drill" : true,
-    expected: true },
+    expected: true
+  },
 ]);

@@ -156,10 +156,16 @@ const { runChecks } = require("../lib/checks");
 
 const delayed = async (clicks) => {
   const s = render(<Delayed />);
-  for (let i = 0; i < clicks; i++) s.click("#bump");
+  // all the clicks land inside ONE act, the way a fast user produces them:
+  // React has no chance to re-render between them.
+  act(() => {
+    const btn = s.find("#bump");
+    for (let i = 0; i < clicks; i++) btn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  });
+  const immediate = s.text();
   await new Promise((r) => setTimeout(r, 80));
   act(() => {});
-  return s.text();
+  return { immediate, after: s.text() };
 };
 
 const tagsRun = () => {
@@ -176,9 +182,12 @@ const tagsRun = () => {
 };
 
 runChecks([
-  { name: "Delayed starts at 0", fn: Delayed, run: () => delayed(0), expected: "count: 0" },
-  { name: "Delayed, one click then one tick", fn: Delayed, run: () => delayed(1), expected: "count: 1" },
-  { name: "Delayed, three fast clicks all land", fn: Delayed, run: () => delayed(3), expected: "count: 3" },
+  { name: "Delayed starts at 0", fn: Delayed, run: () => delayed(0),
+    expected: { immediate: "count: 0", after: "count: 0" } },
+  { name: "Delayed does not move until the timer fires", fn: Delayed, run: () => delayed(1),
+    expected: { immediate: "count: 0", after: "count: 1" } },
+  { name: "Delayed, three fast clicks all land", fn: Delayed, run: () => delayed(3),
+    expected: { immediate: "count: 0", after: "count: 3" } },
 
   { name: "Greeter, empty state", fn: Greeter, run: () => {
       const s = render(<Greeter />);
