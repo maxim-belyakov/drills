@@ -1,5 +1,7 @@
 # Daily Recall Drills
 
+**Opening a new session:** paste the block from `SESSION-START.md` as the first message. It makes the session verify the whole git cycle before any work starts, and points it at this file.
+
 Artifact for the 4-week recall programme kept in the Obsidian vault
 (`🎯 Программа ежедневных повторений (4 недели)`).
 
