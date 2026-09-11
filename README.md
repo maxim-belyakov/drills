@@ -164,6 +164,8 @@ alternating shapes; the next one is a fault-hunt again, and it should be in Reac
 
 Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the end.
 
+**Saturday 2026-09-12 - timed build 4 is ready:** `timed/2026-09-12-inbox/`, inherited React code with five planted faults and eight checks, six red at the start. Every fault is one from the second finding, written by him in the last two weeks. Start: `npm run drill timed/2026-09-12-inbox/check.jsx`.
+
 ## Log
 
 **Format column:** 💻 a full session at the machine · 📱 a mobile session, done from the phone in chat with no editor and no runner · ⏱ a timed run. A mobile session keeps the day, but it is not interchangeable with a full one - it cannot close a drill that has to be typed. Marked so the two can be counted apart.
