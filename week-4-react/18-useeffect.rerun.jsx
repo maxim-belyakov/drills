@@ -30,8 +30,20 @@ const load = (id) =>
 // waits, and looks at whether tick() kept firing.
 
 function Clock() {
-  // TODO
-  return <p id="n">0</p>;
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCount(prev => prev + 1);
+      tick();
+    }, 10);
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [])
+
+  return <p id="n">{count}</p>;
 }
 
 // --- 2 --------------------------------------------------------
@@ -45,7 +57,10 @@ function Clock() {
 // The check reads log.titles and expects exactly ["a", "b"].
 
 function Title({ text }) {
-  // TODO
+  useEffect(() => {
+    setTitle(text);
+  }, [text]);
+
   return <p id="t">{text}</p>;
 }
 
@@ -62,8 +77,17 @@ function Title({ text }) {
 // This is a debounce, and the cancelling half is the point.
 
 function Search({ query }) {
-  // TODO
-  return <p id="r"></p>;
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setText(runSearch(query));
+    }, 30);
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  return <p id="r">{text}</p>;
 }
 
 // --- 4 --------------------------------------------------------
@@ -79,8 +103,22 @@ function Search({ query }) {
 // An effect cannot un-await a promise. What it CAN do is refuse the answer.
 
 function Loader({ id }) {
-  // TODO
-  return <p id="v">loading</p>;
+  const [value, setValue] = useState('loading');
+
+  useEffect(() => {
+    let current = true;
+
+    load(id).then((answer) => {
+      if (current) setValue(answer);
+    });
+
+    return () => {
+      current = false;
+    };
+  }, [id])
+
+
+  return <p id="v">{value}</p>;
 }
 
 // --- 5, spoken, nothing to write ------------------------------
