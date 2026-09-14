@@ -11,6 +11,8 @@
 //
 // Run:  npm run drill week-4-react/20-forms.rerun.jsx
 
+import { use } from "react";
+
 const { React } = require("../lib/react-harness.js");
 const { useState } = React;
 
@@ -24,7 +26,14 @@ const { useState } = React;
 // one more letter, and expects the space to survive.
 
 function CodeField() {
-  return "__HERE__";
+  const [code, setCode] = useState('');
+
+  return (
+    <>
+      <input id='code' value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
+      <p id='echo'>{code}</p>
+    </>
+  );
 }
 
 // --- 2 ----------------------------------------------------------
@@ -37,7 +46,15 @@ function CodeField() {
 // e.target.value is ALWAYS a string, and for an empty field it is "".
 
 function HoursField() {
-  return "__HERE__";
+  const [hours, setHours] = useState('');
+  const hoursNumber = parseInt(hours);
+
+  return (
+    <>
+      <input id='hours' value={hours} onChange={(e) => setHours(e.target.value)} />
+      <p id='total'>{hoursNumber ? hoursNumber * 4 : '0'}</p>
+    </>
+  );
 }
 
 // --- 3 ----------------------------------------------------------
@@ -50,7 +67,14 @@ function HoursField() {
 // unticked, initial={true} starts ticked. A click flips it either way.
 
 function NewsletterBox({ initial }) {
-  return "__HERE__";
+  const [tick, setTick] = useState(initial);
+
+  return (
+    <>
+      <input id='optin' type="checkbox" checked={tick} onChange={(e) => setTick(e.target.checked)} />
+      <p id='state'>{tick ? 'yes' : 'no'}</p>
+    </>
+  );
 }
 
 // --- 4 ----------------------------------------------------------
@@ -80,7 +104,17 @@ function MilesField({ value, onChange }) {
 }
 
 function Odometer() {
-  return "__HERE__";
+  const [kilo, setKilo] = useState('');
+  const kiloNumber = parseInt(kilo) || 0;
+  const miles = kilo === '' ? '' : kiloNumber * 5 / 8;
+
+  return (
+    <>
+     <KmField value={kilo} onChange={setKilo} />
+     <MilesField value={miles} onChange={(m) => setKilo(m === '' ? '' : parseInt(m) * 8 / 5)} />
+     <p id="advice">{kiloNumber >= 10 ? 'long' : 'short'}</p>
+    </>
+  );
 }
 
 // --- 5, spoken, nothing to write --------------------------------
