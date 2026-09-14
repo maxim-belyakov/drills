@@ -50,7 +50,13 @@ function Note({ author }) {
 // "ben", and fails if React logs a key warning.
 
 function Team({ members }) {
-  return "__HERE__";
+  return (
+    <ul>
+      {members.map(item => (
+        <Row key={item.id} member={item} />
+      ))}
+    </ul>
+  );
 }
 
 // --- 2 --------------------------------------------------------
@@ -62,7 +68,14 @@ function Team({ members }) {
 // expects exactly dt,dd,dt,dd - and no key warning.
 
 function Glossary({ rows }) {
-  return "__HERE__";
+  return (<dl>
+    {rows.map(item => (
+      <Fragment key={item.id}>
+        <dt>{item.term}</dt>
+        <dd>{item.def}</dd>
+      </Fragment>
+    ))}
+  </dl>);
 }
 
 // --- 3 --------------------------------------------------------
@@ -76,7 +89,9 @@ function Glossary({ rows }) {
 // Make React throw the old one away.
 
 function Editor({ author }) {
-  return "__HERE__";
+  return (
+    <Note key={author.id} author={author} />
+  );
 }
 
 // --- 4 --------------------------------------------------------
@@ -91,7 +106,19 @@ function Editor({ author }) {
 // back in the order it was given.
 
 function RankedTeam({ members, by }) {
-  return "__HERE__";
+  const sortedMembers = [...members].sort((a, b) => {
+    if (by === 'name') {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.points - a.points
+    }
+  });
+
+  return (
+    <ul>
+      {sortedMembers.map(item => <Row key={item.id} member={item} />)}
+    </ul>
+  );
 }
 
 // --- 5, spoken, nothing to write ------------------------------
