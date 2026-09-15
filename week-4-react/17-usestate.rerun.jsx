@@ -58,27 +58,8 @@ function Greeter() {
 // even though the screen looks correct.
 
 const Tags = ({ initial }) => {
-  const [tags, setTags] = useState(initial || []);
-  const [newTag, setNewTag] = useState('');
-
-  const handleAddNewTag = () => {
-    if (!newTag.length || newTag.length === 0) return
-
-    setTags(prev => [...prev, newTag]);
-    setNewTag('');
-  }
-
-  return (
-    <>
-      <input id="tag" value={newTag} onChange={(e) => setNewTag(e.target.value)} />
-      <button id="add" onClick={handleAddNewTag} />
-      <p id="count">{tags.length}</p>
-      <ul>
-        {tags.map(item => <li key={item}>{item}</li>)}
-      </ul>
-    </>
-  );
-}
+  return "__HERE__";
+};
 
 // --- 4 --------------------------------------------------------
 // <Lazy /> gets an expensive initial value from the function `slowInit` below.
@@ -95,20 +76,13 @@ const Tags = ({ initial }) => {
 
 let initCalls = 0;
 function slowInit() {
-  return "__HERE__";
+  initCalls++;
+  return "heavy";
 }
 
 const Lazy = () => {
-  const [value, setValue] = useState(slowInit);
-  const [count, setCount] = useState(0);
-
-  return (
-    <>
-      <p id="value">{value}</p>
-      <button id="bump" onClick={() => setCount(count + 1)}>{`count: ${count}`}</button>
-    </>
-  );
-}
+  return "__HERE__";
+};
 
 // --- 5, spoken, nothing to write ------------------------------
 //   a) in part 1, why does `setCount(count + 1)` twice in one handler add one,
