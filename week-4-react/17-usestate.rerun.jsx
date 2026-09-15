@@ -27,19 +27,7 @@ const { useState } = React;
 // tell React what the next value is.
 
 function Delayed() {
-  const [count, setCount] = useState(0);
-
-  const handleClick = () => {
-    setTimeout(() => {
-      setCount(prev => prev + 1)
-    }, 20)
-  }
-
-  return (
-    <>
-      <button id="bump" onClick={handleClick}>{`count: ${count}`}</button>
-    </>
-  );
+  return "__HERE__";
 }
 
 // --- 2 --------------------------------------------------------
@@ -52,14 +40,7 @@ function Delayed() {
 //   after typing "Ola" -> input value "Ola",  p "Hello, Ola!"
 
 function Greeter() {
-  const [name, setName] = useState('');
-
-  return (
-    <>
-      <input id='name' value={name} onChange={(e) => setName(e.target.value)} />
-      <p id="out">Hello, {!!name ? name : 'stranger'}!</p>
-    </>
-  );
+  return "__HERE__";
 }
 
 // --- 3 --------------------------------------------------------
@@ -114,8 +95,7 @@ const Tags = ({ initial }) => {
 
 let initCalls = 0;
 function slowInit() {
-  initCalls++;
-  return "heavy";
+  return "__HERE__";
 }
 
 const Lazy = () => {
