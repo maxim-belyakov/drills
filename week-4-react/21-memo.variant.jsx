@@ -52,8 +52,21 @@ const VoteChild = memo(function VoteChild({ onVote }) {
 // when the skip counter changes.
 
 function GenreCounter() {
-  // TODO
-  return null;
+  const [genre, setGenre] = useState('');
+  const [rating, setRating] = useState(0);
+  const [count, setCount] = useState(0);
+
+  const hits = useMemo(() => slowScan(TRACKS, genre, rating), [genre, rating])
+
+  return (
+    <>
+      <input id="g" value={genre} onChange={(e) => setGenre(e.target.value)} />
+      <input id="r" value={rating} onChange={(e) => setRating(Number(e.target.value))} />
+      <button id="skip" value={count} onClick={() => setCount(prev => prev + 1)}>+</button>
+      <p id="skips">{count}</p>
+      <p id="hits">{hits.length}</p>
+    </>
+  );
 }
 
 // --- 2 ----------------------------------------------------------
@@ -67,8 +80,16 @@ function GenreCounter() {
 //   a changed first or second  ->  BadgeChild renders again
 
 function TonePanel({ first, second }) {
-  // TODO
-  return null;
+  const [count, setCount] = useState(0);
+  const tags = useMemo(() => ([first, second]), [first, second])
+
+  return (
+    <>
+      <button id="skip2" value={count} onClick={() => setCount(prev => prev + 1)}>+</button>
+      <p id="skips2">{count}</p>
+      <BadgeChild tags={tags} />
+    </>
+  );
 }
 
 // --- 3 ----------------------------------------------------------
@@ -81,8 +102,15 @@ function TonePanel({ first, second }) {
 //   and through all of it, VoteChild must have rendered exactly ONCE
 
 function VoteBox() {
-  // TODO
-  return null;
+  const [score, setScore] = useState(0);
+  const update = useCallback((update) => setScore((prev) => prev + update), []);
+
+  return (
+    <>
+      <p id="score">{score}</p>
+      <VoteChild onVote={update} />
+    </>
+  );
 }
 
 // --- 4, spoken, nothing to write --------------------------------
@@ -104,15 +132,18 @@ const click = (s, id, n = 1) => { for (let i = 0; i < n; i++) s.click(id); };
 const type = (s, id, value) => s.type(id, value);
 
 runChecks([
-  { name: "1. the scan ignores unrelated state", fn: GenreCounter, run: async () => {
+  {
+    name: "1. the scan ignores unrelated state", fn: GenreCounter, run: async () => {
       reset();
       const s = render(<GenreCounter />);
       const after = log.scanCalls;
       click(s, "#skip", 3);
       return { mounted: after >= 1, extra: log.scanCalls - after, skips: s.find("#skips").textContent };
-    }, expected: { mounted: true, extra: 0, skips: "3" } },
+    }, expected: { mounted: true, extra: 0, skips: "3" }
+  },
 
-  { name: "1. the scan re-runs for BOTH inputs", fn: GenreCounter, run: async () => {
+  {
+    name: "1. the scan re-runs for BOTH inputs", fn: GenreCounter, run: async () => {
       reset();
       const s = render(<GenreCounter />);
       type(s, "#g", "jazz");
@@ -121,35 +152,44 @@ runChecks([
       type(s, "#r", "4");
       const afterRating = log.scanCalls;
       return { ranOnGenre: afterGenre > 1, ranOnRating: afterRating > afterGenre, hitsAll, hitsFiltered: s.find("#hits").textContent };
-    }, expected: { ranOnGenre: true, ranOnRating: true, hitsAll: "3", hitsFiltered: "2" } },
+    }, expected: { ranOnGenre: true, ranOnRating: true, hitsAll: "3", hitsFiltered: "2" }
+  },
 
-  { name: "2. the memoised child ignores unrelated state", fn: TonePanel, run: async () => {
+  {
+    name: "2. the memoised child ignores unrelated state", fn: TonePanel, run: async () => {
       reset();
       const s = render(<TonePanel first="warm" second="dry" />);
       click(s, "#skip2", 3);
       return { renders: log.badgeRenders, skips: s.find("#skips2").textContent, badge: s.find("#badge").textContent };
-    }, expected: { renders: 1, skips: "3", badge: "warm/dry" } },
+    }, expected: { renders: 1, skips: "3", badge: "warm/dry" }
+  },
 
-  { name: "2. but it does re-render when a tag changes", fn: TonePanel, run: async () => {
+  {
+    name: "2. but it does re-render when a tag changes", fn: TonePanel, run: async () => {
       reset();
       const s = render(<TonePanel first="warm" second="dry" />);
       s.rerender(<TonePanel first="warm" second="dry" />);
       const afterSame = log.badgeRenders;
       s.rerender(<TonePanel first="cold" second="dry" />);
       return { afterSame, afterChange: log.badgeRenders, badge: s.find("#badge").textContent };
-    }, expected: { afterSame: 1, afterChange: 2, badge: "cold/dry" } },
+    }, expected: { afterSame: 1, afterChange: 2, badge: "cold/dry" }
+  },
 
-  { name: "3. the score follows the argument", fn: VoteBox, run: async () => {
+  {
+    name: "3. the score follows the argument", fn: VoteBox, run: async () => {
       reset();
       const s = render(<VoteBox />);
       click(s, "#up"); click(s, "#up"); click(s, "#down"); click(s, "#up");
       return s.find("#score").textContent;
-    }, expected: "2" },
+    }, expected: "2"
+  },
 
-  { name: "3. and the vote child rendered exactly once", fn: VoteBox, run: async () => {
+  {
+    name: "3. and the vote child rendered exactly once", fn: VoteBox, run: async () => {
       reset();
       const s = render(<VoteBox />);
       click(s, "#up"); click(s, "#up"); click(s, "#down"); click(s, "#up");
       return log.voteRenders;
-    }, expected: 1 },
+    }, expected: 1
+  },
 ]);
