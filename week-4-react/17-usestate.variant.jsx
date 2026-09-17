@@ -7,6 +7,8 @@
 //
 // Run:  npm run drill week-4-react/17-usestate.variant.jsx
 
+import { useEffect, useRef } from "react";
+
 const { React } = require("../lib/react-harness.js");
 const { useState } = React;
 
@@ -22,8 +24,19 @@ const { useState } = React;
 // The check clicks three times before any timer has fired.
 
 function Pledge() {
-  // TODO
-  return <button id="give">total: 0</button>;
+  const [count, setCount] = useState(0);
+  const timerRef = useRef(null);
+
+  const handleCount = () => {
+    timerRef.current = setTimeout(() => {
+      setCount(prev => prev + 5);
+    }, 25)
+  }
+
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
+
+  return <button id="give" onClick={handleCount}>total: {count}</button>;
 }
 
 // --- 2 --------------------------------------------------------
@@ -36,8 +49,14 @@ function Pledge() {
 //   after typing "Lodz"  -> input value "Lodz",  p "Sent from Lodz."
 
 function Signature() {
-  // TODO
-  return null;
+  const [city, setCity] = useState('');
+
+  return (
+    <>
+      <input id="city" value={city} onChange={(e) => setCity(e.target.value)} />
+      <p id="line">Sent from {`${city === '' ? 'nowhere' : city}.`}</p>
+    </>
+  );
 }
 
 // --- 3 --------------------------------------------------------
@@ -56,8 +75,27 @@ function Signature() {
 // The check holds on to the FIRST array and looks at it afterwards.
 
 function Basket({ initial }) {
-  // TODO
-  return null;
+  const [basketList, setBasketList] = useState([...initial]);
+  const [newItem, setNewItem] = useState('');
+
+  const handleAddItem = () => {
+    if (newItem.length === 0) return;
+
+    setBasketList(prev => [...prev, newItem]);
+
+    setNewItem('');
+  }
+
+  return (
+    <>
+      <input id="item" value={newItem} onChange={(e) => setNewItem(e.target.value)} />
+      <button id="add" onClick={handleAddItem}></button>
+      <p id="size">{basketList.length}</p>
+      <ul>
+        {basketList.map(item => <li key={item}>{item}</li>)}
+      </ul>
+    </>
+  );
 }
 
 // --- 4 --------------------------------------------------------
@@ -77,8 +115,14 @@ function slowSeed() {
 }
 
 function Heavy() {
-  // TODO
-  return null;
+  const [items, setItems] = useState(slowSeed);
+  const [count, setCount] = useState(0);
+  return (
+    <>
+      <p id="seed">{items}</p>
+      <button id="tick" onClick={() => setCount(prev => prev + 1)}>+</button>
+    </>
+  );
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -106,7 +150,7 @@ const pledged = async (clicks) => {
   });
   const immediate = s.text();
   await new Promise((r) => setTimeout(r, 90));
-  act(() => {});
+  act(() => { });
   return { immediate, after: s.text() };
 };
 
@@ -127,18 +171,27 @@ const basketRun = () => {
 };
 
 runChecks([
-  { name: "1. Pledge starts at 0 and waits", fn: Pledge, run: () => pledged(0),
-    expected: { immediate: "total: 0", after: "total: 0" } },
-  { name: "1. one click moves it by five, but only after the timer", fn: Pledge, run: () => pledged(1),
-    expected: { immediate: "total: 0", after: "total: 5" } },
-  { name: "1. three fast clicks all land", fn: Pledge, run: () => pledged(3),
-    expected: { immediate: "total: 0", after: "total: 15" } },
+  {
+    name: "1. Pledge starts at 0 and waits", fn: Pledge, run: () => pledged(0),
+    expected: { immediate: "total: 0", after: "total: 0" }
+  },
+  {
+    name: "1. one click moves it by five, but only after the timer", fn: Pledge, run: () => pledged(1),
+    expected: { immediate: "total: 0", after: "total: 5" }
+  },
+  {
+    name: "1. three fast clicks all land", fn: Pledge, run: () => pledged(3),
+    expected: { immediate: "total: 0", after: "total: 15" }
+  },
 
-  { name: "2. Signature, empty state", fn: Signature, run: () => {
+  {
+    name: "2. Signature, empty state", fn: Signature, run: () => {
       const s = render(<Signature />);
       return { value: s.find("#city").value, line: s.find("#line").textContent };
-    }, expected: { value: "", line: "Sent from nowhere." } },
-  { name: "2. Signature is controlled and reacts to typing", fn: Signature, run: () => {
+    }, expected: { value: "", line: "Sent from nowhere." }
+  },
+  {
+    name: "2. Signature is controlled and reacts to typing", fn: Signature, run: () => {
       const s = render(<Signature />);
       s.type("#city", "Lodz");
       // the value ATTRIBUTE is only there when React owns the field:
@@ -148,23 +201,32 @@ runChecks([
         drivenByReact: s.find("#city").getAttribute("value") === "Lodz",
         line: s.find("#line").textContent,
       };
-    }, expected: { value: "Lodz", drivenByReact: true, line: "Sent from Lodz." } },
+    }, expected: { value: "Lodz", drivenByReact: true, line: "Sent from Lodz." }
+  },
 
-  { name: "3. Basket appends, counts, clears, and refuses an empty entry", fn: Basket, run: () => basketRun(),
-    expected: { before: ["bread"], afterAdd: ["bread", "milk"], afterEmptyAdd: ["bread", "milk"], size: "2", inputAfter: "" } },
+  {
+    name: "3. Basket appends, counts, clears, and refuses an empty entry", fn: Basket, run: () => basketRun(),
+    expected: { before: ["bread"], afterAdd: ["bread", "milk"], afterEmptyAdd: ["bread", "milk"], size: "2", inputAfter: "" }
+  },
 
-  { name: "4. Heavy shows the value", fn: Heavy, run: () => {
+  {
+    name: "4. Heavy shows the value", fn: Heavy, run: () => {
       seedCalls = 0;
       const s = render(<Heavy />);
       return s.find("#seed").textContent;
-    }, expected: "deep" },
-  { name: "4. slowSeed ran exactly once across five re-renders", fn: Heavy, run: () => {
+    }, expected: "deep"
+  },
+  {
+    name: "4. slowSeed ran exactly once across five re-renders", fn: Heavy, run: () => {
       seedCalls = 0;
       const s = render(<Heavy />);
       for (let i = 0; i < 5; i++) s.click("#tick");
       return seedCalls;
-    }, expected: 1 },
-  { name: "4. and it does it without useEffect", fn: Heavy,
+    }, expected: 1
+  },
+  {
+    name: "4. and it does it without useEffect", fn: Heavy,
     run: () => /useEffect/.test(Heavy.toString()) ? "useEffect is not allowed in this drill" : true,
-    expected: true },
+    expected: true
+  },
 ]);
