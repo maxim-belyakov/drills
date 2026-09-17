@@ -32,8 +32,10 @@ drills - это артефакт программы.
 Доложи по каждому пункту ✅ или ❌ одной строкой. Пункт 4 зелёный тогда, когда пуш
 упал ожидаемым текстом. Если текст другой - скажи сразу, а не в конце дня.
 
-Пушит не песочница, а Mac-сессия. Ты коммитишь через g.sh, я пишу "push" в чат
-на Маке. Токен в .git/config не возвращается никогда - он был отозван 11.09.
+Пушит не песочница. Если в списке инструментов есть iterm-shell - это shell
+НА МАКЕ, с моими ключами: пуш делай через него, сам, не прося меня. Если его нет,
+пуш делаю я из своего терминала по твоей просьбе. Токен в .git/config не
+возвращается никогда - он был отозван 11.09.
 
 Затем прочитай в папке drills:
   README.md   - правила программы, журнал, счётчик, что осталось
@@ -90,4 +92,5 @@ exit $rc
 | `access denied by the git proxy: ... not in this session's authorized repository set` | Anthropic's git proxy. The repository list is fixed when the task is created. Read works, write does not. | Add the repository to the task's sources when creating the task, if the interface offers it. |
 | `GitHub access to this repository is not enabled for this session` on the API | The Claude GitHub App has no installation covering the repo. | github.com/apps/claude/installations/new, select the repo. Done on 2026-09-11. |
 | `could not read Username for 'https://github.com'` on push from the sandbox | Expected since 2026-09-11: the PAT was removed from the origin URL on purpose (it was readable in `git remote -v` and in every transcript) and revoked. The Mac keeps its credentials in `gh`; the sandbox has none and must not get the token back into `.git/config`. | Commit in the sandbox through `g.sh`; the Mac session pushes (`g.sh push origin main`) - say "push" in the Mac chat. Step 3 of the opening check is therefore: branch created and deleted locally, push expected to fail with exactly this message; any OTHER message is a real problem. |
+| `could not read Username` while `iterm-shell` is in the tool list | Nothing is broken. Push from the Mac shell instead of from the sandbox. | `mcp__remote-devices__iterm-shell__run_command` with `cd <repo> && git push` - found 2026-09-17, after a week of reporting the push as impossible. |
 | `fatal: Unable to create '.git/index.lock': File exists` on the Mac | A leftover lock from the sandbox. | Route sandbox git through `g.sh`; delete the lock on the Mac. |
