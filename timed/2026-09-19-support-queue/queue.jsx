@@ -7,6 +7,8 @@
 //
 // Run:  npm run drill timed/2026-09-19-support-queue/check.jsx
 
+import { Fragment, use } from "react";
+
 const { React } = require("../../lib/react-harness.js");
 const { useState, useEffect } = React;
 
@@ -107,14 +109,94 @@ const respond = (status, payload, delay) =>
 //
 // You may use useState and useEffect. Nothing else is needed.
 
+// Each <li> has:
+//   - an id of `row-<ticket id>`, for example id="row-t1"
+//   - the text `<title> (<priority>)`, for example "printer on fire (normal)"
+//   - a <button> inside it with id `esc-<ticket id>`, text "escalate"
+
 function SupportQueue() {
-  // TODO
-  return null;
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [supportOption, setSupportOption] = useState('open');
+  const potentialOptions = ["open", "closed", "archived"];
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        setError('');
+        setLoading(true);
+        const response = await fetch(`/tickets?status=${supportOption}`, {
+          method: 'GET'
+        })
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const result = await response.json();
+        setTickets(result);
+      } catch (e) {
+        console.log('e.message', e.message)
+        setError(e.message)
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchTickets();
+  }, [supportOption])
+
+  if (error.length !== 0) return <p id="error">{error}</p>
+
+  if (loading) return <p id="loading">loading</p>
+
+  return (
+    <>
+      <select id="status" size={potentialOptions.length} onChange={(e) => setSupportOption(e.target.value)}>
+        {potentialOptions.map(item => <option key={item} value={item} >{item}</option>)}
+      </select>
+      {tickets.length === 0 ? (
+        <p id="empty">nothing here</p>
+      ) : (<ul id="list">
+        {tickets.map(item => (
+          <SupportTicket key={item.id} ticket={item} />
+        ))}
+      </ul>)}
+    </>
+  );
+}
+
+const SupportTicket = ({ ticket }) => {
+  const [escalete, setEscalete] = useState(null);
+  const [escerror, setEscerror] = useState('');
+
+  const handleEscalate = async (user) => {
+    try {
+      setEscerror('');
+      const response = await fetch(`/tickets/${user.id}/escalate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason: "manual" })
+      })
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const result = await response.json();
+      setEscalete(result);
+    } catch (e) {
+      setEscerror(e.message)
+    }
+  }
+
+  return (
+    <Fragment key={ticket.id}>
+      <li key={ticket.id} id={`row-${ticket.id}`}>
+        {ticket.title} ({escalete ? escalete.priority : ticket.priority})
+        <button id={`esc-${ticket.id}`} onClick={() => handleEscalate(ticket)}>escalate</button>
+      </li>
+      {escerror.length !== 0 && <p id="escerror">{escerror}</p>}
+    </Fragment>
+  )
 }
 
 // ================= YOUR CODE ENDS HERE =========================
 
-module.exports = { SupportQueue, sent, TICKETS,
+module.exports = {
+  SupportQueue, sent, TICKETS,
   setEscalateBehaviour: (v) => { escalateBehaviour = v; },
   setSlowFirstList: (v) => { slowFirstList = v; },
   setListBehaviour: (v) => { listBehaviour = v; },
