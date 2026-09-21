@@ -62,26 +62,14 @@ function Meter() {
 //
 // It renders <p id="r"> with the room name.
 
-function Presence({ room }) {
-  const [localRoom, setLocalRoom] = useState(null);
-  
-  useEffect(() => {    
-    if (localRoom === null) {
-      join(room);
-      setLocalRoom(room);
-      return
-    };
-
-    leave(localRoom);
-    setLocalRoom(room);
+function Presence({ room }) {  
+  useEffect(() => {
     join(room);
 
-    return () => {
-      leave(room);
-    }
+    return () => leave(room);
   }, [room]);
 
-  return <p id="r">{!!localRoom && localRoom}</p>;
+  return <p id="r">{room}</p>;
 }
 
 // --- 3 --------------------------------------------------------
@@ -141,8 +129,10 @@ function Profile({ id }) {
       try {
         setLoading(true);
         const response = await fetchProfile(id);
-        if (current) setUser(response);
-        setLoading(false);
+        if (current) {
+          setUser(response);
+          setLoading(false);
+        }        
       } catch (e) {
         console.error(e.message);
         setLoading(false);
