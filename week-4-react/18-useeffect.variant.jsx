@@ -32,8 +32,21 @@ const fetchProfile = (id) =>
 // it, waits, and looks at whether sample() kept firing.
 
 function Meter() {
-  // TODO
-  return <p id="n">0</p>;
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      sample();
+      setCount(prev => prev + 2);
+    }, 10);
+
+    return () => {
+      clearInterval(timer);
+    }
+
+  }, [])
+
+  return <p id="n">{count}</p>;
 }
 
 // --- 2 --------------------------------------------------------
@@ -50,8 +63,25 @@ function Meter() {
 // It renders <p id="r"> with the room name.
 
 function Presence({ room }) {
-  // TODO
-  return <p id="r">{room}</p>;
+  const [localRoom, setLocalRoom] = useState(null);
+  
+  useEffect(() => {    
+    if (localRoom === null) {
+      join(room);
+      setLocalRoom(room);
+      return
+    };
+
+    leave(localRoom);
+    setLocalRoom(room);
+    join(room);
+
+    return () => {
+      leave(room);
+    }
+  }, [room]);
+
+  return <p id="r">{!!localRoom && localRoom}</p>;
 }
 
 // --- 3 --------------------------------------------------------
@@ -68,8 +98,24 @@ function Presence({ room }) {
 //     -> log.queries is [], and <p id="q"> is empty
 
 function Filter({ query }) {
-  // TODO
-  return <p id="q"></p>;
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    if (!query || query.length === 0) return;
+
+    let current = true;
+    const timer = setTimeout(async () => {
+      const response = runQuery(query);
+      setText(response);
+    }, 30);
+
+    return () => {
+      current = false;
+      clearTimeout(timer);
+    }
+  }, [query])
+
+  return <p id="q">{text}</p>;
 }
 
 // --- 4 --------------------------------------------------------
@@ -86,8 +132,30 @@ function Filter({ query }) {
 //   -> <p id="v"> says "profile 2", and stays that way
 
 function Profile({ id }) {
-  // TODO
-  return <p id="v">loading</p>;
+  const [user, setUser] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let current = true;    
+    const getUser = async () => {
+      try {
+        setLoading(true);
+        const response = await fetchProfile(id);
+        if (current) setUser(response);
+        setLoading(false);
+      } catch (e) {
+        console.error(e.message);
+        setLoading(false);
+      }
+    }
+    getUser();
+
+    return () => {
+      current = false;
+    }
+  }, [id]);
+
+  return <p id="v">{loading ? 'loading' : user}</p>;
 }
 
 // --- 5, spoken, nothing to write ------------------------------
@@ -139,6 +207,13 @@ runChecks([
       return { beforeUnmount, afterUnmount: log.rooms };
     }, expected: { beforeUnmount: ["join a", "leave a", "join b"], afterUnmount: ["join a", "leave a", "join b", "leave b"] } },
 
+  { name: "2. leaving straight after joining still leaves the room", fn: Presence, run: async () => {
+      reset();
+      const s = render(<Presence room="a" />);
+      s.unmount();
+      return log.rooms;
+    }, expected: ["join a", "leave a"] },
+
   { name: "3. Filter debounces - only the last query runs", fn: Filter, run: async () => {
       reset();
       const s = render(<Filter query="" />);
@@ -165,6 +240,16 @@ runChecks([
       await wait(120);
       return { settled, immediately, finally_: s.find("#v").textContent };
     }, expected: { settled: "profile 2", immediately: "loading", finally_: "profile 1" } },
+
+  { name: "4. a stale answer does not end the loading of the current one", fn: Profile, run: async () => {
+      reset();
+      const s = render(<Profile id={2} />);       // 2 answers at 10 ms
+      s.rerender(<Profile id={1} />);             // 1 answers at 70 ms
+      await wait(30);                             // 2 has arrived, 1 has not
+      const midway = s.find("#v").textContent;
+      await wait(100);
+      return { midway, finally_: s.find("#v").textContent };
+    }, expected: { midway: "loading", finally_: "profile 1" } },
 
   { name: "4. the slow answer for the id you left never reaches the screen", fn: Profile, run: async () => {
       reset();
