@@ -38,6 +38,12 @@ function FieldSaver() {
   );
 }
 
+// given consumer for task 2, second check: its function READS a prop
+function Pinger({ user }) {
+  const ping = useDebouncedCallback(() => save("ping", user), 40);
+  return <button id="ping" onClick={() => ping()}>ping</button>;
+}
+
 // --- 1 ----------------------------------------------------------
 // useLaggingValue(value, ms) returns a value that LAGS behind the one it is
 // given:
@@ -51,8 +57,19 @@ function FieldSaver() {
 // a value is waiting, the wait starts over WITH THE NEW DELAY.
 
 function useLaggingValue(value, ms) {
-  // TODO
-  return value;
+  const [vl, setVl] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVl(value);
+    }, ms)
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [value, ms, vl])
+
+  return vl;
 }
 
 // --- 2 ----------------------------------------------------------
@@ -64,8 +81,16 @@ function useLaggingValue(value, ms) {
 //   component unmounts    ->  a pending call must NOT fire afterwards
 
 function useDebouncedCallback(fn, ms) {
-  // TODO
-  return () => {};
+  const timer = useRef(null);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  const localFn = useCallback((...args) => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => fn(...args), ms)
+  }, [ms])
+
+  return localFn;
 }
 
 // --- 3 ----------------------------------------------------------
@@ -83,8 +108,28 @@ function useDebouncedCallback(fn, ms) {
 // Reuse what you built above.
 
 function DraftEditor() {
-  // TODO
-  return null;
+  const [draft, setDraft] = useState('');
+  const [saved, setSaved] = useState('');
+
+  const debouncedSave = useDebouncedCallback((text) => {
+    if (text.length > 0) {
+      save("draft", text);
+      setSaved(text);
+    }
+  }, 40);
+  
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setDraft(val);
+    debouncedSave(val);
+  };
+
+  return (
+    <>
+      <input id="draft" value={draft} onChange={handleChange} />
+      <p id="saved">{saved}</p>
+    </>
+  );
 }
 
 // --- 4, spoken, nothing to write --------------------------------
@@ -105,7 +150,8 @@ const wait = (ms) => act(async () => { await new Promise((r) => setTimeout(r, ms
 const reset = () => { log.saves = []; };
 
 runChecks([
-  { name: "1. the lagging value starts on the first value and settles on the last", fn: useLaggingValue, run: async () => {
+  {
+    name: "1. the lagging value starts on the first value and settles on the last", fn: useLaggingValue, run: async () => {
       const seen = [];
       const s = render(<Readout value="a" ms={40} />);
       seen.push(s.find("#shown").textContent);
@@ -118,9 +164,11 @@ runChecks([
       await wait(60);
       seen.push(s.find("#shown").textContent);
       return seen;
-    }, expected: ["a", "a", "a", "c"] },
+    }, expected: ["a", "a", "a", "c"]
+  },
 
-  { name: "1. a changed delay restarts the wait with the new delay", fn: useLaggingValue, run: async () => {
+  {
+    name: "1. a changed delay restarts the wait with the new delay", fn: useLaggingValue, run: async () => {
       const s = render(<Readout value="a" ms={20} />);
       s.rerender(<Readout value="b" ms={20} />);
       await wait(10);
@@ -129,26 +177,43 @@ runChecks([
       const early = s.find("#shown").textContent;
       await wait(80);
       return { early, late: s.find("#shown").textContent };
-    }, expected: { early: "a", late: "b" } },
+    }, expected: { early: "a", late: "b" }
+  },
 
-  { name: "2. three calls run once, with ALL of the last call's arguments", fn: useDebouncedCallback, run: async () => {
+  {
+    name: "2. three calls run once, with ALL of the last call's arguments", fn: useDebouncedCallback, run: async () => {
       reset();
       const s = render(<FieldSaver />);
       s.click("#t1"); s.click("#t2"); s.click("#t3");
       await wait(80);
       return log.saves;
-    }, expected: [["title", "hey"]] },
+    }, expected: [["title", "hey"]]
+  },
 
-  { name: "2. a pending call does not fire after unmount", fn: useDebouncedCallback, run: async () => {
+  {
+    name: "2. a pending call does not fire after unmount", fn: useDebouncedCallback, run: async () => {
       reset();
       const s = render(<FieldSaver />);
       s.click("#t1");
       s.unmount();
       await new Promise((r) => setTimeout(r, 80));
       return log.saves;
-    }, expected: [] },
+    }, expected: []
+  },
 
-  { name: "3. the field repaints on every keystroke, the save waits", fn: DraftEditor, run: async () => {
+  {
+    name: "2. the callback uses the LATEST function, not the first one", fn: useDebouncedCallback, run: async () => {
+      reset();
+      const s = render(<Pinger user="ola" />);
+      s.rerender(<Pinger user="max" />);      // the user changed before the click
+      s.click("#ping");
+      await wait(80);
+      return log.saves;
+    }, expected: [["ping", "max"]]
+  },
+
+  {
+    name: "3. the field repaints on every keystroke, the save waits", fn: DraftEditor, run: async () => {
       reset();
       const s = render(<DraftEditor />);
       s.type("#draft", "n"); s.type("#draft", "no"); s.type("#draft", "not");
@@ -156,9 +221,11 @@ runChecks([
       const savesNow = log.saves.length;
       await wait(80);
       return { fieldNow, savesNow, saves: log.saves, shown: s.find("#saved").textContent };
-    }, expected: { fieldNow: "not", savesNow: 0, saves: [["draft", "not"]], shown: "not" } },
+    }, expected: { fieldNow: "not", savesNow: 0, saves: [["draft", "not"]], shown: "not" }
+  },
 
-  { name: "3. nothing is saved on mount, and nothing after clearing the field", fn: DraftEditor, run: async () => {
+  {
+    name: "3. nothing is saved on mount, and nothing after clearing the field", fn: DraftEditor, run: async () => {
       reset();
       const s = render(<DraftEditor />);
       await wait(80);
@@ -168,13 +235,16 @@ runChecks([
       s.type("#draft", "");
       await wait(80);
       return { afterMount, saves: log.saves };
-    }, expected: { afterMount: [], saves: [["draft", "x"]] } },
+    }, expected: { afterMount: [], saves: [["draft", "x"]] }
+  },
 
-  { name: "3. a one-letter draft is saved", fn: DraftEditor, run: async () => {
+  {
+    name: "3. a one-letter draft is saved", fn: DraftEditor, run: async () => {
       reset();
       const s = render(<DraftEditor />);
       s.type("#draft", "q");
       await wait(80);
       return log.saves;
-    }, expected: [["draft", "q"]] },
+    }, expected: [["draft", "q"]]
+  },
 ]);

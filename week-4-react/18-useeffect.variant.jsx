@@ -62,7 +62,7 @@ function Meter() {
 //
 // It renders <p id="r"> with the room name.
 
-function Presence({ room }) {  
+function Presence({ room }) {
   useEffect(() => {
     join(room);
 
@@ -124,7 +124,7 @@ function Profile({ id }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    let current = true;    
+    let current = true;
     const getUser = async () => {
       try {
         setLoading(true);
@@ -132,10 +132,12 @@ function Profile({ id }) {
         if (current) {
           setUser(response);
           setLoading(false);
-        }        
+        }
       } catch (e) {
         console.error(e.message);
-        setLoading(false);
+        if (current) {
+          setLoading(false);
+        }
       }
     }
     getUser();
@@ -166,7 +168,8 @@ const wait = (ms) => act(async () => { await new Promise((r) => setTimeout(r, ms
 const reset = () => { log.samples = 0; log.rooms = []; log.queries = []; log.loads = []; };
 
 runChecks([
-  { name: "1. Meter counts by two while mounted", fn: Meter, run: async () => {
+  {
+    name: "1. Meter counts by two while mounted", fn: Meter, run: async () => {
       reset();
       const s = render(<Meter />);
       await wait(35);
@@ -175,9 +178,11 @@ runChecks([
       // deliberately not an exact number: the machine decides how many ticks
       // fit in 35 ms. What must hold is that the screen equals two per tick.
       return { ticked: log.samples >= 2, even: shown % 2 === 0, matches: shown === log.samples * 2 };
-    }, expected: { ticked: true, even: true, matches: true } },
+    }, expected: { ticked: true, even: true, matches: true }
+  },
 
-  { name: "1. Meter stops when unmounted", fn: Meter, run: async () => {
+  {
+    name: "1. Meter stops when unmounted", fn: Meter, run: async () => {
       reset();
       const s = render(<Meter />);
       await wait(35);
@@ -185,9 +190,11 @@ runChecks([
       s.unmount();
       await new Promise((r) => setTimeout(r, 40));
       return log.samples - during;
-    }, expected: 0 },
+    }, expected: 0
+  },
 
-  { name: "2. Presence leaves the old room before joining the new one", fn: Presence, run: async () => {
+  {
+    name: "2. Presence leaves the old room before joining the new one", fn: Presence, run: async () => {
       reset();
       const s = render(<Presence room="a" />);
       s.rerender(<Presence room="a" />);
@@ -195,32 +202,40 @@ runChecks([
       const beforeUnmount = log.rooms.slice();
       s.unmount();
       return { beforeUnmount, afterUnmount: log.rooms };
-    }, expected: { beforeUnmount: ["join a", "leave a", "join b"], afterUnmount: ["join a", "leave a", "join b", "leave b"] } },
+    }, expected: { beforeUnmount: ["join a", "leave a", "join b"], afterUnmount: ["join a", "leave a", "join b", "leave b"] }
+  },
 
-  { name: "2. leaving straight after joining still leaves the room", fn: Presence, run: async () => {
+  {
+    name: "2. leaving straight after joining still leaves the room", fn: Presence, run: async () => {
       reset();
       const s = render(<Presence room="a" />);
       s.unmount();
       return log.rooms;
-    }, expected: ["join a", "leave a"] },
+    }, expected: ["join a", "leave a"]
+  },
 
-  { name: "3. Filter debounces - only the last query runs", fn: Filter, run: async () => {
+  {
+    name: "3. Filter debounces - only the last query runs", fn: Filter, run: async () => {
       reset();
       const s = render(<Filter query="" />);
       s.rerender(<Filter query="x" />);
       s.rerender(<Filter query="xy" />);
       await wait(70);
       return { queries: log.queries, shown: s.find("#q").textContent };
-    }, expected: { queries: ["xy"], shown: "hits: xy" } },
+    }, expected: { queries: ["xy"], shown: "hits: xy" }
+  },
 
-  { name: "3. an empty query never reaches runQuery", fn: Filter, run: async () => {
+  {
+    name: "3. an empty query never reaches runQuery", fn: Filter, run: async () => {
       reset();
       const s = render(<Filter query="" />);
       await wait(70);
       return { queries: log.queries, shown: s.find("#q").textContent };
-    }, expected: { queries: [], shown: "" } },
+    }, expected: { queries: [], shown: "" }
+  },
 
-  { name: "4. Profile goes back to loading while it switches", fn: Profile, run: async () => {
+  {
+    name: "4. Profile goes back to loading while it switches", fn: Profile, run: async () => {
       reset();
       const s = render(<Profile id={2} />);
       await wait(40);
@@ -229,9 +244,11 @@ runChecks([
       const immediately = s.find("#v").textContent;
       await wait(120);
       return { settled, immediately, finally_: s.find("#v").textContent };
-    }, expected: { settled: "profile 2", immediately: "loading", finally_: "profile 1" } },
+    }, expected: { settled: "profile 2", immediately: "loading", finally_: "profile 1" }
+  },
 
-  { name: "4. a stale answer does not end the loading of the current one", fn: Profile, run: async () => {
+  {
+    name: "4. a stale answer does not end the loading of the current one", fn: Profile, run: async () => {
       reset();
       const s = render(<Profile id={2} />);       // 2 answers at 10 ms
       s.rerender(<Profile id={1} />);             // 1 answers at 70 ms
@@ -239,13 +256,16 @@ runChecks([
       const midway = s.find("#v").textContent;
       await wait(100);
       return { midway, finally_: s.find("#v").textContent };
-    }, expected: { midway: "loading", finally_: "profile 1" } },
+    }, expected: { midway: "loading", finally_: "profile 1" }
+  },
 
-  { name: "4. the slow answer for the id you left never reaches the screen", fn: Profile, run: async () => {
+  {
+    name: "4. the slow answer for the id you left never reaches the screen", fn: Profile, run: async () => {
       reset();
       const s = render(<Profile id={1} />);
       s.rerender(<Profile id={2} />);
       await wait(150);
       return { shown: s.find("#v").textContent, arrived: log.loads };
-    }, expected: { shown: "profile 2", arrived: [2, 1] } },
+    }, expected: { shown: "profile 2", arrived: [2, 1] }
+  },
 ]);
