@@ -88,7 +88,7 @@ function useDebouncedCallback(fn, ms) {
   const localFn = useCallback((...args) => {
     clearTimeout(timer.current);
     timer.current = setTimeout(() => fn(...args), ms)
-  }, [ms])
+  }, [fn, ms])
 
   return localFn;
 }
