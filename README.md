@@ -191,6 +191,8 @@ Three changes for week 7:
 
 **To re-run cold (0)** - every numbered drill is closed. 18 useEffect cleanup closed on 09-22 on its spoken (a). What remains is 25 and 26, the Saturday run.
 
+**Spaced repeats of closed drills.** With the list finished, a session that is not a build is the opener plus one cold re-run of the drill the opener pointed at - evidence, not a rota. Re-run files carry `.rerun` and are stubs on new data, so the closed original stays as the record: `07-optional-nullish.rerun.js` (built 09-22, after `"" ?? x` was missed in the opener).
+
 Third-pass files, built on new data because the originals are readable on GitHub: `21-memo.variant.jsx`, `17-usestate.variant.jsx`, `18-useeffect.variant.jsx`, `23-debounce.variant.jsx`.
 
 **Next.js and assembly** - 24 closed on 09-10 · 25 a 45-minute build out loud ·
