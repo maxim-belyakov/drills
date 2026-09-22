@@ -115,9 +115,9 @@ would break this that the check never sends?**
 
 ## Counter
 
-Start: 2026-08-03 · reviewed 2026-09-14 · last session 2026-09-21
-Closed cold: **23 of 26** numbered drills · assemblies closed cold: **2** · timed builds run: **5**
-Sessions: 35 · of them mobile: 5 · timed: 4 · days with no session: 6 (08-17, 08-29, 08-31, 09-06, 09-12, 09-13) plus one deliberate skip (08-24)
+Start: 2026-08-03 · reviewed 2026-09-14 · last session 2026-09-22
+Closed cold: **24 of 26** numbered drills · assemblies closed cold: **2** · timed builds run: **5**
+Sessions: 36 · of them mobile: 5 · timed: 4 · days with no session: 6 (08-17, 08-29, 08-31, 09-06, 09-12, 09-13) plus one deliberate skip (08-24)
 
 **Closes per week: 6 · 4 · 4 · 0 · 0 · 5.** Week 6 (09-08 to 09-14) closed 22, 15, 16, 24 and 20, ran build 4 two days late, and lost the weekend. Review below. All 24 numbered drills are now WRITTEN; 25 and 26 are the recurring timed run. What remains is turning the open ones into closes. Drill 22 on 09-08 is the first React drill to close cold, and the first close in fifteen days.
 
@@ -181,17 +181,17 @@ Three changes for week 7:
    not "something": a legitimate falsy for `||`, a space for `.trim()`, a fraction for
    `parseInt` and for every boundary, a one-character query for any length test.
 
-## Remaining - 0 new, 1 to re-run (spoken only)
+## Remaining - 0 new, 0 to re-run
 
 **Running the React drills:** `npm run drill week-4-react/17-usestate.jsx` (add a name to run one check).
 
 **Async** - all six written; 15 and 16 are still open and sit in the re-run list below
 
-**React** - all seven written; 17, 19, 20, 21, 22 and 23 closed; 18 waits on one spoken answer
+**React** - all seven written; 17, 18, 19, 20, 21, 22 and 23 closed
 
-**To re-run cold (1)** - 18 useEffect cleanup: code 9/9 on 09-21, **spoken (a) only**, asked cold next session. Every other numbered drill is closed.
+**To re-run cold (0)** - every numbered drill is closed. 18 useEffect cleanup closed on 09-22 on its spoken (a). What remains is 25 and 26, the Saturday run.
 
-Third-pass files, built on new data because the originals are readable on GitHub: `21-memo.variant.jsx`, `17-usestate.variant.jsx`.
+Third-pass files, built on new data because the originals are readable on GitHub: `21-memo.variant.jsx`, `17-usestate.variant.jsx`, `18-useeffect.variant.jsx`, `23-debounce.variant.jsx`.
 
 **Next.js and assembly** - 24 closed on 09-10 · 25 a 45-minute build out loud ·
 26 a 90-minute full run with changing requirements
@@ -267,3 +267,4 @@ Drills 25 and 26 are not one-offs. They are the Saturday run, repeated to the en
 | 2026-09-21 | 18 useEffect cleanup, third pass | 💻 | 🔁 **seven of seven cold, nothing looked at, narrated - and two defects the checks did not send.** Rebuilt on new data with a new task: `Presence` joins a room and must leave it before joining the next. `Meter` and `Filter` right first time, including the empty-query boundary. 🔴 `Presence` calls `leave` BY HAND inside the effect body, keeping the previous room in extra state, and returns no cleanup from the first run. Measured: mount in "a" then unmount gives `["join a"]` - the user never leaves. The canonical version is `join(room); return () => leave(room)`, and it gives `["join a", "leave a"]`. The code shape and the spoken answer carry the same misconception: (a) named both moments of the cleanup, then said task 2 works on the unmount one, when it works on the FIRST - the cleanup before the next run is exactly the leave of the old room. 🔴 `Profile` guards `setUser` with the flag but not `setLoading(false)`. Measured: switching 1 to a slower id, the stale answer arrives first and ends the loading of the current request - the screen goes blank instead of saying loading. **Eleventh and twelfth sightings of the second finding.** Both were holes in MY checks too: neither case was sent. Two checks added, verified - they now fail exactly his two defects and pass the reference. (b) three behaviours right, how "changed" is decided not said (`Object.is`). (c) right: the answer cannot be cancelled, only refused. 📌 Traces 1 of 3: `splice` and `slice` clean, which were red on the 19th. `setTimeout` said to return a Promise in Node - it returns a Timeout object, and a number in the browser, never a promise. `""` read as truthy. Deck `11 Return Values` written at his request, six cards. |
 | 2026-09-21 | 18, the two defects | 💻 | ✅ both fixed in one pass, 9 of 9. `Presence` is now `join(room); return () => leave(room)` - two lines, no state - and he said it himself: *"I over-complicated it"*. `Profile` moved `setLoading(false)` inside the guard. He then asked the right question: why his earlier version never logged `leave a` twice, when he had written `leave` both in the body and in the cleanup. Measured: his first run returned NO cleanup, so the manual `leave` and the cleanup each covered a different room by accident; the same code with a cleanup on the first run too logs `leave a` twice. Spoken (a) comes back cold next session. |
 | 2026-09-21 | 23 debounce, third pass | 💻 | ✅ **seven of seven cold, spoken three of three - drill 23 closes.** Rebuilt on new data with three twists: the delay itself can change, the callback carries two arguments, and the editor refuses an empty save but keeps a one-letter one. `useLaggingValue` right with `[value, ms]`, after one self-correction: a state variable named `value` shadowing the argument. ✅ **The first finding worked twice in one task:** `DraftEditor` v1 had a constant `saved = ''` in the deps, v2 was correct but inlined its own timer, and he then re-read the task - *"reuse what you built above"* - and rebuilt it on the hook. No threshold anywhere; the one-letter case, aimed at the `length > 2` from 09-09, passed first time. 🔴 `useDebouncedCallback` has `[ms]` without `fn`, so it keeps the FIRST function forever. Green only because every consumer's function read nothing from render. Measured with one that does: the user changed from ola to max, and the click sent "ola: hi". **Thirteenth sighting of the second finding** - and his own spoken (b) states the rule for task 1 exactly. A check for it was added; it fails his current code. ✅ Spoken: (a) a ref write does not re-render; (b) `[value, ms]`, and without `ms` the old delay keeps running - precise; (c) debounce waits for quiet, throttle lets one through per interval, search against scroll. 📌 He also asked whether the old `Presence` would have broken on a third room. Measured: a to b to c gives `leave b` twice. |
+| 2026-09-22 | 18 useEffect cleanup, spoken part | 💻 | ✅ **closed - 24 of 26.** Asked cold as the first thing in the session, no preparation and no files. Both moments named in the right order - before the next run of the same effect when a dependency changed, and on unmount - which is already more than 09-21, where the answer was "on unmount" alone. He did not pick between them unprompted, so the discriminating half was asked: `Presence` mounted with `room="a"`, the prop changes to `"b"`, what does the log say. Answered exactly: the FIRST moment produces `leave a`, then the effect runs and produces `join b`. That is the mechanism the drill exists for, and the one his 09-21 code missed by calling `leave` by hand. |
