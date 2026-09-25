@@ -1,14 +1,19 @@
-// Probe: <the rule, in one line, as you would say it out loud>
-// Written: <YYYY-MM-DD>, after missing it in the opener.
-//
-// Run: node week-1-js/probes/<this file>
+// Правило, как я его понимаю сейчас: parseInt идёт слева направо и пытается преобразить хотя бы кусок строки в Int, Number пытается преобрахить всю
 
-// 1. PREDICTION - write it first, and do not edit it after the run.
-//    <what you expect each line below to print, and why>
+console.log(parseInt("12px"), Number("12px"));
+console.log(parseInt("0.9"), Number("0.9"));
+console.log(parseInt(""), Number(""));
+console.log(parseInt("08"), Number("1e3"), parseInt("1e3"));
+console.log(parseInt("0.9"), parseInt("9.9"), Number("9.9"));
 
-// 2. THE MEASUREMENT - the smallest code that can prove or break the prediction.
+// Предсказание (написано до запуска):
+// 12, NaN
+// 0, 1
+// NaN, 0
+// 8, 1000, 1
 
-// 3. THE RULE - one sentence, written AFTER seeing the output.
-//    <the generating rule, not the four facts it produces>
-
-
+// Итоговое правило (написано ПОСЛЕ запуска):
+//   parseInt берёт префикс и останавливается на первом символе, который не годится
+//   для целого; Number конвертирует строку целиком или даёт NaN, пустая строка это 0.
+//   Ни одна из них не округляет: parseInt("9.9") это 9, потому что оборвал, а не округлил.
+//   Промах предсказания: Number("0.9") посчитал за 1.
