@@ -4,6 +4,8 @@
 //
 // Run: npm run drill timed/2026-09-26-restock/check.jsx
 
+import { useMemo } from "react";
+
 const { React } = require("../../lib/react-harness.js");
 const { useState, useEffect } = React;
 
@@ -64,7 +66,9 @@ function Restock({ warehouses = ["north", "south"] }) {
 
   useEffect(() => {
     let current = true;
+    setError('');
     setLoading(true);
+
     loadStock(warehouse)
       .then((list) => {
         if (current) {
@@ -79,21 +83,17 @@ function Restock({ warehouses = ["north", "south"] }) {
           setLoading(false);
         }
       });
+      
     return () => { current = false; };
   }, [warehouse, attempt]);
 
   const q = query.trim().toLowerCase();
-  const shown = q.length >= 2 ? parts.filter((p) => p.name.toLowerCase().includes(q)) : parts;
-  const total = shown.reduce((sum, p) => sum + parseInt(p.price) * p.qty, 0);
 
-  if (error) {
-    return (
-      <p id="error">
-        {error}
-        <button id="retry" onClick={() => setAttempt((n) => n + 1)}>retry</button>
-      </p>
-    );
-  }
+  const shown = useMemo(() => {
+    return q.length >= 1 ? parts.filter((p) => p.name.toLowerCase().includes(q)) : parts
+  }, [q, parts]);
+
+  const total = shown.reduce((sum, p) => sum + Number(p.price) * p.qty, 0);
 
   return (
     <div>
@@ -104,11 +104,15 @@ function Restock({ warehouses = ["north", "south"] }) {
       {loading && <p id="status">loading</p>}
       <p id="count">{shown.length} of {parts.length}</p>
       <p id="total">{total.toFixed(2)}</p>
-      {!loading && (
+      {(!loading && !error) && (
         <ul id="list">
-          {shown.map((p, i) => <Row key={`${p.name}-${i}`} part={p} />)}
+          {shown.map((p, i) => <Row key={p.sku} part={p} />)}
         </ul>
       )}
+      {error && <p id="error">
+        {error}
+        <button id="retry" onClick={() => setAttempt((n) => n + 1)}>retry</button>
+      </p>}
     </div>
   );
 }
