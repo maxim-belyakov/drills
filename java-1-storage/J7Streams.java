@@ -27,6 +27,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.*;
 
+import javax.print.Doc;
+
 import static java.util.stream.Collectors.*;
 
 public class J7Streams {
@@ -38,7 +40,7 @@ public class J7Streams {
     // countByVenue(DATA) -> {Aurora=2, Bliss=2, Cocoon=2, Dew=1}
     // One collector, no loop.
     static Map<String, Long> countByVenue(List<Booking> bookings) {
-        return null;
+        return bookings.stream().collect(groupingBy(Booking::venue, counting()));
     }
 
     // --- 2 ----------------------------------------------------------
@@ -46,7 +48,7 @@ public class J7Streams {
     // a booking exactly on `from` stays.
     // bookingsSince(DATA, 2026-09-11) -> 4 bookings
     static List<Booking> bookingsSince(List<Booking> bookings, LocalDate from) {
-        return null;
+        return bookings.stream().filter(b -> !b.date().isBefore(from)).toList();
     }
 
     // --- 3 ----------------------------------------------------------
@@ -55,7 +57,12 @@ public class J7Streams {
     // rather than "whatever the map happened to give".
     // topVenues(DATA, 2) -> [Aurora, Bliss]
     static List<String> topVenues(List<Booking> bookings, int n) {
-        return null;
+        return countByVenue(bookings).entrySet().stream()
+        .sorted(Map.Entry.<String, Long>comparingByValue().reversed()
+                .thenComparing(Map.Entry.comparingByKey()))
+        .limit(n)
+        .map(Map.Entry::getKey)
+        .toList();
     }
 
     // --- 4 ----------------------------------------------------------
@@ -63,14 +70,20 @@ public class J7Streams {
     // is 20.00 - not 20.000000000000004.
     // revenueByVenue(DATA) -> {Aurora=20.00, Bliss=150.00, Cocoon=20.30, Dew=5.00}
     static Map<String, BigDecimal> revenueByVenue(List<Booking> bookings) {
-        return null;
+        return bookings.stream()
+        .collect(groupingBy(Booking::venue,
+                 reducing(BigDecimal.ZERO, Booking::amount, BigDecimal::add)));
     }
 
     // --- 5 ----------------------------------------------------------
     // Every venue name once, alphabetical, comma and space between them.
     // venueLine(DATA) -> "Aurora, Bliss, Cocoon, Dew"
     static String venueLine(List<Booking> bookings) {
-        return null;
+        return bookings.stream()
+        .map(Booking::venue)
+        .distinct()
+        .sorted()
+        .collect(joining(", "));
     }
 
     // --- 6, spoken, nothing to write --------------------------------
