@@ -99,7 +99,7 @@ public class J7Streams {
 
         Object[][] cases = {
             {"1. countByVenue", (Supplier) () -> countByVenue(DATA),
-                new TreeMap<>(Map.of("Aurora", 2L, "Bliss", 2L, "Cocoon", 2L, "Dew", 1L))},
+                "{Aurora=2, Bliss=2, Cocoon=2, Dew=1}"},
             {"2. bookingsSince keeps the boundary day", (Supplier) () -> {
                 List<Booking> r = bookingsSince(DATA, LocalDate.of(2026, 9, 11));
                 return r == null ? null : r.stream().map(Booking::venue).sorted().collect(joining(","));
@@ -108,7 +108,7 @@ public class J7Streams {
                 List.of("Aurora", "Bliss")},
             {"4. revenueByVenue is exact", (Supplier) () -> {
                 Map<String, BigDecimal> r = revenueByVenue(DATA);
-                return r == null ? null : new TreeMap<>(r).toString();
+                return r == null ? null : sorted(r);
             }, "{Aurora=20.00, Bliss=150.00, Cocoon=20.30, Dew=5.00}"},
             {"5. venueLine", (Supplier) () -> venueLine(DATA), "Aurora, Bliss, Cocoon, Dew"},
         };
@@ -130,7 +130,7 @@ public class J7Streams {
                 System.out.println("  ..   " + name + " - not written yet");
                 continue;
             }
-            Object a = actual instanceof Map ? new TreeMap<>((Map) actual) : actual;
+            Object a = actual instanceof Map<?, ?> m ? sorted(m) : actual;
             if (a.toString().equals(expected.toString())) {
                 ok++;
                 System.out.println("  OK   " + name);
@@ -147,6 +147,14 @@ public class J7Streams {
         else if (todo > 0) System.out.println(ok + " green, " + todo + " still to write. Run again after each one.");
         else System.out.println("All green. Was it narrated out loud? If not, it is a repeat.");
         System.out.println();
+    }
+
+    // a map printed in a stable order, so the comparison does not depend on hashing
+    static String sorted(Map<?, ?> m) {
+        return m.entrySet().stream()
+                .sorted(Comparator.comparing(e -> String.valueOf(e.getKey())))
+                .map(e -> e.getKey() + "=" + e.getValue())
+                .collect(joining(", ", "{", "}"));
     }
 
     interface Supplier { Object get(); }
