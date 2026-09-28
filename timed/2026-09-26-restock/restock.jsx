@@ -4,8 +4,6 @@
 //
 // Run: npm run drill timed/2026-09-26-restock/check.jsx
 
-import { useMemo } from "react";
-
 const { React } = require("../../lib/react-harness.js");
 const { useState, useEffect } = React;
 
@@ -66,7 +64,7 @@ function Restock({ warehouses = ["north", "south"] }) {
 
   useEffect(() => {
     let current = true;
-    setError('');
+    setError(null);
     setLoading(true);
 
     loadStock(warehouse)
@@ -89,9 +87,7 @@ function Restock({ warehouses = ["north", "south"] }) {
 
   const q = query.trim().toLowerCase();
 
-  const shown = useMemo(() => {
-    return q.length >= 1 ? parts.filter((p) => p.name.toLowerCase().includes(q)) : parts
-  }, [q, parts]);
+  const shown = q.length >= 1 ? parts.filter((p) => p.name.toLowerCase().includes(q)) : parts;
 
   const total = shown.reduce((sum, p) => sum + Number(p.price) * p.qty, 0);
 
