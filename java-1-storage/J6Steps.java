@@ -42,7 +42,7 @@ public class J6Steps {
     //   10 rows out.
 
     static String s1() {
-        return null; // here
+        return "SELECT id, amount FROM txn ORDER BY id";
     }
 
     // --- step 2: throw rows away ---------------------------------
@@ -51,7 +51,7 @@ public class J6Steps {
     //   8 rows out. Two transactions were FAILED.
 
     static String s2() {
-        return null; // here
+        return "SELECT id, amount FROM txn WHERE status = 'SETTLED' ORDER BY id" ;
     }
 
     // --- step 3: glue the client's name onto every row ------------
@@ -67,7 +67,11 @@ public class J6Steps {
     //   Still 8 rows. Names repeat, because one client has several transactions.
 
     static String s3() {
-        return null; // here
+        return """
+            SELECT c.name, t.id, t.amount
+            FROM txn t JOIN client c ON c.id = t.client_id
+            WHERE t.status = 'SETTLED' ORDER BY t.id
+        """;
     }
 
     // --- step 4: glue rows into piles ----------------------------
@@ -79,7 +83,11 @@ public class J6Steps {
     //   step 2 already threw it away.
 
     static String s4() {
-        return null; // here
+        return """
+            SELECT c.name, count(*), sum(t.amount)
+            FROM txn t JOIN client c ON c.id = t.client_id
+            WHERE t.status = 'SETTLED' GROUP BY c.name ORDER BY c.name
+                """;
     }
 
     // --- step 5: throw piles away --------------------------------
@@ -91,7 +99,12 @@ public class J6Steps {
     //   2 rows out. Acme had 2 transactions and drops.
 
     static String s5() {
-        return null; // here
+        return """
+            SELECT c.name, count(*), sum(t.amount)
+            FROM txn t JOIN client c ON c.id = t.client_id
+            WHERE t.status = 'SETTLED' GROUP BY c.name 
+            HAVING count(*) >= 3 ORDER BY c.name
+                """;
     }
 
     // Step 5 plus "ORDER BY total DESC" IS task 1 of J6Sql. Nothing else is missing.
